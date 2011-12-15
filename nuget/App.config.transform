@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+Copyright (C) 2011 Bellevue College and Peninsula College
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License and GNU General Public License along with this program.
+If not, see <http://www.gnu.org/licenses/>.
+-->
+<configuration>
+	<configSections>
+		<section name="ctcOdsApiSettings" type="Ctc.Ods.Config.SettingsConfigHandler, CtcOdsApi" />
+	</configSections>
+
+	<connectionStrings>
+		<add name="OdsContext" connectionString=" ** ENTER YOUR CONNECTION STRING HERE ** " providerName="System.Data.SqlClient"/>
+	</connectionStrings>
+
+	<ctcOdsApiSettings>
+		<regex CommonCourseChar="&amp;"/>
+		<yearQuarter minValue="0000" maxValue="Z999" registrationLeadDays="14"/>
+		<waitlist status="W-LISTED"/>
+		<classFlags online="3" hybrid="8" telecourse="1">
+			<!-- These flags are defined at https://tfs.wacollabcoop.org/sites/BellevueCollege/ODSAPI/Team%20Wiki/How%20Section%20data%20is%20managed%20in%20ODS%20(HP).aspx -->
+			<rule action="exclude" column="SectionStatusID1" position="contains" value="X"/>
+			<rule action="exclude" column="SectionStatusID1" position="contains" value="Z"/>
+			<rule action="exclude" column="SectionStatusID2" position="contains" value="A"/>
+			<rule action="exclude" column="SectionStatusID4" position="contains" value="M"/>
+			<rule action="exclude" column="SectionStatusID4" position="contains" value="N"/>
+		</classFlags>
+	</ctcOdsApiSettings>
+
+</configuration>

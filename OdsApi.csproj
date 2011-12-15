@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D4697354-CBB8-4376-BB92-65A21760C752}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ctc.Ods</RootNamespace>
+    <AssemblyName>CtcOdsApi</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <PackageDir>Package\$(Configuration)</PackageDir>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\CtcOdsApi.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dev|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Dev\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>bin\Debug\CtcOdsApi.XML</DocumentationFile>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>packages\EntityFramework.4.1.10715.0\lib\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AvailabilityFacet.cs" />
+    <Compile Include="CommonExtensions.cs" />
+    <Compile Include="Config\ApiSettings.cs" />
+    <Compile Include="Config\SettingsConfigHandler.cs" />
+    <Compile Include="Customizations\BellevueCollegeCourseDescriptionStrategy.cs" />
+    <Compile Include="Customizations\PeninsulaCollegeCourseDescriptionStrategy.cs" />
+    <Compile Include="Customizations\Types.cs" />
+    <Compile Include="Data\CoursePrefixEntity.cs" />
+    <Compile Include="Data\DayEntity.cs" />
+    <Compile Include="Customizations\ICourseDescriptionStrategy.cs" />
+    <Compile Include="Data\EmployeeEntity.cs" />
+    <Compile Include="Data\InstructionEntity.cs" />
+    <Compile Include="Data\InstructorEntity.cs" />
+    <Compile Include="Data\SectionEntity.cs" />
+    <Compile Include="Data\WaitlistEntity.cs" />
+    <Compile Include="Data\WebRegistrationSettingEntity.cs" />
+    <Compile Include="Data\YearQuarterEntity.cs" />
+    <Compile Include="Data\CourseEntity.cs" />
+    <Compile Include="DaysFacet.cs" />
+    <Compile Include="Extensions\QueryResultCacheExtension.cs" />
+    <Compile Include="ISectionFacet.cs" />
+    <Compile Include="LinqExtensions.cs" />
+    <Compile Include="ModalityFacet.cs" />
+    <Compile Include="RegistrationQuartersFacet.cs" />
+    <Compile Include="TimeFacet.cs" />
+    <Compile Include="Types\CourseDescription.cs" />
+    <Compile Include="Types\CoursePrefix.cs" />
+    <Compile Include="Data\CourseDescriptionEntity.cs" />
+    <Compile Include="Types\CourseID.cs" />
+    <Compile Include="Data\OdsContext.cs" />
+    <Compile Include="Data\OdsRepository.cs" />
+    <Compile Include="Customizations\DefaultCourseDescriptionStrategy.cs" />
+    <Compile Include="Types\Footnote.cs" />
+    <Compile Include="Types\ICourseID.cs" />
+    <Compile Include="Types\Course.cs" />
+    <Compile Include="Types\ICourse.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Types\ICourseDescription.cs" />
+    <Compile Include="Types\ICoursePrefix.cs" />
+    <Compile Include="Types\IFootnote.cs" />
+    <Compile Include="Types\ISection.cs" />
+    <Compile Include="Types\ISectionID.cs" />
+    <Compile Include="Types\OfferedItem.cs" />
+    <Compile Include="Types\Section.cs" />
+    <Compile Include="Types\SectionID.cs" />
+    <Compile Include="Types\YearQuarter.cs" />
+    <Compile Include="Utility.cs" />
+    <Compile Include="YearQuarterFacet.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="ClassDiagram1.cd" />
+    <None Include="CTCODS.nuspec">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="mkpkg.cmd" />
+    <None Include="nuget\App.config.transform" />
+    <None Include="nuget\Web.config.transform" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="lib\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="license.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+			 Other similar extension points exist, see Microsoft.Common.targets.
+	<Target Name="BeforeBuild">
+	</Target>
+	<Target Name="AfterBuild">
+	</Target>
+	-->
+  <Target Name="AfterBuild">
+    <!-- copy the workstation-specific connection strings to the same folder as the executable -->
+    <Exec Command="if exist ConnectionStrings.config xcopy /y ConnectionStrings.config $(OutputPath)" />
+  </Target>
+  <!-- NuGet packaging code obtained from http://blog.richardadleta.com/2011/06/automating-nuget-packing-and-publishing.html -->
+  <Target Name="Package">
+    <!-- Ensure the Package directory exists for this project -->
+    <RemoveDir Directories="$(PackageDir)" />
+    <MakeDir Directories="$(PackageDir)" />
+    <!-- Package the project -->
+    <Exec Command="NuGet.exe pack -Symbols -OutputDir &quot;$(PackageDir)&quot; -Properties Configuration=$(Configuration)" />
+  </Target>
+</Project>

@@ -1,0 +1,520 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="Ctc.Ods.AvailabilityFacet" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="18" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AvailabilityFacet.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ctc.Ods.CommonExtensions" Collapsed="true">
+    <Position X="14" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>CommonExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ctc.Ods.DaysFacet" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="15.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAkAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DaysFacet.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ctc.Ods.LinqExtensions" Collapsed="true">
+    <Position X="15.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAACAAA=</HashCode>
+      <FileName>LinqExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ctc.Ods.ModalityFacet" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="15.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgBAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ModalityFacet.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ctc.Ods.RegistrationQuartersFacet" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="14" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAABAACAAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>RegistrationQuartersFacet.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ctc.Ods.TimeFacet" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="15.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAABAAAAAAAAAAAAAAAAAAABAAAAA=</HashCode>
+      <FileName>TimeFacet.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ctc.Ods.CourseID" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEkMAAAAAAAAAAAIAAAAAAAAAAAiA=</HashCode>
+      <FileName>Types\CourseID.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ctc.Ods.Utility">
+    <Position X="9.25" Y="6.5" Width="2.25" />
+    <Members>
+      <Field Name="_today" Hidden="true" />
+      <Field Name="DATE_OVERRIDE_KEY" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>ABAIAgBAAgAAgAAEAAAAAAACAAAAAAAAACAAAAAAIAA=</HashCode>
+      <FileName>Utility.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ctc.Ods.Config.ApiSettings">
+    <Position X="6.75" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAIAAAAACAAAIAAAAAAAAAAAAAAAAgAAAAAAAAA=</HashCode>
+      <FileName>Config\ApiSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ctc.Ods.Config.YearQuarterNode" Collapsed="true">
+    <Position X="12.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Config\ApiSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ctc.Ods.Config.ClassFlags" Collapsed="true">
+    <Position X="10.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAQAAAAAAAAACAAAAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Config\ApiSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ctc.Ods.Config.ClassRule" Collapsed="true">
+    <Position X="12.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAABAAAAAAAAAAAAAAAAgAAAAAAQ=</HashCode>
+      <FileName>Config\ApiSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ctc.Ods.Config.WaitlistNode" Collapsed="true">
+    <Position X="10.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Config\ApiSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ctc.Ods.Config.RegexSettings" Collapsed="true">
+    <Position X="12.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Config\ApiSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ctc.Ods.Config.SettingsConfigHandler" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="14" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Config\SettingsConfigHandler.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ctc.Ods.Customizations.BellevueCollegeCourseDescriptionStrategy" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Customizations\BellevueCollegeCourseDescriptionStrategy.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ctc.Ods.Customizations.DefaultCourseDescriptionStrategy" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Customizations\DefaultCourseDescriptionStrategy.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ctc.Ods.Customizations.PeninsulaCollegeCourseDescriptionStrategy" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="14" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAYAIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Customizations\PeninsulaCollegeCourseDescriptionStrategy.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ctc.Ods.Customizations.Types" Collapsed="true">
+    <Position X="8.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Customizations\Types.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ctc.Ods.Data.CourseDescription1Entity" Collapsed="true">
+    <Position X="1" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\CourseDescriptionEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ctc.Ods.Data.CourseDescription2Entity" Collapsed="true">
+    <Position X="3.25" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\CourseDescriptionEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ctc.Ods.Data.CourseDescriptionEntityBase" Collapsed="true">
+    <Position X="2.25" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACgAAAAgAAAAAAAAAAABAQAgAAAAACAEAA=</HashCode>
+      <FileName>Data\CourseDescriptionEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ctc.Ods.Data.CourseEntity" Collapsed="true">
+    <Position X="17.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>hAAAAAAAAAAAAEAAgAAAAAAgAAAABAQAgAAAAACAQAA=</HashCode>
+      <FileName>Data\CourseEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ctc.Ods.Data.CoursePrefixEntity" Collapsed="true">
+    <Position X="12.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAAAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\CoursePrefixEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ctc.Ods.Data.DayEntity" Collapsed="true">
+    <Position X="14" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAAAAAAAAAAAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>Data\DayEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ctc.Ods.Data.EmployeeEntity" Collapsed="true">
+    <Position X="17.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAAAAAAAAEAAAAgAAABAgAg=</HashCode>
+      <FileName>Data\EmployeeEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ctc.Ods.Data.InstructionEntity" Collapsed="true">
+    <Position X="12.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAAAFAABAAAAAAIAAiAAABCAAAAAAAAAA=</HashCode>
+      <FileName>Data\InstructionEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ctc.Ods.Data.InstructorEntity" Collapsed="true">
+    <Position X="14" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAABAAAA=</HashCode>
+      <FileName>Data\InstructorEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ctc.Ods.Data.OdsContext" Collapsed="true">
+    <Position X="8.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAgAAIAAYAAAQAAAAAAAAAAGACAAADAQEABABQAABA=</HashCode>
+      <FileName>Data\OdsContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ctc.Ods.Data.OdsRepository" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="0.5" Width="3.75" />
+    <Members>
+      <Field Name="_commonCourseChar" Hidden="true" />
+      <Field Name="_context" Hidden="true" />
+      <Field Name="_currentYearQuarter" Hidden="true" />
+      <Property Name="_DbContext" Hidden="true" />
+      <Field Name="_httpContext" Hidden="true" />
+      <Field Name="_settings" Hidden="true" />
+      <Method Name="Dispose" Hidden="true" />
+      <Method Name="GetAllCourses" Hidden="true" />
+      <Method Name="GetCourseDescriptions" Hidden="true" />
+      <Method Name="OdsRepository" Hidden="true" />
+      <Property Name="Settings" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Ctc.Ods.Data.OdsRepository.SectionFilters" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Data\OdsRepository.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AUAABAAAACIABAIAgAAACAAQAYAAAAAAgAAAACQAAAA=</HashCode>
+      <FileName>Data\OdsRepository.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ctc.Ods.Data.SectionEntity" Collapsed="true">
+    <Position X="10.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gCAAAAAAIAAICIBACBAAAECgJAAoAAQBCAAAAIAAAQA=</HashCode>
+      <FileName>Data\SectionEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ctc.Ods.Data.WaitlistEntity" Collapsed="true">
+    <Position X="8.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Data\WaitlistEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ctc.Ods.Data.WebRegistrationSettingEntity" Collapsed="true">
+    <Position X="12.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAACAAAAAQAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Data\WebRegistrationSettingEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ctc.Ods.Data.YearQuarterEntity" Collapsed="true">
+    <Position X="15.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Data\YearQuarterEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ctc.Ods.Extensions.QueryResultCacheExtension" Collapsed="true">
+    <Position X="15.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAgAAAAAAAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Extensions\QueryResultCacheExtension.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ctc.Ods.Extensions.Evaluator" Collapsed="true">
+    <Position X="8.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Extensions\QueryResultCacheExtension.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ctc.Ods.Extensions.LocalCollectionExpander" Collapsed="true">
+    <Position X="10.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Extensions\QueryResultCacheExtension.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ctc.Ods.Types.Course" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="5.5" Width="3" />
+    <Members>
+      <Field Name="_courseDescriptions" Hidden="true" />
+      <Property Name="_CourseDescriptions1" Hidden="true" />
+      <Property Name="_CourseDescriptions2" Hidden="true" />
+      <Field Name="_courseId" Hidden="true" />
+      <Field Name="_regexPatterns" Hidden="true" />
+      <Property Name="_YearQuarter" Hidden="true" />
+      <Method Name="Equals" Hidden="true" />
+      <Method Name="GetHashCode" Hidden="true" />
+      <Method Name="operator !=" Hidden="true" />
+      <Method Name="operator ==" Hidden="true" />
+      <Property Name="Patterns" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>gACAAAACAABgAEAAgMAAACAAAAAgAJQAAAABAAEABiA=</HashCode>
+      <FileName>Types\Course.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ctc.Ods.Types.CourseDescription" BaseTypeListCollapsed="true">
+    <Position X="3.75" Y="5.75" Width="2.25" />
+    <Members>
+      <Property Name="_YearQuarterBegin" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAAAAEQAAAAAAACAAAA=</HashCode>
+      <FileName>Types\CourseDescription.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ctc.Ods.Types.CoursePrefix" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <Members>
+      <Property Name="_Subject" Hidden="true" />
+      <Field Name="_validationPatterns" Hidden="true" />
+      <Method Name="Equals" Hidden="true" />
+      <Method Name="GetHashCode" Hidden="true" />
+      <Method Name="operator !=" Hidden="true" />
+      <Method Name="operator ==" Hidden="true" />
+      <Property Name="Patterns" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAEAAgIAAAAAgAAAAAIAAAAAAAAAAAiA=</HashCode>
+      <FileName>Types\CoursePrefix.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ctc.Ods.Types.Footnote" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAQAAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>Types\Footnote.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ctc.Ods.Types.OfferedItem">
+    <Position X="6.25" Y="4.75" Width="1.75" />
+    <Members>
+      <Field Name="_instructorName" Hidden="true" />
+      <Property Name="_SessionSequence" Hidden="true" />
+      <Property Name="ID" Hidden="true" />
+      <Method Name="OfferedItem" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAJAgABAABAAAAAgICAgAAAAQAAQAAAAAAA=</HashCode>
+      <FileName>Types\OfferedItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ctc.Ods.Types.Section" BaseTypeListCollapsed="true">
+    <Position X="5" Y="0.5" Width="3" />
+    <Members>
+      <Field Name="_classID" Hidden="true" />
+      <Field Name="_courseDescriptions" Hidden="true" />
+      <Property Name="_CourseDescriptions1" Hidden="true" />
+      <Property Name="_CourseDescriptions2" Hidden="true" />
+      <Field Name="_courseId" Hidden="true" />
+      <Field Name="_courseTitle" Hidden="true" />
+      <Property Name="_CourseTitle" Hidden="true" />
+      <Field Name="_hybridFlag" Hidden="true" />
+      <Field Name="_onlineFlag" Hidden="true" />
+      <Property Name="_SBCTCMisc1" Hidden="true" />
+      <Field Name="_settings" Hidden="true" />
+      <Field Name="_telecourseFlag" Hidden="true" />
+      <Field Name="_validationPatterns" Hidden="true" />
+      <Property Name="_YearQuarterID" Hidden="true" />
+      <Method Name="Equals" Hidden="true" />
+      <Method Name="GetHashCode" Hidden="true" />
+      <Method Name="operator !=" Hidden="true" />
+      <Method Name="operator ==" Hidden="true" />
+      <Method Name="Section" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>gCCABAAyIQBBgQAEwAAgACAgCAKgAIQQIoBAAgEAAiQ=</HashCode>
+      <FileName>Types\Section.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ctc.Ods.Types.SectionID" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="12.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAEkAAAAACAAAAAAIAAAAAAAAAAAiA=</HashCode>
+      <FileName>Types\SectionID.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ctc.Ods.Types.YearQuarter" BaseTypeListCollapsed="true">
+    <Position X="2.25" Y="3" Width="2.5" />
+    <Members>
+      <Field Name="_friendlyName" Hidden="true" />
+      <Method Name="Equals" Hidden="true" />
+      <Method Name="GetHashCode" Hidden="true" />
+      <Method Name="GetYear" Hidden="true" />
+      <Method Name="GetYearMod" Hidden="true" />
+      <Method Name="IncrementYear" Hidden="true" />
+      <Method Name="IsValid" Hidden="true" />
+      <Method Name="operator !=" Hidden="true" />
+      <Method Name="operator ==" Hidden="true" />
+      <Field Name="QUARTER" Hidden="true" />
+      <Field Name="YEAR_MOD" Hidden="true" />
+      <Field Name="YEAR1" Hidden="true" />
+      <Field Name="YEAR2" Hidden="true" />
+      <Method Name="YearQuarter" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAOAAAAAAAAAgAAkkAkAAAAAGAAAAIAABAAwACAIAiA=</HashCode>
+      <FileName>Types\YearQuarter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Interface Name="Ctc.Ods.ISectionFacet" Collapsed="true">
+    <Position X="15.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ISectionFacet.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ctc.Ods.Customizations.ICourseDescriptionStrategy" Collapsed="true">
+    <Position X="12.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Customizations\ICourseDescriptionStrategy.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ctc.Ods.Types.ICourse" Collapsed="true">
+    <Position X="14" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gACAAAAAAAAgAEAAAMAAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Types\ICourse.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ctc.Ods.Types.ICourseDescription" Collapsed="true">
+    <Position X="15.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAAAAAQAAAAAAACAAAA=</HashCode>
+      <FileName>Types\ICourseDescription.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ctc.Ods.Types.ICourseID" Collapsed="true">
+    <Position X="14" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Types\ICourseID.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ctc.Ods.Types.ICoursePrefix" Collapsed="true">
+    <Position X="12.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAAIAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Types\ICoursePrefix.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ctc.Ods.Types.IFootnote" Collapsed="true">
+    <Position X="14" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAQAAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>Types\IFootnote.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ctc.Ods.Types.ISection" Collapsed="true">
+    <Position X="15.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gACABAAAIQABgQAAAAAAACAACACAAAQAIIAAAAAAAAA=</HashCode>
+      <FileName>Types\ISection.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ctc.Ods.Types.ISectionID" Collapsed="true">
+    <Position X="12.25" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAgAAAAACAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Types\ISectionID.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Ctc.Ods.Config.ClassRuleAction" Collapsed="true">
+    <Position X="15.75" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAACAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Config\ApiSettings.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Ctc.Ods.Config.ClassRulePosition" Collapsed="true">
+    <Position X="14" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAA=</HashCode>
+      <FileName>Config\ApiSettings.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>

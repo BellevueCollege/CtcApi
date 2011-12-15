@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!--
+Copyright (C) 2011 Bellevue College and Peninsula College
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License and GNU General Public License along with this program.
+If not, see <http://www.gnu.org/licenses/>.
+-->
+<package >
+	<metadata>
+		<id>CtcOdsApi</id>
+		<version>$version$</version>
+		<title>CTC ODS API</title>
+		<authors>Shawn South</authors>
+		<owners>$author$</owners>
+		<licenseUrl>http://www.opensource.org/licenses/lgpl-3.0.html</licenseUrl>
+		<projectUrl>https://skydrive.live.com/?cid=CFBF113FCE9E52C4&amp;id=CFBF113FCE9E52C4%21118#cid=CFBF113FCE9E52C4&amp;id=CFBF113FCE9E52C4%21264</projectUrl>
+		<iconUrl>https://sn2files.storage.live.com/y1piGsEP4o3zW3cU_o_64eFwkJ_J6uz6nB9qhLWGV6OM3DlpklUS72qdQc0uTUF9R_41yRLu2xwcDM/ctcodsapi-logo.jpg</iconUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>$description$</description>
+		<releaseNotes></releaseNotes>
+		<copyright>Copyright 2011 Washington State Board for Community and Technical Colleges</copyright>
+		<tags>CTC ODS API HP HP3000 SBCTC college Washington State</tags>
+	</metadata>
+	<files>
+		<file src="nuget\App.config.transform" target="content" />
+		<file src="nuget\Web.config.transform" target="content" />
+	</files>
+</package>
