@@ -103,6 +103,11 @@ namespace Ctc.Ods.Data
 		/// <summary>
 		/// 
 		/// </summary>
+		public DateTime? StartDate{get;set;}
+
+		/// <summary>
+		/// 
+		/// </summary>
 		public DateTime? StartTime{get;set;}
 
 		/// <summary>

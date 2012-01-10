@@ -86,7 +86,7 @@
     <Compile Include="Data\YearQuarterEntity.cs" />
     <Compile Include="Data\CourseEntity.cs" />
     <Compile Include="DaysFacet.cs" />
-    <Compile Include="DataFacets\EarlyStartFacet.cs" />
+    <Compile Include="DataFacets\LateStartFacet.cs" />
     <Compile Include="Extensions\QueryResultCacheExtension.cs" />
     <Compile Include="ISectionFacet.cs" />
     <Compile Include="LinqExtensions.cs" />

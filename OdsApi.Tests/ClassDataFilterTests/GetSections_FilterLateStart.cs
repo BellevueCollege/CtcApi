@@ -25,18 +25,18 @@ namespace Ctc.Ods.Tests.ClassDataFilterTests
 	/// Summary description for GetSections_FilterEarlyStart
 	/// </summary>
 	[TestClass]
-	public class GetSections_FilterEarlyStart
+	public class GetSections_FilterLateStart
 	{
 		private DataVerificationHelper _dataVerifier;
 
-		public GetSections_FilterEarlyStart()
+		public GetSections_FilterLateStart()
 		{
-				_dataVerifier = new DataVerificationHelper();
+		    _dataVerifier = new DataVerificationHelper();
 		}
 
-		~GetSections_FilterEarlyStart()
+		~GetSections_FilterLateStart()
 		{
-			_dataVerifier.Dispose();
+		  _dataVerifier.Dispose();
 		}
 
 		private TestContext testContextInstance;
@@ -57,17 +57,21 @@ namespace Ctc.Ods.Tests.ClassDataFilterTests
 			}
 		}
 
+		//Use ClassInitialize to run code before running the first test in the class
+		[ClassInitialize]
+		public static void MyClassInitialize(TestContext testContext)
+		{
+		}
+		
+		//Use ClassCleanup to run code after all tests in a class have run
+		[ClassCleanup]
+		public static void MyClassCleanup()
+		{
+		}
+		
 		#region Additional test attributes
 		//
 		// You can use the following additional attributes as you write your tests:
-		//
-		// Use ClassInitialize to run code before running the first test in the class
-		// [ClassInitialize()]
-		// public static void MyClassInitialize(TestContext testContext) { }
-		//
-		// Use ClassCleanup to run code after all tests in a class have run
-		// [ClassCleanup()]
-		// public static void MyClassCleanup() { }
 		//
 		// Use TestInitialize to run code before running each test 
 		// [TestInitialize()]
@@ -80,15 +84,17 @@ namespace Ctc.Ods.Tests.ClassDataFilterTests
 		#endregion
 
 		[TestMethod]
-		[Ignore]	// Not yet implemented
-		public void GetSections_EarlyStart_Success()
+		public void GetSections_LateStart_Success()
 		{
-			int count = TestHelper.GetSectionCountWithFilter(new EarlyStartFacet());
+			string whereClause = "NOT StartDate IS NULL AND dateadd(day, -8, StartDate) >= (select top 1 yq.FirstClassDay from vw_YearQuarter yq where yq.YearQuarterID = Vw_Class.YearQuarterID)";
+
+			int count = TestHelper.GetSectionCountWithFilter(new LateStartFacet(8));
 
 			int allSectionCount = _dataVerifier.AllSectionsCount;
 			Assert.IsTrue(allSectionCount > count);
 
-			// TODO: verify count is what we expect
+			int expectedCount = _dataVerifier.GetSectionCount(whereClause);
+			Assert.AreEqual(expectedCount, count);
 		}
 	}
 }
