@@ -105,6 +105,11 @@ namespace Ctc.Ods.Data
 		/// </summary>
 		public DateTime? StartDate{get;set;}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public DateTime? EndDate { get; set; }
+
 		/// <summary>
 		/// 
 		/// </summary>
