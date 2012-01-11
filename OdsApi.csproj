@@ -74,6 +74,7 @@
     <Compile Include="Customizations\BellevueCollegeCourseDescriptionStrategy.cs" />
     <Compile Include="Customizations\PeninsulaCollegeCourseDescriptionStrategy.cs" />
     <Compile Include="Customizations\Types.cs" />
+    <Compile Include="DataFacets\CreditsFacet.cs" />
     <Compile Include="Data\CoursePrefixEntity.cs" />
     <Compile Include="Data\DayEntity.cs" />
     <Compile Include="Customizations\ICourseDescriptionStrategy.cs" />
