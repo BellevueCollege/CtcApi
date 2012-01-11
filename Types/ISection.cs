@@ -48,6 +48,16 @@ namespace Ctc.Ods.Types
 		/// </summary>
 		YearQuarter Yrq {get;}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        DateTime? StartDate {get;}
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        DateTime? EndDate {get;}
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -71,7 +81,7 @@ namespace Ctc.Ods.Types
 		/// <summary>
 		/// 
 		/// </summary>
-		IEnumerable<string> Footnotes { get; }
+		IEnumerable<string> Footnotes {get;}
 
 		// TODO: Seat availability
 
@@ -86,12 +96,17 @@ namespace Ctc.Ods.Types
 		/// <summary>
 		/// 
 		/// </summary>
-		bool IsOnline { get;}
+		bool IsOnline {get;}
 
 		/// <summary>
 		/// 
 		/// </summary>
 		bool IsCommonCourse{get;}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        bool IsContinuousEnrollment{get;}
 
 		/// <summary>
 		/// 

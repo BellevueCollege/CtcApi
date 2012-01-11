@@ -225,6 +225,15 @@ namespace Ctc.Ods.Config
 		/// </remarks>
 		[XmlAttribute("telecourse")]
 		public string Telecourse{get;set;}
+
+        /// <summary>
+        /// Value in the <b>ODS</b> which identifies a Continuous Enrollment <see cref="ISection"/>
+        /// </summary>
+        /// <remarks>
+        /// The code looks for this value in the <i>ContinuousSequentialIndicator</i> column of the <i>vw_Class</i> view.
+        /// </remarks>
+        [XmlAttribute("continuousEnrollment")]
+        public string ContinuousEnrollment { get; set; }
 	}
 
 	/// <summary>

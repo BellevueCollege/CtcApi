@@ -115,6 +115,16 @@ namespace Ctc.Ods.Data
 		/// </summary>
 		public DateTime? EndTime{get;set;}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public DateTime? StartDate { get; set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public DateTime? EndDate { get; set; }
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -127,6 +137,11 @@ namespace Ctc.Ods.Data
 		/// Contains flags which indicate which type of <see cref="Section"/> this is
 		/// </summary>
 		public string SBCTCMisc1{get;set;}
+
+        /// <summary>
+        /// Contains flags to indicate the <see cref="Section"/>'s enrollment type
+        /// </summary>
+        public string ContinuousSequentialIndicator { get; set; }
 
 		/// <summary>
 		/// 

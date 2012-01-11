@@ -629,6 +629,8 @@ namespace Ctc.Ods.Data
 					                   			Credits = section.joinedData.sectionData.Credits,
 					                   			SectionCode = section.joinedData.sectionData.Section,
 					                   			_YearQuarterID = section.joinedData.sectionData.YearQuarterID,
+                                                StartDate = section.joinedData.sectionData.StartDate,
+                                                EndDate = section.joinedData.sectionData.EndDate,
 					                   			// count up how many students are waitlisted for each section
 					                   			WaitlistCount = _DbContext.WaitListCounts.Where(w => w.Status == waitlistStatus && w.ClassID == section.joinedData.sectionData.ClassID).Count(),
 					                   			// Construct the collection of instructor/day/time/location information...
@@ -662,6 +664,7 @@ namespace Ctc.Ods.Data
 																	_CourseDescriptions1 =  _DbContext.CourseDescriptions1.Where(d => d.CourseID == section.joinedData.sectionData.CourseID),
 																	_CourseDescriptions2 =  _DbContext.CourseDescriptions2.Where(d => d.CourseID == section.joinedData.sectionData.CourseID),
 																	_SBCTCMisc1 = section.joinedData.sectionData.SBCTCMisc1,
+                                                                    _ContinuousSequentialIndicator = section.joinedData.sectionData.ContinuousSequentialIndicator,
 					                   	});
 			Debug.Print("==> Created [{0}] Sections.  {1}", sections.Count(), DateTime.Now);
 			Debug.Flush();

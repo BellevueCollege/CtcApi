@@ -38,6 +38,7 @@ namespace Ctc.Ods.Types
 		private string _onlineFlag;
 		private string _hybridFlag;
 		private string _telecourseFlag;
+        private string _continuousEnrollmentFlag;
 
 		private string _courseTitle;
 		private string _classID;
@@ -89,6 +90,18 @@ namespace Ctc.Ods.Types
 		[DataMember]
 		public YearQuarter Yrq { get; protected internal set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        [DataMember]
+        public DateTime? StartDate { get; protected internal set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [DataMember]
+        public DateTime? EndDate { get; protected internal set; }
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -111,6 +124,12 @@ namespace Ctc.Ods.Types
 		/// </summary>
 		[DataMember]
 		public bool IsHybrid { get; protected internal set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [DataMember]
+        public bool IsContinuousEnrollment { get; protected internal set; }
 
 		#region Properties mapped to data columns
 		/// <summary>
@@ -162,6 +181,23 @@ namespace Ctc.Ods.Types
 				}
 			}
 		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        internal string _ContinuousSequentialIndicator
+        {
+            set
+            {
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    if (value.StartsWith(_continuousEnrollmentFlag))
+                    {
+                        IsContinuousEnrollment = true;
+                    }
+                }
+            }
+        }
 
 		/// <summary>
 		/// 
@@ -275,6 +311,7 @@ namespace Ctc.Ods.Types
 			_onlineFlag = _settings.ClassFlags.Online ?? string.Empty;
 			_hybridFlag = _settings.ClassFlags.Hybrid ?? string.Empty;
 			_telecourseFlag = _settings.ClassFlags.Telecourse ?? string.Empty;
+            _continuousEnrollmentFlag = _settings.ClassFlags.ContinuousEnrollment ?? string.Empty;
 		}
 
 		/// <summary>
