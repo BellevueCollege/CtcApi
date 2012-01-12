@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="ApiSettingsTests.cs" />
     <Compile Include="ClassDataFilterTests\GetSections_FilterAvailability.cs" />
+    <Compile Include="ClassDataFilterTests\GetSections_FilterCredits.cs" />
     <Compile Include="ClassDataFilterTests\GetSections_FilterDays.cs" />
     <Compile Include="ClassDataFilterTests\GetSections_FilterLateStart.cs" />
     <Compile Include="ClassDataFilterTests\GetSections_FilterModality.cs" />
