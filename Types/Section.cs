@@ -131,6 +131,18 @@ namespace Ctc.Ods.Types
         [DataMember]
         public bool IsContinuousEnrollment { get; protected internal set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        [DataMember]
+        public bool IsVariableCredits { get; protected internal set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [DataMember]
+        public bool IsLateStart { get; protected internal set; }
+
 		#region Properties mapped to data columns
 		/// <summary>
 		/// 
@@ -195,6 +207,34 @@ namespace Ctc.Ods.Types
                     {
                         IsContinuousEnrollment = true;
                     }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        internal bool? _VariableCredits
+        {
+            set
+            {
+                if (value != null)
+                {
+                    IsVariableCredits = (bool)value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        internal bool? _LateStart
+        {
+            set
+            {
+                if (value != null)
+                {
+                    IsLateStart = (bool)value;
                 }
             }
         }

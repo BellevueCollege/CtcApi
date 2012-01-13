@@ -108,6 +108,16 @@ namespace Ctc.Ods.Types
         /// </summary>
         bool IsContinuousEnrollment{get;}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        bool IsVariableCredits {get;}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        bool IsLateStart {get;}
+
 		/// <summary>
 		/// 
 		/// </summary>
