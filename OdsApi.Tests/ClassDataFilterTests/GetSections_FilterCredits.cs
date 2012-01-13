@@ -65,20 +65,26 @@ namespace Ctc.Ods.Tests.ClassDataFilterTests
         public void GetSections_Credits_Success()
         {
             int credits = 2;
+            decimal creditsUpperBound = (decimal)(credits + 0.99);
 
             IList<Section> sections = TestHelper.GetSectionsWithFilter(new CreditsFacet(credits));
-            int correctSectionsExact = sections.Where(s => s.Credits == credits).ToList().Count;
-            int correctSectionsRounded = sections.Where(s => s.Credits > credits).ToList().Count;
+            int correctSectionsExact = sections.Where(s => s.Credits == credits).Count();
+            int correctSectionsRounded = sections.Where(s => s.Credits > credits && s.Credits <= creditsUpperBound).Count();
 
-            int correctCount = correctSectionsExact + correctSectionsRounded;
+            // How many sections were only returned because they were Variable Credit sections with credit amounts above the bounds of our search?
+            // Note: this is not an arbitrary search for all returned Variable Credit sections
+            IList<Section> variableCreditSections = sections.Where(s => s.IsVariableCredits).ToList();
+            int correctVariableCreditExceptions = variableCreditSections.Where(s => s.Credits > creditsUpperBound).Count();
 
-            string totalWhereClause = String.Format("Credits between {0} and {1}", credits, credits+0.99);
-            int expectedCount = _dataVerifier.GetSectionCount(totalWhereClause);
+            int correctCount = correctSectionsExact + correctSectionsRounded + correctVariableCreditExceptions;
+
+            string totalWhereClause = String.Format("(Credits between {0} and {1})", credits, creditsUpperBound);
+            int expectedCount = _dataVerifier.GetSectionCount(totalWhereClause) + correctVariableCreditExceptions;
             Assert.AreEqual(expectedCount, sections.Count); // Did we get the expected amount of results?
             Assert.AreEqual(sections.Count, correctCount);  // And all results are valid?
 
             int incorrectCount = sections.Where(s => s.Credits < credits).ToList().Count;   // Did section credit amounts that were too SMALL get returned?
-            incorrectCount += sections.Where(s => s.Credits >= credits + 1).ToList().Count; // Did section credit amounts that were too LARGE get returned?
+            incorrectCount += sections.Where(s => s.Credits >= credits + 1 && !s.IsVariableCredits).ToList().Count; // Did section credit amounts that were too LARGE get returned?
             Assert.AreEqual(0, incorrectCount);
         }
 
@@ -89,20 +95,25 @@ namespace Ctc.Ods.Tests.ClassDataFilterTests
         public void GetSections_OneOrLessCredits_Success()
         {
             int credits = 1;
+            decimal creditsUpperBound = (decimal)(credits + 0.99);
 
             IList<Section> sections = TestHelper.GetSectionsWithFilter(new CreditsFacet(credits));
-            int correctSectionsExact = sections.Where(s => s.Credits == credits).ToList().Count;
-            int correctSectionsRounded = sections.Where(s => s.Credits > credits).ToList().Count;
-            correctSectionsRounded += sections.Where(s => s.Credits >= 0 && s.Credits < credits).ToList().Count;
+            int correctSectionsExact = sections.Where(s => s.Credits == credits).Count();
+            int correctSectionsRounded = sections.Where(s => s.Credits != credits && s.Credits >= 0 && s.Credits < creditsUpperBound).Count(); 
 
-            int correctCount = correctSectionsExact + correctSectionsRounded;
+            // How many sections were only returned because they were Variable Credit sections with credit amounts above the bounds of our search?
+            // Note: this is not an arbitrary search for all returned Variable Credit sections
+            IList<Section> variableCreditSections = sections.Where(s => s.IsVariableCredits).ToList();
+            int correctVariableCreditExceptions = variableCreditSections.Where(s => s.Credits > creditsUpperBound).Count();
 
-            string totalWhereClause = String.Format("Credits between 0 and {0}", credits + 0.99);
-            int expectedCount = _dataVerifier.GetSectionCount(totalWhereClause);
+            int correctCount = correctSectionsExact + correctSectionsRounded + correctVariableCreditExceptions;
+
+            string totalWhereClause = String.Format("Credits between 0 and {0}", creditsUpperBound);
+            int expectedCount = _dataVerifier.GetSectionCount(totalWhereClause) + correctVariableCreditExceptions;
             Assert.AreEqual(expectedCount, sections.Count); // Did we get the expected amount of results?
             Assert.AreEqual(sections.Count, correctCount);  // And all results are valid?
 
-            int incorrectCount = sections.Where(s => s.Credits >= credits + 1).ToList().Count;
+            int incorrectCount = sections.Where(s => s.Credits >= credits + 1 && !s.IsVariableCredits).Count();
             Assert.AreEqual(0, incorrectCount); // Were any of the results returned incorrect?
         }
     }
