@@ -26,10 +26,6 @@ namespace Ctc.Ods
     ///</summary>
     public class CreditsFacet : ISectionFacet
     {
-        // TODO:
-        // - Take variable credit courses into account
-        //      - Add tests for variable credit courses
-
         private int _credits;
 
         ///<summary>
@@ -53,7 +49,7 @@ namespace Ctc.Ods
 
                 if (db != null)
                 {
-                    return s => (s.Credits < 1 ? 1 : Math.Floor(s.Credits)) == _credits;
+                    return s => (s.Credits < 1 ? 1 : Math.Floor(s.Credits)) == _credits || (s.VariableCredits == true && Math.Floor(s.Credits) >= _credits);
                 }
 
                 throw new ArgumentNullException("dbContext", "Database context is not valid.");
