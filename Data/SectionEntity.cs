@@ -138,6 +138,11 @@ namespace Ctc.Ods.Data
         /// </summary>
         public string ContinuousSequentialIndicator { get; set; }
 
+        /// <summary>
+        /// Contains flags to indicate the <see cref="Section"/>'s credit type
+        /// </summary>
+        public bool? VariableCredits { get; set; }
+
 		/// <summary>
 		/// 
 		/// </summary>
