@@ -26,6 +26,7 @@ using System.Web;
 using Ctc.Ods.Config;
 using Ctc.Ods.Customizations;
 using Ctc.Ods.Types;
+using System.Data.Objects.SqlClient;
 
 namespace Ctc.Ods.Data
 {
@@ -665,6 +666,11 @@ namespace Ctc.Ods.Data
 																	_CourseDescriptions2 =  _DbContext.CourseDescriptions2.Where(d => d.CourseID == section.joinedData.sectionData.CourseID),
 																	_SBCTCMisc1 = section.joinedData.sectionData.SBCTCMisc1,
                                                                     _ContinuousSequentialIndicator = section.joinedData.sectionData.ContinuousSequentialIndicator,
+                                                                    _VariableCredits = section.joinedData.sectionData.VariableCredits,
+                                                                    _LateStart = section.joinedData.sectionData.StartDate > _DbContext.YearQuarters.Where(y => y.YearQuarterID == section.joinedData.sectionData.YearQuarterID)
+							  																									            .Select(y => y.FirstClassDay)
+																																            .FirstOrDefault(),
+
 					                   	});
 			Debug.Print("==> Created [{0}] Sections.  {1}", sections.Count(), DateTime.Now);
 			Debug.Flush();
