@@ -15,6 +15,7 @@
 //If not, see <http://www.gnu.org/licenses/>.
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using Ctc.Ods.Data;
 using Ctc.Ods.Tests.ClassDataFilterTests;
@@ -544,6 +545,84 @@ namespace Ctc.Ods.Tests
 			int count = sections.Count;
 			int areTelecourse = sections.Where(s => s.IsTelecourse).Count();
 			Assert.AreEqual(count, areTelecourse);
+		}
+
+		/// <summary>
+		/// 
+		///</summary>
+		[TestMethod]
+		public void GetSections_VerifyHasLinkedClasses()
+		{
+			IList<ISectionFacet> facets = TestHelper.GetFacets();
+
+			using (OdsRepository repository = new OdsRepository())
+			{
+				IList<Section> sections = repository.GetSections(facets);
+
+				int actual = _dataVerifier.GetSectionCount("ItemNumber in (select c.ItemYRQLink from vw_Class c where c.ItemYRQLink <> c.ItemNumber and c.ItemYRQLink = vw_Class.ItemNumber and c.YearQuarterID = vw_Class.YearQuarterID)");
+				int expected = sections.Where(s => s.HasLinked).Count();
+
+				Assert.AreEqual(expected, actual);
+			}
+		}
+
+		/// <summary>
+		/// 
+		///</summary>
+		[TestMethod]
+		public void GetSections_VerifyIsLinkedClasses()
+		{
+			IList<ISectionFacet> facets = TestHelper.GetFacets();
+
+			using (OdsRepository repository = new OdsRepository())
+			{
+				IList<Section> sections = repository.GetSections(facets);
+
+				int actual = _dataVerifier.GetSectionCount("ItemYRQLink <> ItemNumber");
+				int expected = sections.Where(s => s.IsLinked).Count();
+
+				Assert.AreEqual(expected, actual);
+			}
+		}
+
+		/// <summary>
+		/// 
+		///</summary>
+		[TestMethod]
+		public void GetSections_VerifyLinkedClassesCounts()
+		{
+			IList<ISectionFacet> facets = TestHelper.GetFacets();
+
+			using (OdsRepository repository = new OdsRepository())
+			{
+				IList<Section> sections = repository.GetSections(facets).Where(s => s.HasLinked).ToList();
+
+				using (DbDataReader rs = _dataVerifier.ExecuteReader(
+							@"select
+								c2.ClassID
+								,c2.CourseID
+								,c2.CourseTitle
+								,(select COUNT(*) from vw_Class c where c.ItemYRQLink <> c.ItemNumber and c.ItemYRQLink = c2.ItemNumber and c.YearQuarterID = c2.YearQuarterID) as Linked
+							from vw_Class c2
+							where c2.ItemNumber in (select c.ItemYRQLink from vw_Class c where c.ItemYRQLink <> c.ItemNumber and c.ItemYRQLink = c2.ItemNumber and c.YearQuarterID = c2.YearQuarterID)"
+				))
+				{
+					if (rs.HasRows)
+					{
+						Assert.IsTrue(sections.Count > 0);
+
+						while (rs.Read())
+						{
+							int actual = int.Parse(rs["Linked"].ToString().Trim());
+							string classID = rs["ClassID"].ToString().Trim();
+
+							int expected = sections.Where(s => s.ID.Equals(classID)).Select(s => s.LinkedSections).Count();
+
+							Assert.AreEqual(expected, actual);
+						}
+					}
+				}
+			}
 		}
 
 

@@ -87,6 +87,11 @@ namespace Ctc.Ods.Types
 		/// <summary>
 		/// 
 		/// </summary>
+		public IEnumerable<string> LinkedSections{get;protected internal set;}
+
+		/// <summary>
+		/// 
+		/// </summary>
 		[DataMember]
 		public YearQuarter Yrq { get; protected internal set; }
 
@@ -142,6 +147,16 @@ namespace Ctc.Ods.Types
         /// </summary>
         [DataMember]
         public bool IsLateStart { get; protected internal set; }
+
+		///<summary>
+		///</summary>
+		public bool HasLinked{get; protected internal set;}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool IsLinked{get; protected internal set;}
+
 
 		#region Properties mapped to data columns
 		/// <summary>

@@ -331,6 +331,32 @@ namespace Ctc.Ods.Tests
 			}
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="sql"></param>
+		/// <returns></returns>
+		public DbDataReader ExecuteReader(string sql)
+		{
+			string fullSql = string.Format("{0} {1} {2}", sql, _sectionFilter, _yrqFilter);
+			try
+			{
+				if (_conn.State != ConnectionState.Open) {
+					_conn.Open();
+				}
+
+				using (DbCommand cmd = _conn.CreateCommand())
+				{
+					cmd.CommandText = fullSql;
+					return cmd.ExecuteReader();
+				}
+			}
+			catch (SqlException ex)
+			{
+				throw new DataException(String.Format("An error occurred while attempting execute the following SQL: \"{0}\"", sql), ex);
+			}
+		}
+
 		#region Helper methods
 		private string ExecuteScalar(string sql)
 		{
@@ -373,7 +399,7 @@ namespace Ctc.Ods.Tests
 		{
 			if (disposing)
 			{
-				if (_conn != null && _conn.State != ConnectionState.Closed)
+				if (_conn != null && _conn.State == ConnectionState.Open)
 				{
 					_conn.Close();
 				}
