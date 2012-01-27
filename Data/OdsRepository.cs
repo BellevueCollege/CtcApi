@@ -660,6 +660,12 @@ namespace Ctc.Ods.Data
 					                   					        																						Room = i.Room,
 																																													_SessionSequence = i.SessionSequence ?? "00"
 					                   					        																				}),
+																	IsLinked = section.joinedData.sectionData.ItemYRQLink != null && section.joinedData.sectionData.ItemYRQLink != section.joinedData.sectionData.ItemNumber,
+																	LinkedTo = section.joinedData.sectionData.ItemYRQLink,
+																	//LinkedSections = _DbContext.Sections.Where(s => (s.ItemYRQLink ?? string.Empty) != (s.ItemNumber ?? string.Empty)
+																	//                                             && (s.ItemYRQLink ?? string.Empty) == (section.joinedData.sectionData.ItemNumber ?? string.Empty) 
+																	//                                             && (s.YearQuarterID ?? string.Empty) == (section.joinedData.sectionData.YearQuarterID ?? string.Empty))
+																	//                                    .Select(s => s.ClassID),
 																	_Footnote1 = section.joinedData.Footnote1 ?? string.Empty,
 																	_Footnote2 = section.Footnote2 ?? string.Empty,
 																	_CourseDescriptions1 =  _DbContext.CourseDescriptions1.Where(d => d.CourseID == section.joinedData.sectionData.CourseID),

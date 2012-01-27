@@ -44,6 +44,16 @@ namespace Ctc.Ods.Data
 		/// <summary>
 		/// 
 		/// </summary>
+		public string ItemNumber{get;set;}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public string ItemYRQLink{get;set;}
+
+		/// <summary>
+		/// 
+		/// </summary>
 		public string ClusterItemNumber{get;set;}
 
 		///<summary>
@@ -170,7 +180,6 @@ namespace Ctc.Ods.Data
 		/// 
 		/// </summary>
 		public string FootnoteID2 { get; set; }
-
 		#endregion
 	}
 }

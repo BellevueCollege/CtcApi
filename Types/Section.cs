@@ -46,6 +46,7 @@ namespace Ctc.Ods.Types
 		private IList<CourseDescription> _courseDescriptions;
 		private IList<string> _footnotes;
 		private RegexSettings _validationPatterns;
+		private int _linkedSectionCount = -1;
 
 		#region Public members
 
@@ -84,10 +85,10 @@ namespace Ctc.Ods.Types
 			protected internal set { _courseDescriptions = value; }
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public IEnumerable<string> LinkedSections{get;protected internal set;}
+		///// <summary>
+		///// 
+		///// </summary>
+		//public IEnumerable<string> LinkedSections{get;protected internal set;}
 
 		/// <summary>
 		/// 
@@ -148,14 +149,34 @@ namespace Ctc.Ods.Types
         [DataMember]
         public bool IsLateStart { get; protected internal set; }
 
-		///<summary>
-		///</summary>
-		public bool HasLinked{get; protected internal set;}
+		/////<summary>
+		/////</summary>
+		//public bool HasLinked
+		//{
+		//  get
+		//  {
+		//    if (_linkedSectionCount < 0)
+		//    {
+		//      _linkedSectionCount = (LinkedSections != null ? LinkedSections.Count() : 0);
+		//    }
+
+		//    return _linkedSectionCount > 0;
+		//  }
+		//}
 
 		/// <summary>
 		/// 
 		/// </summary>
 		public bool IsLinked{get; protected internal set;}
+
+		/// <summary>
+		/// An <see cref="SectionID.ItemNumber"/> identifying another <see cref="Section"/> that this <see cref="Section"/> is linked to
+		/// </summary>
+		/// <remarks>
+		/// <para>Only classes in the same <see cref="YearQuarter"/> can be linked.</para>
+		/// <para>If the current <see cref="Section"/> is not linked to another, then its own <see cref="SectionID.ItemNumber"/> may appear here.</para>
+		/// </remarks>
+		public string LinkedTo{get; protected internal set;}
 
 
 		#region Properties mapped to data columns
@@ -416,7 +437,6 @@ namespace Ctc.Ods.Types
 				// ReSharper restore PossibleNullReferenceException
 			}
 		}
-
 		#endregion
 
 		#region Equality methods
