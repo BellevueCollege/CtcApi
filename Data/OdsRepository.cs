@@ -87,8 +87,9 @@ namespace Ctc.Ods.Data
 		#endregion
 
 		/// <summary>
-		/// 
+		/// Creates a new Repository instance for accessing data from the ODS
 		/// </summary>
+		/// <seealso cref="ApiSettings"/>
 		public OdsRepository()
 		{
 			Debug.Print("==> instantiating OdsRepository()...");
@@ -97,9 +98,14 @@ namespace Ctc.Ods.Data
 		}
 
 		/// <summary>
-		/// 
+		/// Creates a new Repository instance for accessing data from the ODS
 		/// </summary>
-		/// <param name="context"></param>
+		/// <param name="context">
+		///		The <see cref="HttpContextBase">HttpContext</see> of the calling application. This can be used
+		///		to obtain information about the currently executing context, store information in context-based
+		///		<i>state bags</i>, etc.
+		/// </param>
+		/// <seealso cref="ApiSettings"/>
 		public OdsRepository(HttpContextBase context) : this()
 		{
 			_httpContext = context;
@@ -109,6 +115,7 @@ namespace Ctc.Ods.Data
 		/// <summary>
 		/// Gets the current <see cref="YearQuarter"/> for today's date
 		/// </summary>
+		/// <seealso cref="ApiSettings.YearQuarter"/>
 		public YearQuarter CurrentYearQuarter
 		{
 			get
@@ -122,10 +129,26 @@ namespace Ctc.Ods.Data
 		}
 
 		/// <summary>
+		/// Gets the current registration <see cref="YearQuarter"/>for today's date
+		/// </summary>
+		/// <returns>The nearest <see cref="YearQuarter"/> that is currently open for registration.</returns>
+		/// <seealso cref="GetRegistrationQuarters"/>
+		/// <seealso cref="ApiSettings.YearQuarter"/>
+		public YearQuarter CurrentRegistrationQuarter
+		{
+			get
+			{
+				return GetRegistrationQuarters()[0];
+			}
+		}
+
+		/// <summary>
 		/// Gets a list of <see cref="YearQuarter"/>s, starting with the current registration quarter
 		/// </summary>
 		/// <param name="count">Total number of <see cref="YearQuarter"/>s to return.</param>
 		/// <returns>A list of <see cref="YearQuarter"/> objects, with the first being the current registration quarter.</returns>
+		/// <seealso cref="CurrentRegistrationQuarter"/>
+		/// <seealso cref="ApiSettings.YearQuarter"/>
 		public IList<YearQuarter> GetRegistrationQuarters(int count = 1)
 		{
 			// LINQ for EF only supports primitive variables
@@ -150,8 +173,6 @@ namespace Ctc.Ods.Data
 																						ID = q.YearQuarterID
 																					}).ToList();
 		}
-
-		// TODO: Implement a GetCurrentRegistrationQuarter property, which returns just the current registration quarter
 
 		#endregion
 
@@ -662,10 +683,6 @@ namespace Ctc.Ods.Data
 					                   					        																				}),
 																	IsLinked = section.joinedData.sectionData.ItemYRQLink != null && section.joinedData.sectionData.ItemYRQLink != section.joinedData.sectionData.ItemNumber,
 																	LinkedTo = section.joinedData.sectionData.ItemYRQLink,
-																	//LinkedSections = _DbContext.Sections.Where(s => (s.ItemYRQLink ?? string.Empty) != (s.ItemNumber ?? string.Empty)
-																	//                                             && (s.ItemYRQLink ?? string.Empty) == (section.joinedData.sectionData.ItemNumber ?? string.Empty) 
-																	//                                             && (s.YearQuarterID ?? string.Empty) == (section.joinedData.sectionData.YearQuarterID ?? string.Empty))
-																	//                                    .Select(s => s.ClassID),
 																	_Footnote1 = section.joinedData.Footnote1 ?? string.Empty,
 																	_Footnote2 = section.Footnote2 ?? string.Empty,
 																	_CourseDescriptions1 =  _DbContext.CourseDescriptions1.Where(d => d.CourseID == section.joinedData.sectionData.CourseID),
