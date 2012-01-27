@@ -163,6 +163,12 @@ namespace Ctc.Ods.Types
 		public string LinkedTo { get; protected internal set; }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        [DataMember]
+        public bool IsDifferentEndDate { get; protected internal set; }
+
 		#region Properties mapped to data columns
 		/// <summary>
 		/// 
@@ -258,6 +264,20 @@ namespace Ctc.Ods.Types
 				}
 			}
 		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        internal bool? _DifferentEndDate
+        {
+            set
+            {
+                if (value != null)
+                {
+                    IsDifferentEndDate = (bool)value;
+                }
+            }
+        }
 
 		/// <summary>
 		/// 
