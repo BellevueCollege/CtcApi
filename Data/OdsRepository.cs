@@ -693,6 +693,9 @@ namespace Ctc.Ods.Data
                                                                     _LateStart = section.joinedData.sectionData.StartDate > _DbContext.YearQuarters.Where(y => y.YearQuarterID == section.joinedData.sectionData.YearQuarterID)
 							  																									            .Select(y => y.FirstClassDay)
 																																            .FirstOrDefault(),
+                                                                    _DifferentEndDate = section.joinedData.sectionData.EndDate != _DbContext.YearQuarters.Where(y => y.YearQuarterID == section.joinedData.sectionData.YearQuarterID)
+                                                                                                                                            .Select(y => y.LastClassDay)
+                                                                                                                                            .FirstOrDefault(),
 
 					                   	});
 			Debug.Print("==> Created [{0}] Sections.  {1}", sections.Count(), DateTime.Now);
