@@ -23,14 +23,17 @@ using Ctc.Ods.Data;
 
 namespace Ctc.Ods.Types
 {
-	// TODO: lock down setters so that they are not public
-	// The class schedule app needs to be able to set many of these when it sub-classes Section, so I'm thinking
-	// about making them protected, and then a set of internal properties (with leading underscores) so the repository
-	// can also set their values. 8/03/2011, shawn.south@bellevuecollege.edu
-
 	/// <summary>
-	/// Defines an instance of a college class (<see cref="Course"/>)
+	/// Defines an instance of a college class (i.e. <see cref="Course"/>)
 	/// </summary>
+	/// <remarks>
+	/// A <see cref="Section"/> provides a rich, heirarchical represenation of the data found in
+	/// the <i>vw_Class</i> view of the ODS. This allows the .NET developer to work with a logical
+	/// object rather than being limited by the schematic designs of the HP3000 data source.
+	/// 
+	/// To obtain one or more <see cref="Section"/> objects use the <see cref="OdsRepository"/>
+	/// </remarks>
+	/// <seealso cref="OdsRepository"/>
 	[DataContract]
 	public class Section : ISection
 	{
@@ -38,7 +41,7 @@ namespace Ctc.Ods.Types
 		private string _onlineFlag;
 		private string _hybridFlag;
 		private string _telecourseFlag;
-        private string _continuousEnrollmentFlag;
+		private string _continuousEnrollmentFlag;
 
 		private string _courseTitle;
 		private string _classID;
@@ -46,13 +49,14 @@ namespace Ctc.Ods.Types
 		private IList<CourseDescription> _courseDescriptions;
 		private IList<string> _footnotes;
 		private RegexSettings _validationPatterns;
-		private int _linkedSectionCount = -1;
 
 		#region Public members
 
 		/// <summary>
-		/// 
+		/// Gets the unique identifier for the <see cref="Section"/>
 		/// </summary>
+		/// <seealso cref="ISectionID"/>
+		/// <seealso cref="SectionID"/>
 		public ISectionID ID { get; protected internal set; }
 
 		/// <summary>
@@ -85,28 +89,23 @@ namespace Ctc.Ods.Types
 			protected internal set { _courseDescriptions = value; }
 		}
 
-		///// <summary>
-		///// 
-		///// </summary>
-		//public IEnumerable<string> LinkedSections{get;protected internal set;}
-
 		/// <summary>
 		/// 
 		/// </summary>
 		[DataMember]
 		public YearQuarter Yrq { get; protected internal set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        [DataMember]
-        public DateTime? StartDate { get; protected internal set; }
+		/// <summary>
+		/// 
+		/// </summary>
+		[DataMember]
+		public DateTime? StartDate { get; protected internal set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        [DataMember]
-        public DateTime? EndDate { get; protected internal set; }
+		/// <summary>
+		/// 
+		/// </summary>
+		[DataMember]
+		public DateTime? EndDate { get; protected internal set; }
 
 		/// <summary>
 		/// 
@@ -131,43 +130,28 @@ namespace Ctc.Ods.Types
 		[DataMember]
 		public bool IsHybrid { get; protected internal set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        [DataMember]
-        public bool IsContinuousEnrollment { get; protected internal set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [DataMember]
-        public bool IsVariableCredits { get; protected internal set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [DataMember]
-        public bool IsLateStart { get; protected internal set; }
-
-		/////<summary>
-		/////</summary>
-		//public bool HasLinked
-		//{
-		//  get
-		//  {
-		//    if (_linkedSectionCount < 0)
-		//    {
-		//      _linkedSectionCount = (LinkedSections != null ? LinkedSections.Count() : 0);
-		//    }
-
-		//    return _linkedSectionCount > 0;
-		//  }
-		//}
+		/// <summary>
+		/// 
+		/// </summary>
+		[DataMember]
+		public bool IsContinuousEnrollment { get; protected internal set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public bool IsLinked{get; protected internal set;}
+		[DataMember]
+		public bool IsVariableCredits { get; protected internal set; }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[DataMember]
+		public bool IsLateStart { get; protected internal set; }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool IsLinked { get; protected internal set; }
 
 		/// <summary>
 		/// An <see cref="SectionID.ItemNumber"/> identifying another <see cref="Section"/> that this <see cref="Section"/> is linked to
@@ -176,7 +160,7 @@ namespace Ctc.Ods.Types
 		/// <para>Only classes in the same <see cref="YearQuarter"/> can be linked.</para>
 		/// <para>If the current <see cref="Section"/> is not linked to another, then its own <see cref="SectionID.ItemNumber"/> may appear here.</para>
 		/// </remarks>
-		public string LinkedTo{get; protected internal set;}
+		public string LinkedTo { get; protected internal set; }
 
 
 		#region Properties mapped to data columns
@@ -230,50 +214,50 @@ namespace Ctc.Ods.Types
 			}
 		}
 
-        /// <summary>
-        /// 
-        /// </summary>
-        internal string _ContinuousSequentialIndicator
-        {
-            set
-            {
-                if (!string.IsNullOrWhiteSpace(value))
-                {
-                    if (value.StartsWith(_continuousEnrollmentFlag))
-                    {
-                        IsContinuousEnrollment = true;
-                    }
-                }
-            }
-        }
+		/// <summary>
+		/// 
+		/// </summary>
+		internal string _ContinuousSequentialIndicator
+		{
+			set
+			{
+				if (!string.IsNullOrWhiteSpace(value))
+				{
+					if (value.StartsWith(_continuousEnrollmentFlag))
+					{
+						IsContinuousEnrollment = true;
+					}
+				}
+			}
+		}
 
-        /// <summary>
-        /// 
-        /// </summary>
-        internal bool? _VariableCredits
-        {
-            set
-            {
-                if (value != null)
-                {
-                    IsVariableCredits = (bool)value;
-                }
-            }
-        }
+		/// <summary>
+		/// 
+		/// </summary>
+		internal bool? _VariableCredits
+		{
+			set
+			{
+				if (value != null)
+				{
+					IsVariableCredits = (bool)value;
+				}
+			}
+		}
 
-        /// <summary>
-        /// 
-        /// </summary>
-        internal bool? _LateStart
-        {
-            set
-            {
-                if (value != null)
-                {
-                    IsLateStart = (bool)value;
-                }
-            }
-        }
+		/// <summary>
+		/// 
+		/// </summary>
+		internal bool? _LateStart
+		{
+			set
+			{
+				if (value != null)
+				{
+					IsLateStart = (bool)value;
+				}
+			}
+		}
 
 		/// <summary>
 		/// 
@@ -300,7 +284,7 @@ namespace Ctc.Ods.Types
 				}
 				if (_footnotes.Count <= 0)
 				{
-					foreach (string footnote in new[] {_Footnote1, _Footnote2})
+					foreach (string footnote in new[] { _Footnote1, _Footnote2 })
 					{
 						if (!string.IsNullOrWhiteSpace(footnote))
 						{
@@ -310,7 +294,7 @@ namespace Ctc.Ods.Types
 				}
 				return _footnotes;
 			}
-			protected set {_footnotes = value.ToList();}
+			protected set { _footnotes = value.ToList(); }
 		}
 
 		/// <summary>
@@ -387,7 +371,7 @@ namespace Ctc.Ods.Types
 			_onlineFlag = _settings.ClassFlags.Online ?? string.Empty;
 			_hybridFlag = _settings.ClassFlags.Hybrid ?? string.Empty;
 			_telecourseFlag = _settings.ClassFlags.Telecourse ?? string.Empty;
-            _continuousEnrollmentFlag = _settings.ClassFlags.ContinuousEnrollment ?? string.Empty;
+			_continuousEnrollmentFlag = _settings.ClassFlags.ContinuousEnrollment ?? string.Empty;
 		}
 
 		/// <summary>
