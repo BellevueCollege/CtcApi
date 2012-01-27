@@ -112,6 +112,9 @@ namespace Ctc.Ods.Config
 		/// <seealso cref="RegexSettings"/>
 		[XmlElement(ElementName = "regex")]
 		public RegexSettings RegexPatterns { get;set;}
+
+        [XmlElement(ElementName = "sectionDaysDefault")]
+        public DefaultCourseDaysValue SectionDaysDefault { get; set; }
 	}
 
 
@@ -335,6 +338,13 @@ namespace Ctc.Ods.Config
 		[XmlAttribute("CommonCourseChar")]
 		public string CommonCourseChar {get;set;}
 	}
+
+    [XmlType("sectionDaysDefault")]
+    public class DefaultCourseDaysValue
+    {
+        [XmlAttribute("value")]
+        public string Value { get; set; }
+    }
 
 	#region Enumerations
 	/// <summary>

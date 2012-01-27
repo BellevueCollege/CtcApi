@@ -630,6 +630,7 @@ namespace Ctc.Ods.Data
 			// NOTE: Linq to Entities can't handle values more complex than simple data types
 			// TODO: encapsulate config settings in a handler class
 			string emailDomain = ConfigurationManager.AppSettings["EmailDomain"];
+            string defaultSectionDays = Settings.SectionDaysDefault.Value;
 			string waitlistStatus = Settings.Waitlist.Status;
 
 			// construct the Section object we will pass back to the caller
@@ -664,7 +665,7 @@ namespace Ctc.Ods.Data
 					                   					        																						Days = _DbContext.Days.Where(d => d.DayID == i.DayID)
 					                   					        																																	.Select(d => d.Title)
 					                   					        																																	// TODO: make this default value configurable
-					                   					        																																	.DefaultIfEmpty("ARRANGED")
+                                                                                                                                                                                                    .DefaultIfEmpty(defaultSectionDays)
 					                   					        																																	.FirstOrDefault(),
 					                   					        																						StartTime = i.StartTime,
 					                   					        																						EndTime = i.EndTime,
