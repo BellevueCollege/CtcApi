@@ -114,7 +114,7 @@ namespace Ctc.Ods.Config
 		public RegexSettings RegexPatterns { get;set;}
 
         [XmlElement(ElementName = "sectionDaysDefault")]
-        public DefaultCourseDaysValue SectionDaysDefault { get; set; }
+        public DefaultSectionDaysValue SectionDaysDefault { get; set; }
 	}
 
 
@@ -339,11 +339,25 @@ namespace Ctc.Ods.Config
 		public string CommonCourseChar {get;set;}
 	}
 
+    /// <summary>
+    /// Used to find a particular value that is used as a default in ODS, and replace it with
+    /// a new value. Sections with no scheduled days might default to "ARRANGED," but in many
+    /// situations you might want to replace this value with something more application specific
+    /// </summary>
     [XmlType("sectionDaysDefault")]
-    public class DefaultCourseDaysValue
+    public class DefaultSectionDaysValue
     {
-        [XmlAttribute("value")]
-        public string Value { get; set; }
+        /// <summary>
+        /// The old "default" in the ODS to find
+        /// </summary>
+        [XmlAttribute("valueToReplace")]
+        public string ValueToFind { get; set; }
+
+        /// <summary>
+        /// The new default value
+        /// </summary>
+        [XmlAttribute("newValue")]
+        public string NewValue { get; set; }
     }
 
 	#region Enumerations
