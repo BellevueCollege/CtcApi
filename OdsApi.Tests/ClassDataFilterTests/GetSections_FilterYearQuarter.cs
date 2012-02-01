@@ -67,13 +67,13 @@ namespace Ctc.Ods.Tests.ClassDataFilterTests
         [TestMethod]
         public void GetSections_B121_Success()
         {
-            IList<YearQuarter> yearQuartersToFilter = new List<YearQuarter>();
-            yearQuartersToFilter.Add(YearQuarter.FromString("B121"));
+          IList<YearQuarter> yearQuartersToFilter = new List<YearQuarter>();
+          yearQuartersToFilter.Add(YearQuarter.FromString("B121"));
 
-            int returnedCount = TestHelper.GetSectionCountWithFilter(new YearQuarterFacet(yearQuartersToFilter), false);
-            int actualCount = GetSectionCountForQuarters("B121");
+          int returnedCount = TestHelper.GetSectionCountWithFilter(new YearQuarterFacet(yearQuartersToFilter), false);
+        	int actualCount = _dataVerifier.GetSectionCount(string.Format("YearQuarterID = '{0}'", yearQuartersToFilter[0].ID));
 
-            Assert.AreEqual(actualCount, returnedCount);
+           Assert.AreEqual(actualCount, returnedCount);
         }
 
         /// <summary>
@@ -95,22 +95,25 @@ namespace Ctc.Ods.Tests.ClassDataFilterTests
         [TestMethod]
         public void GetSections_ThreeQuarters_Success()
         {
-            IList<YearQuarter> yearQuartersToFilter = new List<YearQuarter>();
-            yearQuartersToFilter.Add(YearQuarter.FromString("B014"));
-            yearQuartersToFilter.Add(YearQuarter.FromString("B121"));
-            yearQuartersToFilter.Add(YearQuarter.FromString("B122"));
+					IList<YearQuarter> yearQuartersToFilter = new List<YearQuarter>();
+					yearQuartersToFilter.Add(YearQuarter.FromString("B014"));
+					yearQuartersToFilter.Add(YearQuarter.FromString("B121"));
+					yearQuartersToFilter.Add(YearQuarter.FromString("B122"));
 
-            int returnedCount = TestHelper.GetSectionCountWithFilter(new YearQuarterFacet(yearQuartersToFilter), false);
-            int actualCount = GetSectionCountForQuarters("B014") + GetSectionCountForQuarters("B121") + GetSectionCountForQuarters("B122");
+          int returnedCount = TestHelper.GetSectionCountWithFilter(new YearQuarterFacet(yearQuartersToFilter));
+        	int actualCount = _dataVerifier.GetSectionCount(string.Format("YearQuarterID in ('{0}', '{1}', '{2}')",
+        																																yearQuartersToFilter[0].ID,
+																																				yearQuartersToFilter[1].ID,
+        																																yearQuartersToFilter[2].ID));
 
-            Assert.AreEqual(actualCount, returnedCount);
+          Assert.AreEqual(actualCount, returnedCount);
         }
         #endregion
 
         #region Private Helpers
         private int GetSectionCountForQuarters(string yrq)
         {
-            return _dataVerifier.GetSectionCount(string.Format("YearQuarterID in (select d.YearQuarterID from vw_YearQuarter d where d.YearQuarterID = '{0}')", yrq));
+            return _dataVerifier.GetSectionCount(string.Format("YearQuarterID = '{0}'", yrq));
         }
         #endregion
     }

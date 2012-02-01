@@ -464,7 +464,7 @@ namespace Ctc.Ods.Tests
 		{
 			using (OdsRepository repository = new OdsRepository())
 			{
-				YearQuarter yrq = YearQuarter.FromString("B014");
+				YearQuarter yrq = YearQuarter.FromString("B124");
 				string courseId = "ART 101";
 
 				IList<Section> sections = repository.GetSections(CourseID.FromString(courseId), yrq, TestHelper.GetFacets());
