@@ -111,10 +111,21 @@ namespace Ctc.Ods.Config
 		/// </summary>
 		/// <seealso cref="RegexSettings"/>
 		[XmlElement(ElementName = "regex")]
-		public RegexSettings RegexPatterns { get;set;}
+		public RegexSettings RegexPatterns { get;set; }
 
+        /// <summary>
+        /// When no class days are specified for a section, this element
+        /// defines the default value that will be listed on the class
+        /// schedule (ex: "Arranged").
+        /// </summary>
         [XmlElement(ElementName = "sectionDaysDefault")]
-        public DefaultSectionDaysValue SectionDaysDefault { get; set; }
+        public DefaultSectionDaysNode SectionDaysDefault { get;set; }
+
+        /// <summary>
+        /// Defines the definition of a "late start" course.
+        /// </summary>
+        [XmlElement(ElementName = "lateStartDefinition")]
+        public LateStartDefinitionNode lateStartDefinition { get;set; }
 	}
 
 
@@ -345,7 +356,7 @@ namespace Ctc.Ods.Config
     /// situations you might want to replace this value with something more application specific
     /// </summary>
     [XmlType("sectionDaysDefault")]
-    public class DefaultSectionDaysValue
+    public class DefaultSectionDaysNode
     {
         /// <summary>
         /// The old "default" in the ODS to find
@@ -358,6 +369,19 @@ namespace Ctc.Ods.Config
         /// </summary>
         [XmlAttribute("newValue")]
         public string NewValue { get; set; }
+    }
+
+    /// <summary>
+    /// Sets up the definition of a "late start" section.
+    /// </summary>
+    [XmlType("lateStartDefinition")]
+    public class LateStartDefinitionNode
+    {
+        /// <summary>
+        /// Defines how many days after the start of a quarter a class needs to start in order to be called a "Late Start" class.
+        /// </summary>
+        [XmlAttribute("daysCount")]
+        public ushort LateStartDays { get; set; }
     }
 
 	#region Enumerations
