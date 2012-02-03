@@ -18,6 +18,8 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Ctc.Ods.Config;
+using System.Configuration;
 
 namespace Ctc.Ods.Tests.ClassDataFilterTests
 {
@@ -86,9 +88,13 @@ namespace Ctc.Ods.Tests.ClassDataFilterTests
 		[TestMethod]
 		public void GetSections_LateStart_Success()
 		{
-			string whereClause = "NOT StartDate IS NULL AND dateadd(day, -8, StartDate) >= (select top 1 yq.FirstClassDay from vw_YearQuarter yq where yq.YearQuarterID = Vw_Class.YearQuarterID)";
+            ApiSettings settings = (ApiSettings)ConfigurationManager.GetSection(ApiSettings.SectionName);
+            ushort daysCount = settings.lateStartDefinition.LateStartDays;
 
-			int count = TestHelper.GetSectionCountWithFilter(new LateStartFacet(8));
+			string whereClause = String.Format("NOT StartDate IS NULL AND dateadd(day, -{0}, StartDate) >= (select top 1 yq.FirstClassDay from vw_YearQuarter yq where yq.YearQuarterID = Vw_Class.YearQuarterID)", daysCount);
+ 
+            
+            int count = TestHelper.GetSectionCountWithFilter(new LateStartFacet(daysCount));
 
 			int allSectionCount = _dataVerifier.AllSectionsCount;
 			Assert.IsTrue(allSectionCount > count);
