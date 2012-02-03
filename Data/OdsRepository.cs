@@ -630,8 +630,11 @@ namespace Ctc.Ods.Data
 			// NOTE: Linq to Entities can't handle values more complex than simple data types
 			// TODO: encapsulate config settings in a handler class
 			string emailDomain = ConfigurationManager.AppSettings["EmailDomain"];
-            DefaultSectionDaysValue defaultDaysValue = Settings.SectionDaysDefault;
+            DefaultSectionDaysNode defaultDaysValue = Settings.SectionDaysDefault;
 			string waitlistStatus = Settings.Waitlist.Status;
+
+            ApiSettings settings = new ApiSettings();
+            TimeSpan lateStart = new TimeSpan(settings.lateStartDefinition.LateStartDays, 0, 0, 0);
 
 			// construct the Section object we will pass back to the caller
 			IQueryable<Section> sections = _DbContext.Set<SectionEntity>().CompoundWhere(filters.FilterArray)
@@ -691,7 +694,7 @@ namespace Ctc.Ods.Data
                                                                     _ContinuousSequentialIndicator = section.joinedData.sectionData.ContinuousSequentialIndicator,
                                                                     _VariableCredits = section.joinedData.sectionData.VariableCredits,
                                                                     _LateStart = section.joinedData.sectionData.StartDate > _DbContext.YearQuarters.Where(y => y.YearQuarterID == section.joinedData.sectionData.YearQuarterID)
-							  																									            .Select(y => y.FirstClassDay)
+                                                                                                                                            .Select(y => y.FirstClassDay.Add(lateStart))
 																																            .FirstOrDefault(),
                                                                     _DifferentEndDate = section.joinedData.sectionData.EndDate != _DbContext.YearQuarters.Where(y => y.YearQuarterID == section.joinedData.sectionData.YearQuarterID)
                                                                                                                                             .Select(y => y.LastClassDay)
