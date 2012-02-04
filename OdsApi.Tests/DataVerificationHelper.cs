@@ -399,7 +399,7 @@ namespace Ctc.Ods.Tests
 		{
 			if (disposing)
 			{
-				if (_conn != null && _conn.State == ConnectionState.Open)
+				if (_conn != null && _conn.State != ConnectionState.Closed)
 				{
 					_conn.Close();
 				}
