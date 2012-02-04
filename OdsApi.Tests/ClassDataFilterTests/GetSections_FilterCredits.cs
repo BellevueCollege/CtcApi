@@ -14,6 +14,7 @@
 //License and GNU General Public License along with this program.
 //If not, see <http://www.gnu.org/licenses/>.
 using System;
+using System.Collections;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,6 +58,22 @@ namespace Ctc.Ods.Tests.ClassDataFilterTests
                 testContextInstance = value;
             }
         }
+
+    	/// <summary>
+    	/// 
+    	///</summary>
+    	[TestMethod]
+    	public void GetSections_Verify_IsVariableCredits_Flag()
+    	{
+    		IList<Section> sections = TestHelper.GetSectionsWithFilter(new YearQuarterFacet(YearQuarter.FromString("B123")));
+    		IList<Section> engl = sections.Where(s => s.CourseSubject.ToUpper() == "ENGL" && s.CourseNumber == "299").ToList();
+
+				int actual = sections.Where(s => s.IsVariableCredits).Count();
+				Assert.IsTrue(actual > 0, "No Sections have their IsVariableCredits flag set.");
+
+    		int expected = _dataVerifier.GetSectionCount("isnull(VariableCredits, 0) <> 0 and YearQuarterID = 'B123'");
+    		Assert.AreEqual(expected, actual);
+    	}
 
         /// <summary>
         /// 
