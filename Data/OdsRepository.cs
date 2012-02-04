@@ -630,11 +630,10 @@ namespace Ctc.Ods.Data
 			// NOTE: Linq to Entities can't handle values more complex than simple data types
 			// TODO: encapsulate config settings in a handler class
 			string emailDomain = ConfigurationManager.AppSettings["EmailDomain"];
-            DefaultSectionDaysNode defaultDaysValue = Settings.SectionDaysDefault;
+      DefaultSectionDaysNode defaultDaysValue = Settings.SectionDaysDefault;
 			string waitlistStatus = Settings.Waitlist.Status;
 
-            ApiSettings settings = new ApiSettings();
-            TimeSpan lateStart = new TimeSpan(settings.lateStartDefinition.LateStartDays, 0, 0, 0);
+      ushort lateStart = Settings.lateStartDefinition.LateStartDays;
 
 			// construct the Section object we will pass back to the caller
 			IQueryable<Section> sections = _DbContext.Set<SectionEntity>().CompoundWhere(filters.FilterArray)
@@ -648,8 +647,8 @@ namespace Ctc.Ods.Data
 					                   	{
 					                   			ClassID = section.joinedData.sectionData.ClassID,
 					                   			CourseID = section.joinedData.sectionData.CourseID,
-																	// NOTE: This is Bellevue College logic. If different logic is desired, we should move this to the Section class
 																	// use CourseTitle2 from the Course table, otherwise fall back to CourseTitle, then the course title from the Section (i.e. Class) table
+																	// NOTE: This is Bellevue College logic. If different logic is desired, we should move this to the Section class
 																	_CourseTitle = _DbContext.Courses.Where(c => c.CourseID == section.joinedData.sectionData.CourseID && c.YearQuarterEnd.CompareTo(section.joinedData.sectionData.YearQuarterID) > 0)
 																																	 .Select(c => c.Title2 ?? c.Title1).DefaultIfEmpty(section.joinedData.sectionData.CourseTitle).FirstOrDefault(),
 					                   			Credits = section.joinedData.sectionData.Credits,
@@ -691,14 +690,12 @@ namespace Ctc.Ods.Data
 																	_CourseDescriptions1 =  _DbContext.CourseDescriptions1.Where(d => d.CourseID == section.joinedData.sectionData.CourseID),
 																	_CourseDescriptions2 =  _DbContext.CourseDescriptions2.Where(d => d.CourseID == section.joinedData.sectionData.CourseID),
 																	_SBCTCMisc1 = section.joinedData.sectionData.SBCTCMisc1,
-                                                                    _ContinuousSequentialIndicator = section.joinedData.sectionData.ContinuousSequentialIndicator,
-                                                                    _VariableCredits = section.joinedData.sectionData.VariableCredits,
-                                                                    _LateStart = section.joinedData.sectionData.StartDate > _DbContext.YearQuarters.Where(y => y.YearQuarterID == section.joinedData.sectionData.YearQuarterID)
-                                                                                                                                            .Select(y => y.FirstClassDay.Add(lateStart))
-																																            .FirstOrDefault(),
-                                                                    _DifferentEndDate = section.joinedData.sectionData.EndDate != _DbContext.YearQuarters.Where(y => y.YearQuarterID == section.joinedData.sectionData.YearQuarterID)
-                                                                                                                                            .Select(y => y.LastClassDay)
-                                                                                                                                            .FirstOrDefault(),
+                                  _ContinuousSequentialIndicator = section.joinedData.sectionData.ContinuousSequentialIndicator,
+                                  _VariableCredits = section.joinedData.sectionData.VariableCredits,
+                                  _LateStart = SqlFunctions.DateAdd("day", (lateStart * -1), section.joinedData.sectionData.StartDate) >=
+																							_DbContext.YearQuarters.Where(y => y.YearQuarterID == section.joinedData.sectionData.YearQuarterID).Select(y => y.FirstClassDay).FirstOrDefault(),
+                                  _DifferentEndDate = section.joinedData.sectionData.EndDate !=
+																											_DbContext.YearQuarters.Where(y => y.YearQuarterID == section.joinedData.sectionData.YearQuarterID).Select(y => y.LastClassDay).FirstOrDefault(),
 
 					                   	});
 			Debug.Print("==> Created [{0}] Sections.  {1}", sections.Count(), DateTime.Now);
