@@ -20,7 +20,13 @@ namespace Ctc.Ods
 		public LateStartFacet()
 		{
       ApiSettings settings = ConfigurationManager.GetSection(ApiSettings.SectionName) as ApiSettings;
-			_days = settings.ClassFlags.LateStartDaysCount; // TODO: what happens when flag dows not exist
+			_days = settings.ClassFlags.LateStartDaysCount;
+
+			// If required setting does not exist or is set to zero
+			if (_days <= 0)
+			{
+				throw new ArgumentNullException("lateStartDaysCount", "Missing a valid value for lateStartDaysCount in the classFlags element of the configuration settings. Either the attribute does not exist, or it is not a positive non-zero integer.");
+			}
 		}
 
 		/// <summary>
