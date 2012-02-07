@@ -627,8 +627,7 @@ namespace Ctc.Ods.Data
 			string emailDomain = ConfigurationManager.AppSettings["EmailDomain"];
       DefaultSectionDaysNode defaultDaysValue = Settings.SectionDaysDefault;
 			string waitlistStatus = Settings.Waitlist.Status;
-
-      ushort lateStart = Settings.lateStartDefinition.LateStartDays;
+      ushort lateStartDays = Settings.ClassFlags.LateStartDaysCount;
 
 			// construct the Section object we will pass back to the caller
 			IQueryable<Section> sections = _DbContext.Set<SectionEntity>().CompoundWhere(filters.FilterArray)
@@ -687,7 +686,7 @@ namespace Ctc.Ods.Data
 																	_SBCTCMisc1 = section.joinedData.sectionData.SBCTCMisc1,
                                   _ContinuousSequentialIndicator = section.joinedData.sectionData.ContinuousSequentialIndicator,
                                   _VariableCredits = section.joinedData.sectionData.VariableCredits,
-                                  _LateStart = SqlFunctions.DateAdd("day", (lateStart * -1), section.joinedData.sectionData.StartDate) >=
+                                  _LateStart = SqlFunctions.DateAdd("day", (lateStartDays * -1), section.joinedData.sectionData.StartDate) >=
 																											_DbContext.YearQuarters.Where(y => y.YearQuarterID == section.joinedData.sectionData.YearQuarterID)
 																																						.Select(y => y.FirstClassDay)
 																																						.FirstOrDefault(),
