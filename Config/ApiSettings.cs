@@ -39,7 +39,7 @@ namespace Ctc.Ods.Config
 	///				
 	///				<ctcOdsApiSettings>
 	///					<regex CommonCourseChar="&amp;"/>
-	///					<yearQuarter minValue="0000" maxValue="Z999" registrationLeadDays="14"/>
+	///					<yearQuarter minValue="0000" maxValue="Z999" registrationLeadDays="14" cache="30"/>
 	///					<waitlist status="W-LISTED"/>
 	///					<classFlags online="3" hybrid="8" telecourse="1">
 	///						<rule action="exclude" column="SectionStatusID1" position="contains" value="X"/>
@@ -101,8 +101,12 @@ namespace Ctc.Ods.Config
 		public YearQuarterNode YearQuarter{get;set;}
 
 		/// <summary>
-		/// 
+		/// Provides <see cref="ApiSettings"/> related to whether or not a <see cref="Section"/> has a <i>waitlist</i>
 		/// </summary>
+		/// <remarks>
+		/// Once a <see cref="Section"/> has reached its maximum student enrollment for the quarter any additional
+		/// students registering will be placed on the waitlist instead.
+		/// </remarks>
 		[XmlElement(ElementName = "waitlist")]
 		public WaitlistNode Waitlist {get;set;}
 
@@ -113,23 +117,51 @@ namespace Ctc.Ods.Config
 		[XmlElement(ElementName = "regex")]
 		public RegexSettings RegexPatterns { get;set; }
 
-        /// <summary>
-        /// When no class days are specified for a section, this element
-        /// defines the default value that will be listed on the class
-        /// schedule (ex: "Arranged").
-        /// </summary>
-        [XmlElement(ElementName = "sectionDaysDefault")]
-        public DefaultSectionDaysNode SectionDaysDefault { get;set; }
+    /// <summary>
+    /// Provides rules for displaying a <see cref="Section"/>'s <i>Days</i> information
+    /// </summary>
+    /// <remarks>
+    ///		<para>When no class days are specified for a section, this element
+    ///		defines the default value that will be listed on the class schedule (ex: "Arranged").</para>
+		///		<code lang="xml">
+		///			<configuration>
+		///			
+		///				<configSections>
+		///					<section name="ctcOdsApiSettings" type="Ctc.Ods.Config.SettingsConfigHandler, CtcOdsApi" />
+		///				</configSections>
+		///				
+		///				<ctcOdsApiSettings>
+		///					<sectionDaysDefault valueToReplace="ARRANGED" newValue="Arranged"/>
+		///				</ctcOdsApiSettings>
+		///				
+		///			</configuration>
+		///		</code>
+    /// </remarks>
+    [XmlElement(ElementName = "sectionDaysDefault")]
+    public DefaultSectionDaysNode SectionDaysDefault { get;set; }
 
-        /// <summary>
-        /// Defines the definition of a "late start" course.
-        /// </summary>
-        [XmlElement(ElementName = "lateStartDefinition")]
-        public LateStartDefinitionNode lateStartDefinition { get;set; }
+		// TODO: Rename property to start with an upper-case letter
+    /// <summary>
+    /// Defines the definition of a "late start" course.
+    /// </summary>
+		/// <remarks>
+		///		<code lang="xml">
+		///			<configuration>
+		///			
+		///				<configSections>
+		///					<section name="ctcOdsApiSettings" type="Ctc.Ods.Config.SettingsConfigHandler, CtcOdsApi" />
+		///				</configSections>
+		///				
+		///				<ctcOdsApiSettings>
+		///					<lateStartDefinition daysCount="20"/>
+		///				</ctcOdsApiSettings>
+		///				
+		///			</configuration>
+		///		</code>
+		/// </remarks>
+    [XmlElement(ElementName = "lateStartDefinition")]
+    public LateStartDefinitionNode lateStartDefinition { get;set; }
 	}
-
-
-
 
 	///<summary>
 	/// Provides <see cref="ApiSettings"/> related to <see cref="YearQuarter"/> values
@@ -141,9 +173,24 @@ namespace Ctc.Ods.Config
 		/// The lowest allowed <see cref="YearQuarter.ID"/> value
 		///</summary>
 		/// <remarks>
-		/// This is not expected to represent a usable <see cref="YearQuarter"/> value, but rather
-		/// the smallest value that is programmatically recognized.
+		///		<para>This is not expected to represent a usable <see cref="YearQuarter"/> value, but rather
+		///		the smallest value that is programmatically recognized.</para>
+		///		<code lang="xml">
+		///			<configuration>
+		///			
+		///				<configSections>
+		///					<section name="ctcOdsApiSettings" type="Ctc.Ods.Config.SettingsConfigHandler, CtcOdsApi" />
+		///				</configSections>
+		///				
+		///				<ctcOdsApiSettings>
+		///					<yearQuarter minValue="0000"/>
+		///				</ctcOdsApiSettings>
+		///				
+		///			</configuration>
+		///		</code>
 		/// </remarks>
+		/// <seealso cref="YearQuarterNode">&gt;yearQuarter&lt;</seealso>
+		/// <seealso cref="Max">&gt;maxValue&lt;</seealso>
 		[XmlAttribute("minValue")]
 		public string Min{get;set;}
 
@@ -151,9 +198,24 @@ namespace Ctc.Ods.Config
 		/// The largest allowed <see cref="YearQuarter.ID"/> value
 		///</summary>
 		/// <remarks>
-		/// This is not expected to represent a usable <see cref="YearQuarter"/> value, but rather
-		/// the largest value that is programmatically recognized.
+		///		<para>This is not expected to represent a usable <see cref="YearQuarter"/> value, but rather
+		///		the largest value that is programmatically recognized.</para>
+		///		<code lang="xml">
+		///			<configuration>
+		///			
+		///				<configSections>
+		///					<section name="ctcOdsApiSettings" type="Ctc.Ods.Config.SettingsConfigHandler, CtcOdsApi" />
+		///				</configSections>
+		///				
+		///				<ctcOdsApiSettings>
+		///					<yearQuarter maxValue="Z999"/>
+		///				</ctcOdsApiSettings>
+		///				
+		///			</configuration>
+		///		</code>
 		/// </remarks>
+		/// <seealso cref="YearQuarterNode">&gt;yearQuarter&lt;</seealso>
+		/// <seealso cref="Min">&gt;minValue&lt;</seealso>
 		[XmlAttribute("maxValue")]
 		public string Max{get;set;}
 
@@ -180,8 +242,40 @@ namespace Ctc.Ods.Config
 		///			</configuration>
 		///		</code>
 		/// </remarks>
+		/// <seealso cref="YearQuarterNode">&gt;yearQuarter&lt;</seealso>
 		[XmlAttribute("registrationLeadDays")]
 		public int RegistrationLeadDays{get; set;}
+
+
+		/// <summary>
+		/// How long to cache <see cref="YearQuarter"/> data, in minutes
+		/// </summary>
+		/// <remarks>
+		///		<para>
+		///		Data from both the <i>YearQuarter</i> and <i>WebRegistrationSetting</i> table will be cached
+		///		for this many minutes.
+		///		</para>
+		///		<note type="important">This caching only applies to queries for <i>only</i> data from these tables.
+		///		It is not cached when this data is joined with other data.
+		///		</note>
+		///		<para>The following configuration example will cache YRQ information for one (1) hour:</para>
+		///		<code lang="xml">
+		///			<configuration>
+		///			
+		///				<configSections>
+		///					<section name="ctcOdsApiSettings" type="Ctc.Ods.Config.SettingsConfigHandler, CtcOdsApi" />
+		///				</configSections>
+		///				
+		///				<ctcOdsApiSettings>
+		///					<yearQuarter cache="60"/>
+		///				</ctcOdsApiSettings>
+		///				
+		///			</configuration>
+		///		</code>
+		/// </remarks>
+		/// <seealso cref="YearQuarterNode">&gt;yearQuarter&lt;</seealso>
+		[XmlAttribute("cache")]
+		public uint Cache{get;set;}
 	}
 
 	/// <summary>
@@ -361,12 +455,44 @@ namespace Ctc.Ods.Config
         /// <summary>
         /// The old "default" in the ODS to find
         /// </summary>
+        /// <remarks>
+				///		<code lang="xml">
+				///			<configuration>
+				///			
+				///				<configSections>
+				///					<section name="ctcOdsApiSettings" type="Ctc.Ods.Config.SettingsConfigHandler, CtcOdsApi" />
+				///				</configSections>
+				///				
+				///				<ctcOdsApiSettings>
+				///					<sectionDaysDefault valueToReplace="ARRANGED" newValue="Arranged"/>
+				///				</ctcOdsApiSettings>
+				///				
+				///			</configuration>
+				///		</code>
+        /// </remarks>
+        /// <seealso cref="NewValue">&gt;newValue&lt;</seealso>
         [XmlAttribute("valueToReplace")]
         public string ValueToFind { get; set; }
 
         /// <summary>
         /// The new default value
         /// </summary>
+        /// <remarks>
+				///		<code lang="xml">
+				///			<configuration>
+				///			
+				///				<configSections>
+				///					<section name="ctcOdsApiSettings" type="Ctc.Ods.Config.SettingsConfigHandler, CtcOdsApi" />
+				///				</configSections>
+				///				
+				///				<ctcOdsApiSettings>
+				///					<sectionDaysDefault valueToReplace="ARRANGED" newValue="Arranged"/>
+				///				</ctcOdsApiSettings>
+				///				
+				///			</configuration>
+				///		</code>
+        /// </remarks>
+        /// <seealso cref="ValueToFind">&gt;valueToReplace&lt;</seealso>
         [XmlAttribute("newValue")]
         public string NewValue { get; set; }
     }
@@ -380,6 +506,21 @@ namespace Ctc.Ods.Config
         /// <summary>
         /// Defines how many days after the start of a quarter a class needs to start in order to be called a "Late Start" class.
         /// </summary>
+				/// <remarks>
+				///		<code lang="xml">
+				///			<configuration>
+				///			
+				///				<configSections>
+				///					<section name="ctcOdsApiSettings" type="Ctc.Ods.Config.SettingsConfigHandler, CtcOdsApi" />
+				///				</configSections>
+				///				
+				///				<ctcOdsApiSettings>
+				///					<lateStartDefinition daysCount="20"/>
+				///				</ctcOdsApiSettings>
+				///				
+				///			</configuration>
+				///		</code>
+				/// </remarks>
         [XmlAttribute("daysCount")]
         public ushort LateStartDays { get; set; }
     }
