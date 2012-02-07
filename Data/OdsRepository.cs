@@ -23,8 +23,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Web;
+using System.Web.Caching;
 using Ctc.Ods.Config;
 using Ctc.Ods.Customizations;
+using Ctc.Ods.Extensions;
 using Ctc.Ods.Types;
 using System.Data.Objects.SqlClient;
 
@@ -122,7 +124,11 @@ namespace Ctc.Ods.Data
 			{
 				if (_currentYearQuarter == null)
 				{
-					_currentYearQuarter = YearQuarter.FromString(_DbContext.CurrentYearQuarter.YearQuarterID);
+					YearQuarterEntity yrq = _DbContext.YearQuarters.FromCache(CacheItemPriority.Default, TimeSpan.FromMinutes(Settings.YearQuarter.Cache))
+																												.Where(quarter => quarter.LastClassDay >= Utility.Today && quarter.YearQuarterID != Settings.YearQuarter.Max)
+																												.OrderBy(quarter => quarter.YearQuarterID)
+																												.Take(1).Single();
+					_currentYearQuarter = YearQuarter.FromString(yrq.YearQuarterID);
 				}
 				return _currentYearQuarter;
 			}
@@ -167,11 +173,13 @@ namespace Ctc.Ods.Data
 																														 && y.YearQuarterID != maxYrq
 																													orderby y.YearQuarterID descending 
 																													select y;
-			return quarters.Take(count).Select(q =>
-																				 new YearQuarter
-																					{
-																						ID = q.YearQuarterID
-																					}).ToList();
+
+			return quarters.FromCache(CacheItemPriority.Default, TimeSpan.FromMinutes(Settings.YearQuarter.Cache))
+										.Take(count)
+										.Select(q => new YearQuarter
+																	{
+																		ID = q.YearQuarterID
+																	}).ToList();
 		}
 
 		#endregion
@@ -393,14 +401,6 @@ namespace Ctc.Ods.Data
 			IQueryable<CourseEntity> courseData = _DbContext.Courses.Select(c => c);
 
 			string yrqId = (yrq != null) ? yrq.ID : CurrentYearQuarter.ID;
-			// NOTE: This is BellevueCollege logic - will this work for other colleges?
-			// I'm thinking it might because it checks both tables indiscriminately, and will include records with a NULL value for the YRQ - 8/22/2011, shawn.south@bellevuecollege.edu
-			//courseData = courseData.Where(c => _DbContext.CourseDescriptions1.Where(d1 => d1.YearQuarterBegin.CompareTo(yrqId) <= 0)
-			//                                                                .Select(d1 => d1.CourseID)
-			//                                                                .Contains(c.CourseID)
-			//                                   || _DbContext.CourseDescriptions2.Where(d2 => d2.YearQuarterBegin.CompareTo(yrqId) <= 0)
-			//                                                                .Select(d2 => d2.CourseID)
-			//                                                                .Contains(c.CourseID));
 			
 			courseData = courseData.Where(c => (c.YearQuarterBegin ?? Settings.YearQuarter.Min).CompareTo(yrqId) <= 0 && (c.YearQuarterEnd ?? Settings.YearQuarter.Max).CompareTo(yrqId) >= 0);
 
@@ -497,11 +497,6 @@ namespace Ctc.Ods.Data
 				string yrqId = yrq.ID;
 				filters.Add(s => s.YearQuarterID == yrqId);
 			}
-			//else
-			//{
-			//  // set default YRQ filter if no specific YRQ is supplied
-			//  filters.Add(options | DataFilter.CurrentAndFutureYrq);
-			//}
 			if (facetOptions != null)
 			{
 				filters.Add(facetOptions);
@@ -665,8 +660,8 @@ namespace Ctc.Ods.Data
 					                   					        																				{
 					                   					        																						// get the Day text (e.g. MW, TTh)
 					                   					        																						Days = _DbContext.Days.Where(d => d.DayID == i.DayID)
-                                                                                                                                                                                                    .Select(d => d.Title == defaultDaysValue.ValueToFind ? defaultDaysValue.NewValue : d.Title)
-                                                                                                                                                                                                    .DefaultIfEmpty(defaultDaysValue.NewValue)
+                                                                                                                .Select(d => d.Title == defaultDaysValue.ValueToFind ? defaultDaysValue.NewValue : d.Title)
+                                                                                                                .DefaultIfEmpty(defaultDaysValue.NewValue)
 					                   					        																																	.FirstOrDefault(),
 					                   					        																						StartTime = i.StartTime,
 					                   					        																						EndTime = i.EndTime,
@@ -693,9 +688,13 @@ namespace Ctc.Ods.Data
                                   _ContinuousSequentialIndicator = section.joinedData.sectionData.ContinuousSequentialIndicator,
                                   _VariableCredits = section.joinedData.sectionData.VariableCredits,
                                   _LateStart = SqlFunctions.DateAdd("day", (lateStart * -1), section.joinedData.sectionData.StartDate) >=
-																							_DbContext.YearQuarters.Where(y => y.YearQuarterID == section.joinedData.sectionData.YearQuarterID).Select(y => y.FirstClassDay).FirstOrDefault(),
+																											_DbContext.YearQuarters.Where(y => y.YearQuarterID == section.joinedData.sectionData.YearQuarterID)
+																																						.Select(y => y.FirstClassDay)
+																																						.FirstOrDefault(),
                                   _DifferentEndDate = section.joinedData.sectionData.EndDate !=
-																											_DbContext.YearQuarters.Where(y => y.YearQuarterID == section.joinedData.sectionData.YearQuarterID).Select(y => y.LastClassDay).FirstOrDefault(),
+																											_DbContext.YearQuarters.Where(y => y.YearQuarterID == section.joinedData.sectionData.YearQuarterID)
+																																						.Select(y => y.LastClassDay)
+																																						.FirstOrDefault(),
 
 					                   	});
 			Debug.Print("==> Created [{0}] Sections.  {1}", sections.Count(), DateTime.Now);
@@ -788,8 +787,8 @@ namespace Ctc.Ods.Data
 																																					p => p.CoursePrefixID,
 																																					s => s.CourseID.Substring(0, 5),
 																																					(p, s) => new { p, s })
-																																		.Where(h => h.s.YearQuarterID == yrq.ID)
-																																		.Select(h => new CoursePrefix
+																																	.Where(h => h.s.YearQuarterID == yrq.ID)
+																																	.Select(h => new CoursePrefix
 					             																														{
 					             																															_Subject = h.p.CoursePrefixID.Replace(ccChar, ""),	// ignore Common Course denominator at this level
 					             																															Title = h.p.Title

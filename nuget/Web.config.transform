@@ -27,9 +27,11 @@ If not, see <http://www.gnu.org/licenses/>.
 
 	<ctcOdsApiSettings>
 		<regex CommonCourseChar="&amp;"/>
-		<yearQuarter minValue="0000" maxValue="Z999" registrationLeadDays="14"/>
+		<yearQuarter minValue="0000" maxValue="Z999" registrationLeadDays="14" cache="60"/>
 		<waitlist status="W-LISTED"/>
-		<classFlags online="3" hybrid="8" telecourse="1">
+		<lateStartDefinition daysCount="8" />
+		<sectionDaysDefault valueToReplace="ARRANGED" newValue="Arranged" />
+		<classFlags online="3" hybrid="8" telecourse="1" continuousEnrollment="C">
 			<!-- These flags are defined at https://tfs.wacollabcoop.org/sites/BellevueCollege/ODSAPI/Team%20Wiki/How%20Section%20data%20is%20managed%20in%20ODS%20(HP).aspx -->
 			<rule action="exclude" column="SectionStatusID1" position="contains" value="X"/>
 			<rule action="exclude" column="SectionStatusID1" position="contains" value="Z"/>

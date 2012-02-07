@@ -49,7 +49,7 @@ namespace Ctc.Ods.Extensions
 		/// </summary>
 		public static IQueryable<T> FromCache<T>(this IQueryable<T> query) where T : class
 		{
-			return query.FromCache(CacheItemPriority.Normal, TimeSpan.FromMinutes(30));
+			return query.FromCache(CacheItemPriority.Normal, TimeSpan.FromMinutes(0));
 		}
 
 		/// <summary>
@@ -58,39 +58,42 @@ namespace Ctc.Ods.Extensions
 		/// </summary>
 		public static IQueryable<T> FromCache<T>(this IQueryable<T> query, CacheItemPriority priority, TimeSpan slidingExpiration) where T : class
 		{
-			string key = query.GetCacheKey();
-
-			// try to get the query result from the cache
-//			var result = HttpRuntime.Cache.Get(key) as IList<T>;
-			var result = HttpRuntime.Cache.Get(key) as IList<T>;
-
-			if (result == null)
+			if (HttpRuntime.AppDomainAppId != null && slidingExpiration > TimeSpan.FromMinutes(0))
 			{
-				// todo: ... ensure that the query results do not
-				// hold on to resources for your particular data source
-				//
-				//////// for entity framework queries, set to NoTracking
-				var entityQuery = query as ObjectQuery<T>;
-				if (entityQuery != null)
+				string key = query.GetCacheKey();
+
+				// try to get the query result from the cache
+				var result = HttpRuntime.Cache.Get(key) as IList<T>;
+
+				if (result == null)
 				{
-				    entityQuery.MergeOption = MergeOption.NoTracking;
+					// todo: ... ensure that the query results do not
+					// hold on to resources for your particular data source
+					//
+					//////// for entity framework queries, set to NoTracking
+					var entityQuery = query as ObjectQuery<T>;
+					if (entityQuery != null)
+					{
+						entityQuery.MergeOption = MergeOption.NoTracking;
+					}
+
+					// materialize the query
+					result = query.ToList();
+
+					HttpRuntime.Cache.Insert(
+							key,
+							result,
+							null, // no cache dependency
+							Cache.NoAbsoluteExpiration,
+							slidingExpiration,
+							priority,
+							null); // no removal notification
 				}
 
-				// materialize the query
-				result = query.ToList();
-
-				HttpRuntime.Cache.Insert(
-						key,
-						result,
-						null, // no cache dependency
-						Cache.NoAbsoluteExpiration,
-						slidingExpiration,
-						priority,
-						null); // no removal notification
+				return result.AsQueryable();
 			}
 
-//			return result as IQueryable<T>;
-			return result.AsQueryable();
+			return query;
 		}
 
 		/// <summary>
