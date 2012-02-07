@@ -4,6 +4,8 @@ using System.Data.Objects.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
 using Ctc.Ods.Data;
+using System.Configuration;
+using Ctc.Ods.Config;
 
 namespace Ctc.Ods
 {
@@ -15,10 +17,10 @@ namespace Ctc.Ods
 
 		///<summary>
 		///</summary>
-		///<param name="days">Number of days beyond the beginning of the quarter to be considered a <i>Late Start</i> class</param>
-		public LateStartFacet(ushort days)
+		public LateStartFacet()
 		{
-			_days = days;
+      ApiSettings settings = ConfigurationManager.GetSection(ApiSettings.SectionName) as ApiSettings;
+			_days = settings.ClassFlags.LateStartDaysCount; // TODO: what happens when flag dows not exist
 		}
 
 		/// <summary>
