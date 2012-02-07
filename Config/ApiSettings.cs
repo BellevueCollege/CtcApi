@@ -139,28 +139,6 @@ namespace Ctc.Ods.Config
     /// </remarks>
     [XmlElement(ElementName = "sectionDaysDefault")]
     public DefaultSectionDaysNode SectionDaysDefault { get;set; }
-
-		// TODO: Rename property to start with an upper-case letter
-    /// <summary>
-    /// Defines the definition of a "late start" course.
-    /// </summary>
-		/// <remarks>
-		///		<code lang="xml">
-		///			<configuration>
-		///			
-		///				<configSections>
-		///					<section name="ctcOdsApiSettings" type="Ctc.Ods.Config.SettingsConfigHandler, CtcOdsApi" />
-		///				</configSections>
-		///				
-		///				<ctcOdsApiSettings>
-		///					<lateStartDefinition daysCount="20"/>
-		///				</ctcOdsApiSettings>
-		///				
-		///			</configuration>
-		///		</code>
-		/// </remarks>
-    [XmlElement(ElementName = "lateStartDefinition")]
-    public LateStartDefinitionNode lateStartDefinition { get;set; }
 	}
 
 	///<summary>
@@ -334,14 +312,23 @@ namespace Ctc.Ods.Config
 		[XmlAttribute("telecourse")]
 		public string Telecourse{get;set;}
 
-        /// <summary>
-        /// Value in the <b>ODS</b> which identifies a Continuous Enrollment <see cref="ISection"/>
-        /// </summary>
-        /// <remarks>
-        /// The code looks for this value in the <i>ContinuousSequentialIndicator</i> column of the <i>vw_Class</i> view.
-        /// </remarks>
-        [XmlAttribute("continuousEnrollment")]
-        public string ContinuousEnrollment { get; set; }
+    /// <summary>
+    /// Value in the <b>ODS</b> which identifies a Continuous Enrollment <see cref="ISection"/>
+    /// </summary>
+    /// <remarks>
+    /// The code looks for this value in the <i>ContinuousSequentialIndicator</i> column of the <i>vw_Class</i> view.
+    /// </remarks>
+    [XmlAttribute("continuousEnrollment")]
+    public string ContinuousEnrollment { get; set; }
+
+    /// <summary>
+    /// Value in the <b>ODS</b> which identifies a Continuous Enrollment <see cref="ISection"/>
+    /// </summary>
+    /// <remarks>
+    /// The code looks for this value in the <i>ContinuousSequentialIndicator</i> column of the <i>vw_Class</i> view.
+    /// </remarks>
+    [XmlAttribute("lateStartDaysCount")]
+    public ushort LateStartDaysCount { get; set; }
 	}
 
 	/// <summary>
