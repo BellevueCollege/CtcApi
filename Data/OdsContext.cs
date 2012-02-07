@@ -15,7 +15,7 @@
 //If not, see <http://www.gnu.org/licenses/>.
 using System.Data.Entity;
 using System.Diagnostics;
-using System.Linq;
+using Ctc.Ods.Extensions;
 using Ctc.Ods.Types;
 
 namespace Ctc.Ods.Data
@@ -29,27 +29,21 @@ namespace Ctc.Ods.Data
 		public DbSet<CourseDescription2Entity> CourseDescriptions2 { get; set; }
 		public DbSet<Footnote> Footnote { get; set; }
 		public DbSet<CoursePrefixEntity> CoursePrefixes { get; set; }
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <remarks>NOTE: This data is cached via <see cref="QueryResultCacheExtension"/></remarks>
 		public DbSet<DayEntity> Days { get; set; }
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <remarks>NOTE: This data is cached via <see cref="QueryResultCacheExtension"/></remarks>
 		public DbSet<YearQuarterEntity> YearQuarters{get;set;}
 		public DbSet<InstructionEntity> InstructionDetails{get;set;}
 		public DbSet<WebRegistrationSettingEntity> WebRegistrationSettings{get;set;}
 		public DbSet<WaitlistEntity> WaitListCounts{get;set;}
 		public DbSet<InstructorEntity> Instructors{get;set;}
 		public DbSet<EmployeeEntity> Employees{get;set;}
-
-		/// <summary>
-		/// Gets the current <see cref="YearQuarterEntity"/> for today's date
-		/// </summary>
-		public YearQuarterEntity CurrentYearQuarter
-		{
-			get
-			{
-					// TODO: Don't hard-code Z999 as the "infinate future" YRQ
-					return YearQuarters.Where(quarter => quarter.LastClassDay >= Utility.Today && quarter.YearQuarterID != "Z999")
-															.OrderBy(quarter => quarter.YearQuarterID)
-															.Take(1).Single();
-			}
-		}
 
 		public OdsContext()
 		{
