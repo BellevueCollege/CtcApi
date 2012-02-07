@@ -38,20 +38,6 @@ namespace Ctc.Ods.Tests
             }
         }
 
-        /// <summary>
-        /// Test correct conversion of Year Quarter ID to human readable string
-        /// </summary>
-        [TestMethod()]
-        public void convertYQIDTest()
-        {
-            Utility util = new Utility();
-            
-            string expected = "Spring 2010-2011";
-            string actual = util.convertYQID("B014");
-
-            Assert.AreEqual(expected, actual);
-        }
-
     	[TestMethod]
     	public void SafeConvertToBool_TrueString()
     	{
