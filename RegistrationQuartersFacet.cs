@@ -14,9 +14,11 @@
 //License and GNU General Public License along with this program.
 //If not, see <http://www.gnu.org/licenses/>.
 using System;
+using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
+using Ctc.Ods.Config;
 using Ctc.Ods.Data;
 
 namespace Ctc.Ods
@@ -28,6 +30,20 @@ namespace Ctc.Ods
 		private int _quarterCount;
 		private DateTime _today;
 		private DateTime _registrationDate;
+		private string _yrqMax;
+		private ApiSettings _settings;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		private ApiSettings Settings
+		{
+			get
+			{
+				_settings = _settings ?? ConfigurationManager.GetSection(ApiSettings.SectionName) as ApiSettings;
+				return _settings;
+			}
+		}
 
 		///<summary>
 		///</summary>
@@ -48,6 +64,7 @@ namespace Ctc.Ods
 
 			// LINQ for EF only supports primitive variables
 			_today = Utility.Today;
+			_yrqMax = Settings.YearQuarter.Max;
 			// Registration information should be available *before* registration begins
 			// NOTE: we jump ahead n days to simulate date lookup n days prior to the registration date
 			_registrationDate = _today.Add(new TimeSpan(14, 0, 0, 0));
@@ -69,6 +86,11 @@ namespace Ctc.Ods
 				{
 					Expression<Func<T, bool>> filter;
 
+					// TODO: refactor how we count quarters (forward and back)
+					// idea:
+					//	0		- 1 quarter, current
+					// < 0	- that many *additional* previous quarters
+					// > 0	- that many *additional* future quarters
 					if (_quarterCount < 0)
 					{
 						// include current and PREVIOUS quarters
@@ -76,7 +98,7 @@ namespace Ctc.Ods
 						filter = s => db.YearQuarters.Join(db.WebRegistrationSettings, y => y.YearQuarterID, r => r.YearQuarterID, (y, r) => new {y, r})
 						                						 .DefaultIfEmpty()
 						                						 .Where(c => (c.r.FirstRegistrationDate != null && c.r.FirstRegistrationDate <= _registrationDate || c.y.FirstClassDay <= _today)
-						                						 							&& c.y.YearQuarterID != "Z999")
+						                						 							&& c.y.YearQuarterID != _yrqMax)
 						                						 .OrderByDescending(c => c.y.YearQuarterID)
 						                						 .Take(quarterCount)
 						                						 .Any(c => c.y.YearQuarterID == s.YearQuarterID);
@@ -87,7 +109,7 @@ namespace Ctc.Ods
 						filter = s => db.YearQuarters.Join(db.WebRegistrationSettings, y => y.YearQuarterID, r => r.YearQuarterID, (y, r) => new {y, r})
 						                						 .DefaultIfEmpty()
 						                						 .Where(c => (c.r.LastRegistrationDate != null && c.r.LastRegistrationDate > _registrationDate || c.y.LastClassDay > _today)
-						                						 							&& c.y.YearQuarterID != "Z999")
+						                						 							&& c.y.YearQuarterID != _yrqMax)
 						                						 .OrderBy(c => c.y.YearQuarterID)
 						                						 .Take(_quarterCount)
 						                						 .Any(c => c.y.YearQuarterID == s.YearQuarterID);
