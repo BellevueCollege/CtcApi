@@ -91,6 +91,20 @@ namespace Ctc.Ods.Tests.RepositoryTests
 		}
 
 		[TestMethod]
+		public void GetCourses_WithCourseID_Success()
+		{
+			using (OdsRepository repository = new OdsRepository())
+			{
+				IList<Course> courses = repository.GetCourses(CourseID.FromString("ASTR 101"));
+				Assert.IsTrue(courses.Count > 0);
+
+				int count = _dataVerifier.GetCourseCount("CourseID like 'ASTR%101'");
+				Assert.AreEqual(count, courses.Count);
+			}
+		}
+
+
+		[TestMethod]
 		public void GetCourses_VerifyCommonCourseCharacterRemovedFromCourseID()
 		{
 			using (OdsRepository repository = new OdsRepository())

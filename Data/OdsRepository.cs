@@ -406,7 +406,7 @@ namespace Ctc.Ods.Data
 
 			if (courseId != null)
 			{
-				courseData = courseData.Where(c => c.CourseID.Substring(0,5).Trim().ToUpper() == courseId.Subject.ToUpper() && c.CourseID.EndsWith(courseId.Number));
+				courseData = courseData.Where(c => c.CourseID.Substring(0,5).Replace(Settings.RegexPatterns.CommonCourseChar, " ").Trim().ToUpper() == courseId.Subject.ToUpper() && c.CourseID.EndsWith(courseId.Number));
 			}
 			if (subjects != null && subjects.Count() > 0)
 			{
