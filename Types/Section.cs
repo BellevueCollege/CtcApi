@@ -392,6 +392,8 @@ namespace Ctc.Ods.Types
 			_hybridFlag = _settings.ClassFlags.Hybrid ?? string.Empty;
 			_telecourseFlag = _settings.ClassFlags.Telecourse ?? string.Empty;
 			_continuousEnrollmentFlag = _settings.ClassFlags.ContinuousEnrollment ?? string.Empty;
+
+			_footnotes = new List<string>(2);
 		}
 
 		/// <summary>
@@ -439,6 +441,19 @@ namespace Ctc.Ods.Types
 				// ReSharper disable PossibleNullReferenceException
 				return _validationPatterns ?? (_validationPatterns = (ConfigurationManager.GetSection(ApiSettings.SectionName) as ApiSettings).RegexPatterns);
 				// ReSharper restore PossibleNullReferenceException
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public IList<string> CourseFootnotes
+		{
+			get {
+				return _footnotes;
+			}
+			set {
+				_footnotes = value;
 			}
 		}
 		#endregion

@@ -13,8 +13,11 @@
 //You should have received a copy of the GNU Lesser General Public
 //License and GNU General Public License along with this program.
 //If not, see <http://www.gnu.org/licenses/>.
+using System.Collections.Generic;
 using System.Linq;
 using Ctc.Ods.Data;
+using Ctc.Ods.Tests.ClassDataFilterTests;
+using Ctc.Ods.Types;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Ctc.Ods.Tests
@@ -89,5 +92,18 @@ namespace Ctc.Ods.Tests
 		/// <summary>
 		/// 
 		///</summary>
+		[TestMethod]
+		public void CourseFootnotesForSections_Success()
+		{
+			using (OdsRepository repository = new OdsRepository())
+			{
+				IList<Section> sections = repository.GetSections(TestHelper.GetFacets());
+				Assert.IsTrue(sections.Count > 0, "No sections returned");
+
+				int expected = _dataVerifier.GetSectionCount("CourseID in (select c.CourseID from vw_Course c where c.EffectiveYearQuarterEnd <= YearQuarterID and (isnull(c.FootnoteID1, '') <> '' or ISNULL(c.FootnoteID2, '') <> ''))");
+				Assert.AreEqual(expected, sections.Where(s => s.CourseFootnotes.Count > 0).Count());
+			}
+		}
+
 	}
 }
