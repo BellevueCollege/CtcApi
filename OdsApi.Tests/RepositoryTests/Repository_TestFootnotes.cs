@@ -88,9 +88,11 @@ namespace Ctc.Ods.Tests
 		//}
 		//
 		#endregion
-
+/* Commented out due to property name collision: Class Schedule's inherited class defines a .CourseFootnotes property.
+ *	2/23/2012, shawn.south@bellevuecollege.edu
+ *	
 		[TestMethod]
-		[Ignore]
+		[Ignore]	// NOTE: Added course footnotes to GetSections() calls causes the DB query to timeout. See Task #16.
 		public void CourseFootnotesForSections_Success()
 		{
 			using (OdsRepository repository = new OdsRepository())
@@ -103,6 +105,24 @@ namespace Ctc.Ods.Tests
 				int actual = withCourseFootnotes.Count();
 
 				int expected = _dataVerifier.GetSectionCount("CourseID in (select c.CourseID from vw_Course c where c.EffectiveYearQuarterEnd <= YearQuarterID and (isnull(c.FootnoteID1, '') <> '' or ISNULL(c.FootnoteID2, '') <> ''))");
+				Assert.AreEqual(expected, actual);
+			}
+		}
+*/
+		[TestMethod]
+		[Ignore]	// NOTE: Proper implementation requires restructuring the GetCourses() calls. See Task #16.
+		public void CourseFootnotes_Success()
+		{
+			using (OdsRepository repository = new OdsRepository())
+			{
+				IList<Course> courses = repository.GetCourses(TestHelper.GetFacets());
+//				IList<Section> sections = repository.GetSections(CourseID.FromString("engl", "093"), facetOptions:TestHelper.GetFacets());
+				Assert.IsTrue(courses.Count > 0, "No courses returned");
+
+				IEnumerable<Course> withFootnotes = courses.Where(s => s.Footnotes.Count > 0);
+				int actual = withFootnotes.Count();
+
+				int expected = _dataVerifier.GetCourseCount("(isnull(FootnoteID1, '') <> '' or ISNULL(FootnoteID2, '') <> '')");
 				Assert.AreEqual(expected, actual);
 			}
 		}

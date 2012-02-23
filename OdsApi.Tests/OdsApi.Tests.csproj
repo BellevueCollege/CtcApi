@@ -87,7 +87,7 @@
     <Compile Include="CourseIDTest.cs" />
     <Compile Include="CoursesTest.cs" />
     <Compile Include="DataVerificationHelper.cs" />
-    <Compile Include="RepositoryTests\FootnoteTest.cs" />
+    <Compile Include="RepositoryTests\Repository_TestFootnotes.cs" />
     <Compile Include="LinqExtensionsTest.cs" />
     <Compile Include="OdsRepositoryTest.cs" />
     <Compile Include="RepositoryTests\OdsRepository_TestSections.cs" />

@@ -451,6 +451,9 @@ namespace Ctc.Ods.Types
 			}
 		}
 
+/* Commented out due to property name collision: Class Schedule's inherited class defines a .CourseFootnotes property.
+ *	2/23/2012, shawn.south@bellevuecollege.edu
+ *	
 		/// <summary>
 		/// The <see cref="Course"/> footnotes associated with this <see cref="Section"/>
 		/// </summary>
@@ -465,6 +468,7 @@ namespace Ctc.Ods.Types
 				_CourseFootnotes = value;
 			}
 		}
+*/
 		#endregion
 
 		#region Equality methods

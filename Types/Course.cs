@@ -14,6 +14,7 @@
 //License and GNU General Public License along with this program.
 //If not, see <http://www.gnu.org/licenses/>.
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Runtime.Serialization;
@@ -25,12 +26,13 @@ namespace Ctc.Ods.Types
 	/// <summary>
 	/// Defines a college course offered to students
 	/// </summary>
-    [DataContract]
+	[DataContract]
 	public class Course : ICourse, IEquatable<Course>
 	{
 		private RegexSettings _regexPatterns;
 		private IList<CourseDescription> _courseDescriptions;
 		private string _courseId;
+		private IList<string> _footnotes;
 
 		/// <summary>
 		/// Provides a reference to configuration settings
@@ -51,7 +53,7 @@ namespace Ctc.Ods.Types
 		/// <remarks>
 		/// This is a combination of the <see cref="Subject"/> and <see cref="Number"/>
 		/// </remarks>
-        [DataMember]
+		[DataMember]
 		public string CourseID
 		{
 			get
@@ -64,7 +66,7 @@ namespace Ctc.Ods.Types
 				string subject, number;
 
 				_courseId = Utility.ParseCourseID(value, out isCommonCourse, out subject, out number, Patterns.CommonCourseChar);
-				
+
 				IsCommonCourse = isCommonCourse;
 				Subject = subject;
 				Number = number;
@@ -75,27 +77,28 @@ namespace Ctc.Ods.Types
 		/// Departmental prefix for the course (e.g. ART)
 		/// </summary>
 		/// <seealso cref="Number"/>
-        [DataMember]
-        public string Subject { get; internal set; }
+		[DataMember]
+		public string Subject { get; internal set; }
 
 		/// <summary>
 		/// The (typically numeric) identifier for the course (e.g. 101)
 		/// </summary>
 		/// <seealso cref="Subject"/>
-        [DataMember]
-        public string Number { get; internal set; }
+		[DataMember]
+		public string Number { get; internal set; }
 
 		/// <summary>
 		/// Short title of the course (e.g. Beginning Art)
 		/// </summary>
-        [DataMember]
-        public string Title {get; internal set;}
+		[DataMember]
+		public string Title { get; internal set; }
 
 		/// <summary>
 		/// One or more long descriptions (defined by <see cref="ICourseDescription.YearQuarterBegin">begin date</see>) for the course
 		/// </summary>
-        [DataMember]
-        public IEnumerable<CourseDescription> Descriptions {
+		[DataMember]
+		public IEnumerable<CourseDescription> Descriptions
+		{
 			get
 			{
 				if (_courseDescriptions == null)
@@ -110,34 +113,57 @@ namespace Ctc.Ods.Types
 		/// <summary>
 		/// Number of credits earned upon completion of the course
 		/// </summary>
-        [DataMember]
-        public Decimal Credits { get; internal set; }
+		[DataMember]
+		public Decimal Credits { get; internal set; }
 
 		/// <summary>
 		/// Indicates whether this is a <a href="http://www.sbctc.ctc.edu/college/e_commoncoursenumbering.aspx">Common Course</a>
 		/// </summary>
-        [DataMember]
-        public bool IsCommonCourse { get; protected set; }
+		[DataMember]
+		public bool IsCommonCourse { get; protected set; }
 
-			/// <summary>
-			/// 
-			/// </summary>
-		public bool IsVariableCredits{get; internal protected set;}
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool IsVariableCredits { get; internal protected set; }
 
-			/// <summary>
+		/// <summary>
+		/// 
+		/// </summary>
+		public IList<string> Footnotes
+		{
+			get
+			{
+				if (_footnotes == null)
+				{
+					_footnotes = _Footnotes != null ? _Footnotes.ToList() : new List<string>();
+				}
+				return _footnotes;
+			}
+			internal protected set {_footnotes = value;}
+		}
+
+		#region Internal API properties
+		/// <summary>
 		/// Allows EF + LINQ to attach course descriptions
 		/// </summary>
-		internal IEnumerable<CourseDescription1Entity> _CourseDescriptions1{private get; set; }
+		internal IEnumerable<CourseDescription1Entity> _CourseDescriptions1 { private get; set; }
 
 		/// <summary>
 		/// Allows EF + LINQ to attach course descriptions
 		/// </summary>
-		internal IEnumerable<CourseDescription2Entity> _CourseDescriptions2{private get; set; }
+		internal IEnumerable<CourseDescription2Entity> _CourseDescriptions2 { private get; set; }
 
 		/// <summary>
 		/// Allows EF + LINQ to attach the year/quarter
 		/// </summary>
-		internal string _YearQuarter{private get; set;}
+		internal string _YearQuarter { private get; set; }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		internal IEnumerable<string> _Footnotes{get;set;}
+		#endregion
 
 		#endregion
 

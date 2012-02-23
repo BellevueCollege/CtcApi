@@ -212,7 +212,8 @@ namespace Ctc.Ods.Data
 																					course => course.CourseID,
 																					section => section.CourseID,
 																					(course, section) => new { course, section })
-																		.Where(h => (h.course.YearQuarterBegin ?? Settings.YearQuarter.Min).CompareTo(yrqId) <= 0 && (h.course.YearQuarterEnd ?? Settings.YearQuarter.Max).CompareTo(yrqId) >= 0)
+																		.Where(h => (h.course.YearQuarterBegin ?? Settings.YearQuarter.Min).CompareTo(yrqId) <= 0
+																								&& (h.course.YearQuarterEnd ?? Settings.YearQuarter.Max).CompareTo(yrqId) >= 0)
 																		.OrderBy(h => h.course.CourseID.Replace(_commonCourseChar, " "))
 																		.Distinct()
 																		.Select(h => new Course
@@ -223,7 +224,10 @@ namespace Ctc.Ods.Data
 						             														_CourseDescriptions1 = _DbContext.CourseDescriptions1.Where(d => d.CourseID == h.course.CourseID),
 						             														_CourseDescriptions2 = _DbContext.CourseDescriptions2.Where(d => d.CourseID == h.course.CourseID),
 						             														_YearQuarter = yrqId,
-																										IsVariableCredits = (h.course.VariableCredits ?? false)
+																										IsVariableCredits = (h.course.VariableCredits ?? false),
+	// TODO: Refactor how YRQ is associated with Courses (which don't naturally have a YRQ). See Task #16
+																										//_Footnotes = _DbContext.Footnote.Where(f => h.course.FootnoteID1 == f.FootnoteId || h.course.FootnoteID2 == f.FootnoteId)
+																										//                                .Select(f => f.FootnoteText)
 						             												});
 			}
 			else
@@ -429,7 +433,10 @@ namespace Ctc.Ods.Data
 			                                      _CourseDescriptions1 = _DbContext.CourseDescriptions1.Where(d => d.CourseID == c.CourseID),
 			                                      _CourseDescriptions2 = _DbContext.CourseDescriptions2.Where(d => d.CourseID == c.CourseID),
 			                                      _YearQuarter = CurrentYearQuarter.ID,
-																						IsVariableCredits = c.VariableCredits ?? false
+																						IsVariableCredits = c.VariableCredits ?? false,
+	// TODO: Refactor how YRQ is associated with Courses (which don't naturally have a YRQ). See Task #16
+																						//_Footnotes = _DbContext.Footnote.Where(f => c.FootnoteID1 == f.FootnoteId || c.FootnoteID2 == f.FootnoteId)
+																						//                                .Select(f => f.FootnoteText)
 			                                  });
 		}
 
