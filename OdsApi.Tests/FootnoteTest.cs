@@ -89,19 +89,21 @@ namespace Ctc.Ods.Tests
 		//
 		#endregion
 
-		/// <summary>
-		/// 
-		///</summary>
 		[TestMethod]
+		[Ignore]
 		public void CourseFootnotesForSections_Success()
 		{
 			using (OdsRepository repository = new OdsRepository())
 			{
 				IList<Section> sections = repository.GetSections(TestHelper.GetFacets());
+//				IList<Section> sections = repository.GetSections(CourseID.FromString("engl", "093"), facetOptions:TestHelper.GetFacets());
 				Assert.IsTrue(sections.Count > 0, "No sections returned");
 
+				IEnumerable<Section> withCourseFootnotes = sections.Where(s => s.CourseFootnotes.Count > 0);
+				int actual = withCourseFootnotes.Count();
+
 				int expected = _dataVerifier.GetSectionCount("CourseID in (select c.CourseID from vw_Course c where c.EffectiveYearQuarterEnd <= YearQuarterID and (isnull(c.FootnoteID1, '') <> '' or ISNULL(c.FootnoteID2, '') <> ''))");
-				Assert.AreEqual(expected, sections.Where(s => s.CourseFootnotes.Count > 0).Count());
+				Assert.AreEqual(expected, actual);
 			}
 		}
 

@@ -13,6 +13,7 @@
 //You should have received a copy of the GNU Lesser General Public
 //License and GNU General Public License along with this program.
 //If not, see <http://www.gnu.org/licenses/>.
+using System;
 using System.Configuration;
 using Ctc.Ods.Config;
 using Ctc.Ods.Types;
@@ -99,5 +100,23 @@ namespace Ctc.Ods.Data
 		/// varying <see cref="SectionEntity.Credits">Credit</see> amounts
 		/// </summary>
 		public bool? VariableCredits {get;set;}
+
+		/// <summary>
+		/// Identifies a <see cref="Footnote"/> associated with this <see cref="CourseEntity">Course</see>
+		/// </summary>
+		/// <remarks>
+		/// The HP3000 allows two footnotes per Course.
+		/// </remarks>
+		/// <seealso cref="FootnoteID2"/>
+		public string FootnoteID1{get;set;}
+
+		/// <summary>
+		/// Identifies a <see cref="Footnote"/> associated with this <see cref="CourseEntity">Course</see>
+		/// </summary>
+		/// <remarks>
+		/// The HP3000 allows two footnotes per Course.
+		/// </remarks>
+		/// <seealso cref="FootnoteID1"/>
+		public string FootnoteID2{get;set;}
 	}
 }

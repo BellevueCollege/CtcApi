@@ -170,6 +170,8 @@ namespace Ctc.Ods.Types
         public bool IsDifferentEndDate { get; protected internal set; }
 
 		#region Properties mapped to data columns
+
+		#region Internal values set only by the API
 		/// <summary>
 		/// 
 		/// </summary>
@@ -265,24 +267,31 @@ namespace Ctc.Ods.Types
 			}
 		}
 
-        /// <summary>
-        /// 
-        /// </summary>
-        internal bool? _DifferentEndDate
-        {
-            set
-            {
-                if (value != null)
-                {
-                    IsDifferentEndDate = (bool)value;
-                }
-            }
-        }
+		/// <summary>
+		/// 
+		/// </summary>
+		internal bool? _DifferentEndDate
+		{
+			set
+			{
+				if (value != null)
+				{
+					IsDifferentEndDate = (bool)value;
+				}
+			}
+		}
 
 		/// <summary>
 		/// 
 		/// </summary>
 		internal string _CourseTitle { private get; set; }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		internal IEnumerable<string> _CourseFootnotes { get; set; }
+
+		#endregion
 
 		/// <summary>
 		/// 
@@ -392,8 +401,6 @@ namespace Ctc.Ods.Types
 			_hybridFlag = _settings.ClassFlags.Hybrid ?? string.Empty;
 			_telecourseFlag = _settings.ClassFlags.Telecourse ?? string.Empty;
 			_continuousEnrollmentFlag = _settings.ClassFlags.ContinuousEnrollment ?? string.Empty;
-
-			_footnotes = new List<string>(2);
 		}
 
 		/// <summary>
@@ -445,15 +452,17 @@ namespace Ctc.Ods.Types
 		}
 
 		/// <summary>
-		/// 
+		/// The <see cref="Course"/> footnotes associated with this <see cref="Section"/>
 		/// </summary>
 		public IList<string> CourseFootnotes
 		{
-			get {
-				return _footnotes;
+			get
+			{
+				return _CourseFootnotes != null ? _CourseFootnotes.ToList() : new List<string>();
 			}
-			set {
-				_footnotes = value;
+			protected internal set
+			{
+				_CourseFootnotes = value;
 			}
 		}
 		#endregion

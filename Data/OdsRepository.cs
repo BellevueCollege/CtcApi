@@ -681,6 +681,14 @@ namespace Ctc.Ods.Data
 																	LinkedTo = section.joinedData.sectionData.ItemYRQLink,
 																	_Footnote1 = section.joinedData.Footnote1 ?? string.Empty,
 																	_Footnote2 = section.Footnote2 ?? string.Empty,
+																	//_CourseFootnotes = _DbContext.Footnote.Where(f => _DbContext.Courses.Where(c => c.CourseID == section.joinedData.sectionData.CourseID
+																	//                                                                              && c.YearQuarterEnd.CompareTo(section.joinedData.sectionData.YearQuarterID) >= 0)
+																	//                                                                    .Select(c => c.FootnoteID1).Contains(f.FootnoteId)
+																	//                                                  //                  ||
+																	//                                                  //_DbContext.Courses.Where(c => c.CourseID == section.joinedData.sectionData.CourseID
+																	//                                                  //                            && c.YearQuarterEnd.CompareTo(section.joinedData.sectionData.YearQuarterID) >= 0)
+																	//                                                  //                  .Select(c => c.FootnoteID2).Contains(f.FootnoteId)
+																	//                                      ).Select(f => f.FootnoteText),
 																	_CourseDescriptions1 =  _DbContext.CourseDescriptions1.Where(d => d.CourseID == section.joinedData.sectionData.CourseID),
 																	_CourseDescriptions2 =  _DbContext.CourseDescriptions2.Where(d => d.CourseID == section.joinedData.sectionData.CourseID),
 																	_SBCTCMisc1 = section.joinedData.sectionData.SBCTCMisc1,
