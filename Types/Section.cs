@@ -229,12 +229,9 @@ namespace Ctc.Ods.Types
 		{
 			set
 			{
-				if (!string.IsNullOrWhiteSpace(value))
+				if (!string.IsNullOrWhiteSpace(value) && value.StartsWith(_continuousEnrollmentFlag))
 				{
-					if (value.StartsWith(_continuousEnrollmentFlag))
-					{
-						IsContinuousEnrollment = true;
-					}
+					IsContinuousEnrollment = true;
 				}
 			}
 		}
@@ -242,13 +239,23 @@ namespace Ctc.Ods.Types
 		/// <summary>
 		/// 
 		/// </summary>
+		internal DateTime? _LastRegistrationDate
+		{
+			set
+			{
+				LastRegistrationDate = value.HasValue ? value.Value : DateTime.MinValue;
+			}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
 		internal bool? _VariableCredits
 		{
 			set
 			{
-				if (value != null)
+				if (value.HasValue)
 				{
-					IsVariableCredits = (bool)value;
+					IsVariableCredits = value.Value;
 				}
 			}
 		}
@@ -260,9 +267,9 @@ namespace Ctc.Ods.Types
 		{
 			set
 			{
-				if (value != null)
+				if (value.HasValue)
 				{
-					IsLateStart = (bool)value;
+					IsLateStart = value.Value;
 				}
 			}
 		}
@@ -274,9 +281,9 @@ namespace Ctc.Ods.Types
 		{
 			set
 			{
-				if (value != null)
+				if (value.HasValue)
 				{
-					IsDifferentEndDate = (bool)value;
+					IsDifferentEndDate = value.Value;
 				}
 			}
 		}
@@ -450,6 +457,14 @@ namespace Ctc.Ods.Types
 				// ReSharper restore PossibleNullReferenceException
 			}
 		}
+
+		/// <summary>
+		/// The latest date to register for the <see cref="Section"/>, if different from the reqular schedule
+		/// </summary>
+		/// <seealso cref="IsContinuousEnrollment"/>
+		/// <seealso cref="StartDate"/>
+		/// <seealso cref="EndDate"/>
+		public DateTime LastRegistrationDate{get;set;}
 
 /* Commented out due to property name collision: Class Schedule's inherited class defines a .CourseFootnotes property.
  *	2/23/2012, shawn.south@bellevuecollege.edu

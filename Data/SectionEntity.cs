@@ -29,65 +29,65 @@ namespace Ctc.Ods.Data
 		/// 
 		/// </summary>
 		[Key]
-		public string ClassID{get;set;}
+		public string ClassID { get; set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public string Section{get;set;}
+		public string Section { get; set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public string YearQuarterID{get;set;}
+		public string YearQuarterID { get; set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public string ItemNumber{get;set;}
+		public string ItemNumber { get; set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public string ItemYRQLink{get;set;}
+		public string ItemYRQLink { get; set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public string ClusterItemNumber{get;set;}
+		public string ClusterItemNumber { get; set; }
 
 		///<summary>
 		/// How many students the <see cref="Section"/> can accomodate
 		///</summary>
-		public int? ClassCapacity{get;set;}
+		public int? ClassCapacity { get; set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public int? ClusterCapacity{get;set;}
+		public int? ClusterCapacity { get; set; }
 
 		///<summary>
 		/// Number of students currently enrolled.
 		/// TODO: verify StudentsEnrolled has accurate data
 		///</summary>
-		public int? StudentsEnrolled{get;set;}
+		public int? StudentsEnrolled { get; set; }
 
 		#region Course info
 		/// <summary>
 		/// 
 		/// </summary>
 		[Required]
-		public string CourseID{get;set;}
+		public string CourseID { get; set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public string CourseTitle {get;set;}
+		public string CourseTitle { get; set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public Decimal Credits{get;set;}
+		public Decimal Credits { get; set; }
 
 		#endregion
 
@@ -95,12 +95,12 @@ namespace Ctc.Ods.Data
 		/// <summary>
 		/// 
 		/// </summary>
-		public string InstructorSID {get;set;}
+		public string InstructorSID { get; set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public string InstructorName{get;set;}
+		public string InstructorName { get; set; }
 
 		#endregion
 
@@ -108,32 +108,38 @@ namespace Ctc.Ods.Data
 		/// <summary>
 		/// 
 		/// </summary>
-		public string DayID{get;set;}
+		public string DayID { get; set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public DateTime? StartDate{get;set;}
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public DateTime? EndDate { get; set; }
+		public DateTime? StartDate { get; set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public DateTime? StartTime{get;set;}
+		public DateTime? EndDate { get; set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public DateTime? EndTime{get;set;}
+		public DateTime? StartTime { get; set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public string Room{get;set;}
+		public DateTime? EndTime { get; set; }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public string Room { get; set; }
+
+		/// <summary>
+		/// The latest date to register for the <see cref="Section"/>, if different from the reqular schedule
+		/// </summary>
+		/// <seealso cref="ContinuousSequentialIndicator"/>
+		public DateTime? LastRegistrationDate { get; set; }
 
 		#endregion
 
@@ -141,32 +147,32 @@ namespace Ctc.Ods.Data
 		/// <summary>
 		/// Contains flags which indicate which type of <see cref="Section"/> this is
 		/// </summary>
-		public string SBCTCMisc1{get;set;}
+		public string SBCTCMisc1 { get; set; }
 
-        /// <summary>
-        /// Contains flags to indicate the <see cref="Section"/>'s enrollment type
-        /// </summary>
-        public string ContinuousSequentialIndicator { get; set; }
+		/// <summary>
+		/// Contains flags to indicate the <see cref="Section"/>'s enrollment type
+		/// </summary>
+		public string ContinuousSequentialIndicator { get; set; }
 
-        /// <summary>
-        /// Contains flags to indicate the <see cref="Section"/>'s credit type
-        /// </summary>
-        public bool? VariableCredits { get; set; }
+		/// <summary>
+		/// Contains flags to indicate the <see cref="Section"/>'s credit type
+		/// </summary>
+		public bool? VariableCredits { get; set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public string SectionStatusID1 {get;set;}
+		public string SectionStatusID1 { get; set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public string SectionStatusID2 {get;set;}
+		public string SectionStatusID2 { get; set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public string SectionStatusID4 {get;set;}
+		public string SectionStatusID4 { get; set; }
 
 		#endregion
 
@@ -180,6 +186,7 @@ namespace Ctc.Ods.Data
 		/// 
 		/// </summary>
 		public string FootnoteID2 { get; set; }
+
 		#endregion
 	}
 }

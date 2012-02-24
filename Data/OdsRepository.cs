@@ -700,6 +700,7 @@ namespace Ctc.Ods.Data
 																	_CourseDescriptions2 =  _DbContext.CourseDescriptions2.Where(d => d.CourseID == section.joinedData.sectionData.CourseID),
 																	_SBCTCMisc1 = section.joinedData.sectionData.SBCTCMisc1,
                                   _ContinuousSequentialIndicator = section.joinedData.sectionData.ContinuousSequentialIndicator,
+																	_LastRegistrationDate = section.joinedData.sectionData.LastRegistrationDate ?? section.joinedData.sectionData.EndDate,
                                   _VariableCredits = section.joinedData.sectionData.VariableCredits,
                                   _LateStart = SqlFunctions.DateAdd("day", (lateStartDays * -1), section.joinedData.sectionData.StartDate) >=
 																											_DbContext.YearQuarters.Where(y => y.YearQuarterID == section.joinedData.sectionData.YearQuarterID)
