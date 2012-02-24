@@ -106,7 +106,7 @@ namespace Ctc.Ods.Tests
 			{
 				IList<Section> sections = repository.GetSections(CourseID.FromString("ENGL", "101"));
 
-				Section sec = sections.Where(s => s.Offered != null && s.Offered.Where(o => !string.IsNullOrWhiteSpace(o.InstructorID) &&
+				ISection sec = sections.Where(s => s.Offered != null && s.Offered.Where(o => !string.IsNullOrWhiteSpace(o.InstructorID) &&
 																																										!string.IsNullOrWhiteSpace(o.InstructorName)
 																																				)
 																																				.Count() > 0)
@@ -159,7 +159,7 @@ namespace Ctc.Ods.Tests
 				string prevYrq = "0000";
 
 				// TODO: is there a more efficient way to determine that the whole list is sorted?
-				foreach (Section section in sections)
+				foreach (ISection section in sections)
 				{
 					string thisYrq = section.Yrq.ID;
 					Assert.IsTrue(thisYrq.CompareTo(prevYrq) >= 0, "Invalid order found: [{0}] is not less than [{1}]", prevYrq, thisYrq);
@@ -178,7 +178,7 @@ namespace Ctc.Ods.Tests
 				string prevCourseID = "    ";
 
 				// TODO: is there a more efficient way to determine that the whole list is sorted?
-				foreach (Section section in sections)
+				foreach (ISection section in sections)
 				{
 					string thisCourseID = section.CourseID;
 					Assert.IsTrue(thisCourseID.CompareTo(prevCourseID) >= 0, "Invalid order found: [{0}] is not less than [{1}]", prevCourseID, thisCourseID);

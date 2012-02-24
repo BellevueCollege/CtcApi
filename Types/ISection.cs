@@ -15,6 +15,7 @@
 //If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Ctc.Ods.Types
 {
@@ -122,5 +123,59 @@ namespace Ctc.Ods.Types
 		/// 
 		/// </summary>
 		IEnumerable<OfferedItem> Offered{get;}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[DataMember]
+		bool IsOnCampus{get;}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[DataMember]
+		bool IsTelecourse{get;}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[DataMember]
+		bool IsHybrid{get;}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		bool IsLinked{get;}
+
+		/// <summary>
+		/// An <see cref="SectionID.ItemNumber"/> identifying another <see cref="Section"/> that this <see cref="Section"/> is linked to
+		/// </summary>
+		/// <remarks>
+		/// <para>Only classes in the same <see cref="YearQuarter"/> can be linked.</para>
+		/// <para>If the current <see cref="Section"/> is not linked to another, then its own <see cref="SectionID.ItemNumber"/> may appear here.</para>
+		/// </remarks>
+		string LinkedTo{get;}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[DataMember]
+		bool IsDifferentEndDate{get;}
+
+		/// <summary>
+		/// The latest date to register for the <see cref="Section"/>
+		/// </summary>
+		/// <remarks>
+		///		<note type="note">
+		///			<para>
+		///			Per SBCTC policy, this value defaults to the "the last instructional day of the course" (e.g. <see cref="EndDate"/>)
+		///			</para>
+		///			- <a href="http://www.sbctc.ctc.edu/general/policymanual/_a-policymanual-ch5Append.aspx">http://www.sbctc.ctc.edu/general/policymanual/_a-policymanual-ch5Append.aspx</a>
+		///		</note>
+		/// </remarks>
+		/// <seealso cref="IsContinuousEnrollment"/>
+		/// <seealso cref="StartDate"/>
+		/// <seealso cref="EndDate"/>
+		DateTime LastRegistrationDate{get;set;}
 	}
 }
