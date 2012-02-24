@@ -700,16 +700,18 @@ namespace Ctc.Ods.Data
 																	_CourseDescriptions2 =  _DbContext.CourseDescriptions2.Where(d => d.CourseID == section.joinedData.sectionData.CourseID),
 																	_SBCTCMisc1 = section.joinedData.sectionData.SBCTCMisc1,
                                   _ContinuousSequentialIndicator = section.joinedData.sectionData.ContinuousSequentialIndicator,
-																	_LastRegistrationDate = section.joinedData.sectionData.LastRegistrationDate ?? section.joinedData.sectionData.EndDate,
-                                  _VariableCredits = section.joinedData.sectionData.VariableCredits,
-                                  _LateStart = SqlFunctions.DateAdd("day", (lateStartDays * -1), section.joinedData.sectionData.StartDate) >=
-																											_DbContext.YearQuarters.Where(y => y.YearQuarterID == section.joinedData.sectionData.YearQuarterID)
-																																						.Select(y => y.FirstClassDay)
-																																						.FirstOrDefault(),
-                                  _DifferentEndDate = section.joinedData.sectionData.EndDate !=
-																											_DbContext.YearQuarters.Where(y => y.YearQuarterID == section.joinedData.sectionData.YearQuarterID)
-																																						.Select(y => y.LastClassDay)
-																																						.FirstOrDefault(),
+																	// As per SBCTC policy (http://www.sbctc.ctc.edu/general/policymanual/_a-policymanual-ch5Append.aspx), the default
+																	// "last registration date" is the "last instructional day of the course" - 2/24/2012, shawn.south@bellevuecollege.edu
+					                   			_LastRegistrationDate = section.joinedData.sectionData.LastRegistrationDate ?? section.joinedData.sectionData.EndDate,
+					                   			_VariableCredits = section.joinedData.sectionData.VariableCredits,
+					                   			_LateStart = SqlFunctions.DateAdd("day", (lateStartDays * -1), section.joinedData.sectionData.StartDate) >=
+					                   			             _DbContext.YearQuarters.Where(y => y.YearQuarterID == section.joinedData.sectionData.YearQuarterID)
+					                   			             		.Select(y => y.FirstClassDay)
+					                   			             		.FirstOrDefault(),
+					                   			_DifferentEndDate = section.joinedData.sectionData.EndDate !=
+					                   			                    _DbContext.YearQuarters.Where(y => y.YearQuarterID == section.joinedData.sectionData.YearQuarterID)
+					                   			                    		.Select(y => y.LastClassDay)
+					                   			                    		.FirstOrDefault(),
 
 					                   	});
 			Debug.Print("==> Created [{0}] Sections.  {1}", sections.Count(), DateTime.Now);
@@ -799,16 +801,16 @@ namespace Ctc.Ods.Data
 			}
 
 			IQueryable<CoursePrefix> subjects = _DbContext.CoursePrefixes.Join(_DbContext.Sections.CompoundWhere(filters.FilterArray),
-																																					p => p.CoursePrefixID,
-																																					s => s.CourseID.Substring(0, 5),
-																																					(p, s) => new { p, s })
-																																	.Where(h => h.s.YearQuarterID == yrq.ID)
-																																	.Select(h => new CoursePrefix
-					             																														{
-					             																															_Subject = h.p.CoursePrefixID.Replace(ccChar, ""),	// ignore Common Course denominator at this level
-					             																															Title = h.p.Title
-					             																														}
-																																		);
+			                                                                   p => p.CoursePrefixID,
+			                                                                   s => s.CourseID.Substring(0, 5),
+			                                                                   (p, s) => new { p, s })
+					.Where(h => h.s.YearQuarterID == yrq.ID)
+					.Select(h => new CoursePrefix
+					             	{
+					             			_Subject = h.p.CoursePrefixID.Replace(ccChar, ""),	// ignore Common Course denominator at this level
+					             			Title = h.p.Title
+					             	}
+					);
 			return subjects.Distinct().OrderBy(p => p.Title).ToList();
 		}
 
