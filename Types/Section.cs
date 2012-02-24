@@ -237,8 +237,9 @@ namespace Ctc.Ods.Types
 		}
 
 		/// <summary>
-		/// 
+		/// Data retrieval stub for <see cref="LastRegistrationDate"/>
 		/// </summary>
+		/// <seealso cref="LastRegistrationDate"/>
 		internal DateTime? _LastRegistrationDate
 		{
 			set
@@ -459,8 +460,16 @@ namespace Ctc.Ods.Types
 		}
 
 		/// <summary>
-		/// The latest date to register for the <see cref="Section"/>, if different from the reqular schedule
+		/// The latest date to register for the <see cref="Section"/>
 		/// </summary>
+		/// <remarks>
+		///		<note type="note">
+		///			<para>
+		///			Per SBCTC policy, this value defaults to the "the last instructional day of the course" (e.g. <see cref="EndDate"/>)
+		///			</para>
+		///			- <a href="http://www.sbctc.ctc.edu/general/policymanual/_a-policymanual-ch5Append.aspx">http://www.sbctc.ctc.edu/general/policymanual/_a-policymanual-ch5Append.aspx</a>
+		///		</note>
+		/// </remarks>
 		/// <seealso cref="IsContinuousEnrollment"/>
 		/// <seealso cref="StartDate"/>
 		/// <seealso cref="EndDate"/>
