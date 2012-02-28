@@ -23,31 +23,33 @@ namespace Ctc.Ods.Types
 	/// <summary>
 	/// 
 	/// </summary>
-    [DataContract]
-    public class YearQuarter : IEquatable<YearQuarter>
+	[DataContract]
+	public class YearQuarter : IEquatable<YearQuarter>
 	{
+		private const int MAX_YEAR_ALLOWED = 2259;
+
 		#region Public members
 		/// <summary>
 		/// The 4-character code that represents this YearQuarterID 
 		/// </summary>
-        [DataMember]
-        public string ID { get; internal set; }
+		[DataMember]
+		public string ID { get; internal set; }
 
 		/// <summary>
 		/// The user-friendly name for the quarter (e.g. "Fall 2010")
 		/// </summary>
-        [IgnoreDataMember]
-        public string FriendlyName
-        {
-            get
-            {
-                if (String.IsNullOrWhiteSpace(_friendlyName))
-                {
-                    _friendlyName = ToFriendlyName(ID);
-                }
-                return _friendlyName;
-            }
-        }
+		[IgnoreDataMember]
+		public string FriendlyName
+		{
+			get
+			{
+				if (String.IsNullOrWhiteSpace(_friendlyName))
+				{
+					_friendlyName = ToFriendlyName(ID);
+				}
+				return _friendlyName;
+			}
+		}
 
 		/// <summary>
 		/// 
@@ -159,14 +161,20 @@ namespace Ctc.Ods.Types
 
 			Regex quarterFormat = new Regex(@"^(FALL?|(SUM|SPR|WIN)\w{0,3})\s*\d{4}$");
 
-			if (! quarterFormat.IsMatch(quarter))
+			if (!quarterFormat.IsMatch(quarter))
 			{
 				throw new ArgumentOutOfRangeException("quarter", "Argument must be a valid quarter title in the form [season]<optional space>[4-digit year]");
 			}
 
-			char [] yrqId = new char[4];
+			// Should end with 4 digits, if passed previous check
+			if (int.Parse(quarter.Substring(quarter.Length - 4)) > MAX_YEAR_ALLOWED)
+			{
+				throw new ArgumentOutOfRangeException("quarter", string.Format("The specified year cannot be larger than '{0}'", MAX_YEAR_ALLOWED));
+			}
 
-			char [] year = quarter.Substring(quarter.Length - 4).ToCharArray();
+			char[] yrqId = new char[4];
+
+			char[] year = quarter.Substring(quarter.Length - 4).ToCharArray();
 			ushort yearDigit = ushort.Parse(year[3].ToString());
 			ushort decadeDigit = ushort.Parse(year[2].ToString());
 			ushort centuryDigit = ushort.Parse(year[0].ToString());
@@ -391,9 +399,12 @@ namespace Ctc.Ods.Types
 		{
 			int year2 = int.Parse(oldYrq[YEAR2].ToString()) + 1;
 
-			if (year2 == 1) { // starting a new decade
+			if (year2 == 1)
+			{ // starting a new decade
 				newYrq[YEAR_MOD] = Convert.ToChar(oldYrq[YEAR_MOD] + 1);	// Increments the ASCII value, which increments the letter
-			} else {
+			}
+			else
+			{
 				newYrq[YEAR_MOD] = oldYrq[YEAR_MOD];
 			}
 			newYrq[YEAR1] = oldYrq[YEAR2];	// shift the previous 2nd year to the new 1st year, and

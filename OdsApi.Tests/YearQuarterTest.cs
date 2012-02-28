@@ -216,6 +216,38 @@ namespace Ctc.Ods.Tests
 
 		#endregion
 
+		/// <summary>
+		/// 
+		///</summary>
+		[TestMethod]
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		public void YearQuarter_FromFriendlyName_FarFuture()
+		{
+			YearQuarter.FromFriendlyName("Fall 4001");
+			Assert.Fail("Did not throw expected exception.");
+		}
+
+		/// <summary>
+		/// 
+		///</summary>
+		[TestMethod]
+		[Ignore]	// still under development
+		public void YearQuarter_FromFriendlyName_UpperBound()
+		{
+			AssertYearQuarterFromFriendlyName("Spring 2259", "Z894");
+		}
+
+		#region Helper methods
+		private void AssertYearQuarterFromFriendlyName(string friendlyName, string yrqID)
+		{
+			YearQuarter yrq = YearQuarter.FromFriendlyName(friendlyName);
+			Assert.AreEqual(yrqID, yrq.ID);
+		}
+
+		#endregion
+
+		#endregion
+
 		#region Equality tests
 		[TestMethod]
 		public void YearQuarter_Equals_Another()
@@ -233,14 +265,6 @@ namespace Ctc.Ods.Tests
 			YearQuarter yrq2 = YearQuarter.FromFriendlyName("Summer 2011");
 
 			Assert.AreEqual(yrq1, yrq2);
-		}
-
-		#endregion
-
-		private void AssertYearQuarterFromFriendlyName(string friendlyName, string yrqID)
-		{
-			YearQuarter yrq = YearQuarter.FromFriendlyName(friendlyName);
-			Assert.AreEqual(yrqID, yrq.ID);
 		}
 
 		#endregion
