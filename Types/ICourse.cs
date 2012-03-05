@@ -34,6 +34,7 @@ namespace Ctc.Ods.Types
 		/// Departmental prefix for the course (e.g. ART)
 		/// </summary>
 		/// <seealso cref="Number"/>
+		/// <seealso cref="IsCommonCourse"/>
 		string Subject { get; }
 
 		/// <summary>
@@ -60,6 +61,7 @@ namespace Ctc.Ods.Types
 		/// <summary>
 		/// Indicates whether this is a <a href="http://www.sbctc.ctc.edu/college/e_commoncoursenumbering.aspx">Common Course</a>
 		/// </summary>
+		/// <seealso cref="Subject"/>
 		bool IsCommonCourse { get; }
 	}
 }
