@@ -18,6 +18,7 @@ using System.Configuration;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using Ctc.Ods.Config;
 using Ctc.Ods.Types;
 
 namespace Ctc.Ods
@@ -73,6 +74,18 @@ namespace Ctc.Ods
 				}
 				return _today;
 			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
+		static public ApiSettings GetApiSettings()
+		{
+			ApiSettings settings = ConfigurationManager.GetSection(ApiSettings.SectionName) as ApiSettings;
+			// TODO: return a useful/default object if no settings are found in config file
+			// (we might only need to set default values in the ApiSettings object to accomplish this)
+			return settings;
 		}
 
 		/// <summary>
