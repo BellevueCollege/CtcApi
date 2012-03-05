@@ -14,43 +14,81 @@
 //License and GNU General Public License along with this program.
 //If not, see <http://www.gnu.org/licenses/>.
 using System;
+using System.Configuration;
 using System.Text.RegularExpressions;
+using Ctc.Ods.Config;
 using Ctc.Ods.Types;
 
 namespace Ctc.Ods
 {
 	/// <summary>
-	/// 
+	/// Representa the unique ID for a <see cref="Course"/>
 	/// </summary>
+	/// <remarks>
+	/// This is a combination of the <see cref="Subject"/> and <see cref="Number"/>
+	/// </remarks>
 	public class CourseID : ICourseID, IEquatable<CourseID>
 	{
+		private string _commonCourseChar;
+
 		/// <summary>
 		/// 
 		/// </summary>
+		protected string CommonCourseChar
+		{
+			get
+			{
+				if (string.IsNullOrEmpty(_commonCourseChar))
+				{
+					ApiSettings settings = Utility.GetApiSettings();
+					_commonCourseChar = settings != null ? settings.RegexPatterns.CommonCourseChar : "&";
+				}
+				return _commonCourseChar;
+			}
+		}
+
+		/// <summary>
+		/// Departmental prefix for the course (e.g. ART)
+		/// </summary>
+		/// <seealso cref="Number"/>
+		/// <seealso cref="IsCommonCourse"/>
 		public string Subject{get;set;}
 
 		/// <summary>
-		/// 
+		/// The (typically numeric) identifier for the course (e.g. 101)
 		/// </summary>
+		/// <seealso cref="Subject"/>
 		public string Number{get;set;}
 
+		/// <summary>
+		/// Indicates whether this CourseID represents a <a href="http://www.sbctc.ctc.edu/college/e_commoncoursenumbering.aspx">Common Course</a>
+		/// </summary>
+		/// <seealso cref="ICourseID.Subject"/>
+		public bool IsCommonCourse{get;set;}
+
+		#region Constructors
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="subject"></param>
 		/// <param name="number"></param>
-		public CourseID(string subject, string number)
+		protected CourseID(string subject, string number)
 		{
-			Subject = subject;
+			subject = subject.Trim();
+			number = number.Trim();
+
+			IsCommonCourse = subject.EndsWith(CommonCourseChar);
+			Subject = IsCommonCourse ? subject.Substring(0, subject.Length - CommonCourseChar.Length) : subject;
 			Number = number;
 		}
 
+		#region Factory methods
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="courseId"></param>
 		/// <returns></returns>
-		public static ICourseID FromString(string courseId)
+		public static CourseID FromString(string courseId)
 		{
 			courseId = courseId.ToUpper();
 
@@ -73,22 +111,25 @@ namespace Ctc.Ods
 		/// <param name="subject"></param>
 		/// <param name="number"></param>
 		/// <returns></returns>
-		static public ICourseID FromString(string subject, string number)
+		static public CourseID FromString(string subject, string number)
 		{
 			return FromString(String.Concat(subject, " ", number));
 		}
 
+		#endregion
+
+		#endregion
+
 		/// <summary>
-		/// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+		/// Returns a <see cref="T:System.String"/> that represents the current <see cref="ICourseID"/>.
 		/// </summary>
 		/// <returns>
-		/// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+		/// A <see cref="T:System.String"/> that represents the current <see cref="ICourseID"/>.
 		/// </returns>
 		/// <filterpriority>2</filterpriority>
 		public override string ToString()
 		{
-			// Follow HP field conventions
-			return String.Format("{0}{1}", Subject.PadRight(5, ' '), Number.PadRight(5, ' '));
+			return String.Concat(Subject, " ", Number);
 		}
 
 		#region Equality members
@@ -121,7 +162,7 @@ namespace Ctc.Ods
 			{
 				return true;
 			}
-			return Equals(other.Subject, Subject) && Equals(other.Number, Number);
+			return Equals(other.Subject, Subject) && Equals(other.Number, Number) && Equals(other.IsCommonCourse, IsCommonCourse);
 		}
 
 		/// <summary>

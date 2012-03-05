@@ -20,15 +20,9 @@ namespace Ctc.Ods.Tests
 {
     
     
-    /// <summary>
-    ///This is a test class for CourseIDTest and is intended
-    ///to contain all CourseIDTest Unit Tests
-    ///</summary>
 	[TestClass()]
 	public class CourseIDTest
 	{
-
-
 		private TestContext testContextInstance;
 
 		/// <summary>
@@ -78,51 +72,66 @@ namespace Ctc.Ods.Tests
 		#endregion
 
 
-		/// <summary>
-		///A test for FromString
-		///</summary>
 		[TestMethod()]
-		public void FromString_SingleParameter_Success()
+		public void FromString_SingleParameter()
 		{
 			ICourseID actual = CourseID.FromString("art 101");
 			Assert.AreEqual("ART", actual.Subject);
 			Assert.AreEqual("101", actual.Number);
+			Assert.IsFalse(actual.IsCommonCourse);
 		}
 
-		/// <summary>
-		///A test for FromString
-		///</summary>
 		[TestMethod()]
-		public void FromString_SubjectAndNumber_Success()
+		public void FromString_SingleParameter_CommonCourse()
+		{
+			ICourseID actual = CourseID.FromString("art& 101");
+			Assert.AreEqual("ART", actual.Subject);
+			Assert.AreEqual("101", actual.Number);
+			Assert.IsTrue(actual.IsCommonCourse);
+		}
+
+		[TestMethod()]
+		public void FromString_SubjectAndNumber()
 		{
 			string subject = "ART";
 			string number = "101";
 			ICourseID actual = CourseID.FromString(subject, number);
 			Assert.AreEqual(subject, actual.Subject);
 			Assert.AreEqual(number, actual.Number);
+			Assert.IsFalse(actual.IsCommonCourse);
 		}
 
-		/// <summary>
-		///A test for ToString
-		///</summary>
 		[TestMethod()]
-		public void ToStringTest()
+		public void FromString_SubjectAndNumber_CommonCourse()
 		{
-			CourseID target = new CourseID("ART", "101");
-			string expected = "ART  101  ";
+			string subject = "ART";
+			string number = "101";
+			ICourseID actual = CourseID.FromString(string.Concat(subject, "&"), number);
+			Assert.AreEqual(subject, actual.Subject);
+			Assert.AreEqual(number, actual.Number);
+			Assert.IsTrue(actual.IsCommonCourse, "Common Course flag is not set");
+		}
+
+		[TestMethod()]
+		public void ToStringConversion()
+		{
+			ICourseID target = CourseID.FromString("ART", "101");
+			string expected = "ART 101";
 			string actual = target.ToString();
 			Assert.AreEqual(expected, actual);
+			Assert.IsFalse(target.IsCommonCourse);
 		}
 
-		/// <summary>
-		///A test for CourseID Constructor
-		///</summary>
 		[TestMethod()]
-		public void CourseIDConstructorTest()
+		public void ToStringConversion_CommonCourse()
 		{
-			CourseID actual = new CourseID("ART", "101");
-			Assert.AreEqual("ART", actual.Subject);
-			Assert.AreEqual("101", actual.Number);
+			ICourseID target = CourseID.FromString("ART&", "101");
+			string expected = "ART 101";
+			string actual = target.ToString();
+			Assert.AreEqual(expected, actual);
+			Assert.IsTrue(target.IsCommonCourse);
 		}
+
+		// TODO: equality tests
 	}
 }

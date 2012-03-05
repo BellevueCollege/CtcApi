@@ -18,18 +18,30 @@ using System;
 namespace Ctc.Ods.Types
 {
 	/// <summary>
-	/// 
+	/// Representa the unique ID for a <see cref="Course"/>
 	/// </summary>
+	/// <remarks>
+	/// This is a combination of the <see cref="Subject"/> and <see cref="Number"/>
+	/// </remarks>
 	public interface ICourseID : IEquatable<ICourseID>
 	{
 		/// <summary>
-		/// 
+		/// Departmental prefix for the course (e.g. ART)
 		/// </summary>
+		/// <seealso cref="Number"/>
+		/// <seealso cref="IsCommonCourse"/>
 		string Subject{get;set;}
 
 		/// <summary>
-		/// 
+		/// The (typically numeric) identifier for the course (e.g. 101)
 		/// </summary>
+		/// <seealso cref="Subject"/>
 		string Number{get;set;}
+
+		/// <summary>
+		/// Indicates whether this CourseID represents a <a href="http://www.sbctc.ctc.edu/college/e_commoncoursenumbering.aspx">Common Course</a>
+		/// </summary>
+		/// <seealso cref="Subject"/>
+		bool IsCommonCourse{get;set;}
 	}
 }
