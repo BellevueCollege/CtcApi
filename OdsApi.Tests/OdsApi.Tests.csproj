@@ -79,6 +79,7 @@
     <Compile Include="ClassDataFilterTests\GetSections_FilterRegistrationQuarter.cs" />
     <Compile Include="ClassDataFilterTests\GetSections_FilterTime.cs" />
     <Compile Include="ClassDataFilterTests\GetSections_FilterYearQuarter.cs" />
+    <Compile Include="RepositoryTests\OdsRepository_TestSectionCounts.cs" />
     <Compile Include="RepositoryTests\Repository_TestCourses.cs" />
     <Compile Include="RepositoryTests\Repository_TestSubjects.cs" />
     <Compile Include="SearchTests\GetSections_Search.cs" />
