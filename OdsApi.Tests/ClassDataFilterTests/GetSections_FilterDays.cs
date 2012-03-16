@@ -243,7 +243,7 @@ namespace Ctc.Ods.Tests.ClassDataFilterTests
 			int allSectionCount = _dataVerifier.AllSectionsCount;
 			Assert.IsTrue(allSectionCount > count);
 
-			int expectedCount = _dataVerifier.GetSectionCount("DayID in (select d.DayID from vw_Day d where d.Title = 'MTWThF' or d.Title = 'DAILY')");
+			int expectedCount = _dataVerifier.GetSectionCount("ClassID in (select i.ClassID from vw_Instruction i where i.ClassID = ClassID and i.DayID in (select d.DayID from vw_Day d where d.Title = 'MTWThF' or d.Title = 'DAILY'))");
 			Assert.AreEqual(expectedCount, count);
 		}
 
@@ -271,7 +271,7 @@ namespace Ctc.Ods.Tests.ClassDataFilterTests
 		/// <returns></returns>
 		private int GetSectionCountForDays(string days)
 		{
-			return _dataVerifier.GetSectionCount(string.Format("DayID in (select d.DayID from vw_Day d where d.Title = '{0}')", days));
+			return _dataVerifier.GetSectionCount(string.Format("ClassID in (select i.ClassID from vw_Instruction i where i.ClassID = ClassID and i.DayID in (select d.DayID from vw_Day d where d.Title = '{0}'))", days));
 		}
 
 		#endregion
