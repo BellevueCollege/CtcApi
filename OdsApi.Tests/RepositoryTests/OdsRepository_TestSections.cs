@@ -397,15 +397,15 @@ namespace Ctc.Ods.Tests
 		[TestMethod]
 		public void GetSections_ByCourseIDCollection_Success()
 		{
-			int courseIdCount = 3;
-			IList<ICourseID> ids = _dataVerifier.GetCourseIDListFromQuery("stud", courseIdCount);
+			IList<ICourseID> ids = _dataVerifier.GetCourseIDListFromQuery("stud", 3);
+			int expectedCount = ids.Count;
 
 			using (OdsRepository repository = new OdsRepository())
 			{
 				IList<Section> sections = repository.GetSections(ids, facetOptions: TestHelper.GetFacets());
-
 				int sectionCount = sections.Count;
-				Assert.IsTrue(courseIdCount <= sectionCount, "Sections returned ({0}) is less than # of CourseIDs ({1})", sectionCount, courseIdCount);
+
+				Assert.IsTrue(expectedCount <= sectionCount, "Sections returned ({0}) is less than # of CourseIDs ({1})", sectionCount, expectedCount);
 			}
 		}
 
