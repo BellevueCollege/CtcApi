@@ -110,10 +110,12 @@ namespace Ctc.Ods
 
 					if (days == "MTWThF")
 					{
-						return s => db.Days.Where(d => d.Title == days || d.Title.ToUpper() == "DAILY").Select(d => d.DayID).Contains(s.DayID);
+						return s => db.InstructionDetails.Join(db.Days, i => i.DayID, d => d.DayID, (i, d) => new {i, d})
+					            											 .Any(h => h.i.ClassID == s.ClassID && (h.d.Title == days || h.d.Title.ToUpper() == "DAILY"));
 					}
 					// else
-					return s => db.Days.Where(d => d.Title == days).Select(d => d.DayID).Contains(s.DayID);
+					return s => db.InstructionDetails.Join(db.Days, i => i.DayID, d => d.DayID, (i, d) => new {i, d})
+					            										 .Any(h => h.d.Title == days && h.i.ClassID == s.ClassID);
 				}
 				
 				throw new ArgumentNullException("dbContext", "Database context is not valid.");
