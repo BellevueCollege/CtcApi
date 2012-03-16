@@ -94,6 +94,15 @@ namespace Ctc.Ods.Tests
 			Assert.Fail("Did not throw expected exception");
 		}
 
+		[TestMethod]
+		public void YearQuarter_ToFriendlyName_UpperBound()
+		{
+			string expected = "Spring 2259";
+			string actual = YearQuarter.ToFriendlyName("Z894");
+
+			Assert.AreEqual(expected, actual);
+		}
+
 		#region FromFriendlyName tests
 
 		#region No space
@@ -231,10 +240,20 @@ namespace Ctc.Ods.Tests
 		/// 
 		///</summary>
 		[TestMethod]
-		[Ignore]	// still under development
 		public void YearQuarter_FromFriendlyName_UpperBound()
 		{
 			AssertYearQuarterFromFriendlyName("Spring 2259", "Z894");
+		}
+
+		/// <summary>
+		/// 
+		///</summary>
+		[TestMethod]
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		public void YearQuarter_FromFriendlyName_OverUpperBound()
+		{
+			YearQuarter.FromFriendlyName("Spring 2260");
+			Assert.Fail("Did not throw expected exception.");
 		}
 
 		#region Helper methods
