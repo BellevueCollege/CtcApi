@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("CTC ODS API")]
-[assembly: AssemblyDescription("Common API for obtaining rich, multi-layer business objects from the ODS.")]
+[assembly: AssemblyDescription("Common API for obtaining rich, multi-layer business objects from the ODS. For more info, visit https://tfs.wacollabcoop.org/sites/SharedProjects/ODSAPI/")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Washington State Board Community and Technical Colleges - Information Technology")]
 [assembly: AssemblyProduct("CTCODSAPI")]
@@ -46,5 +46,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.9.5.0")]
-[assembly: AssemblyFileVersion("0.9.5.0")]
+[assembly: AssemblyVersion("0.9.6.0")]
+[assembly: AssemblyFileVersion("0.9.6.0")]
