@@ -601,7 +601,8 @@ namespace Ctc.Ods.Data
 		/// <returns></returns>
 		public IList<Section> GetSections(IList<ICourseID> courseIds, YearQuarter yrq = null, IList<ISectionFacet> facetOptions = null)
 		{
-			string[] ids = courseIds.Select(c => c.ToString()).ToArray();
+			// removing all whitespace
+			string[] ids = courseIds.Select(c => string.Concat(c.Subject, c.Number)).ToArray();
 
 			SectionFilters filters = new SectionFilters(this);
 
@@ -610,7 +611,9 @@ namespace Ctc.Ods.Data
 				string yrqId = yrq.ID;
 				filters.Add(s => s.YearQuarterID == yrqId);
 			}
-			filters.Add(s => ids.Contains(s.CourseID.Trim()));
+			// compare with whitespace removed
+			filters.Add(s => ids.Contains(string.Concat(s.CourseID.Substring(0, 5).Trim(), s.CourseID.Substring(5).Trim())));
+			// add remaining facets
 			filters.Add(facetOptions);
 
 			IQueryable<Section> sections = GetSections(filters);
