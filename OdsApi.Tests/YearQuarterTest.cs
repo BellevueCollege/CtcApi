@@ -14,6 +14,7 @@
 //License and GNU General Public License along with this program.
 //If not, see <http://www.gnu.org/licenses/>.
 using System;
+using Ctc.Ods.Tests.ClassDataFilterTests;
 using Ctc.Ods.Types;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -254,6 +255,31 @@ namespace Ctc.Ods.Tests
 		{
 			YearQuarter.FromFriendlyName("Spring 2260");
 			Assert.Fail("Did not throw expected exception.");
+		}
+
+		/// <summary>
+		/// 
+		///</summary>
+		[TestMethod]
+		public void YearQuarter_Min()
+		{
+			
+			string yrqMin = TestHelper.MinYrq;
+			YearQuarter yrq = YearQuarter.FromString(yrqMin);
+			Assert.AreEqual(yrqMin, yrq.ID);
+			Assert.AreEqual("[Minimum]", yrq.FriendlyName);
+		}
+
+		/// <summary>
+		/// 
+		///</summary>
+		[TestMethod]
+		public void YearQuarter_Max()
+		{
+			string yrqMin = TestHelper.MaxYrq;
+			YearQuarter yrq = YearQuarter.FromString(yrqMin);
+			Assert.AreEqual(yrqMin, yrq.ID);
+			Assert.AreEqual("[Maximum]", yrq.FriendlyName);
 		}
 
 		#region Helper methods

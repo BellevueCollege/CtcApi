@@ -14,9 +14,11 @@
 //License and GNU General Public License along with this program.
 //If not, see <http://www.gnu.org/licenses/>.
 using System;
+using System.Configuration;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
+using Ctc.Ods.Config;
 
 namespace Ctc.Ods.Types
 {
@@ -228,12 +230,25 @@ namespace Ctc.Ods.Types
 		/// Gets the user-friendly name for the quarter (e.g. "Fall 2010")
 		/// </summary>
 		/// <param name="yrq">A 4-character YRQ code.</param>
-		/// <returns></returns>
+		/// <returns>
+		///		A user-friendly string for the quarter in the form "Fall 2010". Can also return <see cref="MIN_FRIENDLY_NAME"/>
+		///		or <see cref="MAX_FRIENDLY_NAME"/>, if the value of <paramref name="yrq"/> represents either of the valid
+		///		limits.
+		/// </returns>
+		/// <seealso cref="ApiSettings.YearQuarter"/>
 		/// <exception cref="ArgumentOutOfRangeException"><paramref name="yrq"/> is not a 4-character value.</exception>
 		/// <exception cref="InvalidCastException"><paramref name="yrq"/> is not a valid YearQuarterID.</exception>
 		/// <exception cref="NullReferenceException"><paramref name="yrq"/> in <i>null</i>.</exception>
+		/// <remarks>
+		/// </remarks>
 		public static string ToFriendlyName(string yrq)
 		{
+			// check for min/max limits (which otherwise are not valid YRQ values)
+			ApiSettings settings = ConfigurationManager.GetSection(ApiSettings.SectionName) as ApiSettings;
+			if (yrq.ToUpper() == (settings != null ? settings.YearQuarter.Min : "0000")) return MIN_FRIENDLY_NAME;
+			if (yrq.ToUpper() == (settings != null ? settings.YearQuarter.Max : "Z999")) return MAX_FRIENDLY_NAME;
+
+			// if not min/max, continue...
 			StringBuilder fullName = new StringBuilder();
 
 			if (IsValid(yrq))
@@ -346,6 +361,8 @@ namespace Ctc.Ods.Types
 		}
 
 		#region Private members
+		private static string MAX_FRIENDLY_NAME = "[Maximum]";
+		private static string MIN_FRIENDLY_NAME = "[Minimum]";
 		// array indexes for the 4-character YRQ value
 		readonly private static short YEAR_MOD = 0;
 		readonly private static short YEAR1 = 1;

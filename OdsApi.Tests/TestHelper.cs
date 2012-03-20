@@ -13,8 +13,11 @@
 //You should have received a copy of the GNU Lesser General Public
 //License and GNU General Public License along with this program.
 //If not, see <http://www.gnu.org/licenses/>.
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using Ctc.Ods.Config;
 using Ctc.Ods.Data;
 using Ctc.Ods.Types;
 
@@ -78,6 +81,30 @@ namespace Ctc.Ods.Tests.ClassDataFilterTests
 				facets.Add(new RegistrationQuartersFacet(-4));
 			}
 			return facets;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		static public string MinYrq
+		{
+			get
+			{
+				ApiSettings settings = ConfigurationManager.GetSection(ApiSettings.SectionName) as ApiSettings;
+				return settings != null ? settings.YearQuarter.Min : "0000";
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		static public string MaxYrq
+		{
+			get
+			{
+				ApiSettings settings = ConfigurationManager.GetSection(ApiSettings.SectionName) as ApiSettings;
+				return settings != null ? settings.YearQuarter.Max : "Z999";
+			}
 		}
 	}
 }
