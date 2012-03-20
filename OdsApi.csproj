@@ -68,7 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AvailabilityFacet.cs" />
+    <Compile Include="DataFacets\AvailabilityFacet.cs" />
     <Compile Include="CommonExtensions.cs" />
     <Compile Include="Config\ApiSettings.cs" />
     <Compile Include="Config\SettingsConfigHandler.cs" />
@@ -87,14 +87,14 @@
     <Compile Include="Data\WebRegistrationSettingEntity.cs" />
     <Compile Include="Data\YearQuarterEntity.cs" />
     <Compile Include="Data\CourseEntity.cs" />
-    <Compile Include="DaysFacet.cs" />
+    <Compile Include="DataFacets\DaysFacet.cs" />
     <Compile Include="DataFacets\LateStartFacet.cs" />
     <Compile Include="Extensions\QueryResultCacheExtension.cs" />
-    <Compile Include="ISectionFacet.cs" />
+    <Compile Include="DataFacets\ISectionFacet.cs" />
     <Compile Include="LinqExtensions.cs" />
-    <Compile Include="ModalityFacet.cs" />
-    <Compile Include="RegistrationQuartersFacet.cs" />
-    <Compile Include="TimeFacet.cs" />
+    <Compile Include="DataFacets\ModalityFacet.cs" />
+    <Compile Include="DataFacets\RegistrationQuartersFacet.cs" />
+    <Compile Include="DataFacets\TimeFacet.cs" />
     <Compile Include="Types\CourseDescription.cs" />
     <Compile Include="Types\CoursePrefix.cs" />
     <Compile Include="Data\CourseDescriptionEntity.cs" />
@@ -117,7 +117,7 @@
     <Compile Include="Types\SectionID.cs" />
     <Compile Include="Types\YearQuarter.cs" />
     <Compile Include="Utility.cs" />
-    <Compile Include="YearQuarterFacet.cs" />
+    <Compile Include="DataFacets\YearQuarterFacet.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config">
