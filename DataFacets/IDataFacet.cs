@@ -13,22 +13,12 @@
 //You should have received a copy of the GNU Lesser General Public
 //License and GNU General Public License along with this program.
 //If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Data.Entity;
-using System.Linq.Expressions;
-using Ctc.Ods.Data;
-
 namespace Ctc.Ods
 {
 	/// <summary>
-	/// Provides a common interface for defining live filters (e.g. <i>facets</i>)
+	/// 
 	/// </summary>
-	public interface ISectionFacet : IDataFacet
+	public interface IDataFacet
 	{
-		/// <summary>
-		/// Provides the appropriate anonymous method for a LINQ .Where() call, depending on the option specified
-		/// </summary>
-		/// <param name="dbContext"></param>
-		Expression<Func<T, bool>> GetFilter<T>(DbContext dbContext) where T: SectionEntity;
 	}
 }

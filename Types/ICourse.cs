@@ -20,7 +20,7 @@ namespace Ctc.Ods.Types
 {
 	/// <summary>
 	/// </summary>
-	public interface ICourse : IEquatable<ICourse>
+	public interface ICourse : IRichDataObject, IEquatable<ICourse>
 	{
 		/// <summary>
 		/// The unique ID for the course

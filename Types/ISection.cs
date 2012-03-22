@@ -22,7 +22,7 @@ namespace Ctc.Ods.Types
 	/// <summary>
 	/// Defines an instance of a college class (<see cref="Course"/>)
 	/// </summary>
-	public interface ISection : IEquatable<ISection>
+	public interface ISection : IRichDataObject, IEquatable<ISection>
 	{
 		/// <summary>
 		/// 

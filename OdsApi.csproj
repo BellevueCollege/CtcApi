@@ -68,6 +68,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataFacets\IDataFacet.cs" />
+    <Compile Include="Customizations\IOdsDataMapper.cs" />
+    <Compile Include="Types\IRichDataObject.cs" />
     <Compile Include="DataFacets\AvailabilityFacet.cs" />
     <Compile Include="CommonExtensions.cs" />
     <Compile Include="Config\ApiSettings.cs" />
