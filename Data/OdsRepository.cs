@@ -847,6 +847,32 @@ namespace Ctc.Ods.Data
 			return sectionCount;
 		}
 
+		/// <summary>
+		/// Retrieves the number of <see cref="Section"/>s the specified <see cref="Course"/> subject in the given <see cref="YearQuarter"/>
+		/// </summary>
+		/// <param name="subject"></param>
+		/// <param name="yrq"></param>
+		/// <param name="facets"></param>
+		/// <returns></returns>
+		public int SectionCountForCourse(string subject, YearQuarter yrq, IList<ISectionFacet> facets = null)
+		{
+			SectionFilters filters = new SectionFilters(this);
+
+			string yrqID = yrq.ID;
+			filters.Add(s => s.YearQuarterID == yrqID);
+
+			if (facets != null)
+			{
+				filters.Add(facets);
+			}
+
+			filters.Add(s => s.CourseID.Substring(0, 5).Trim().ToUpper() == subject.ToUpper());
+
+			int sectionCount = _DbContext.Sections.CompoundWhere(filters.FilterArray).Count();
+
+			return sectionCount;
+		}
+
 		#region Implementation of Dispose
 		/// <summary>
 		/// 

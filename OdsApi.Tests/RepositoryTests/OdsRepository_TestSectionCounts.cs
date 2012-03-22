@@ -101,5 +101,38 @@ namespace Ctc.Ods.Tests.RepositoryTests
 				Assert.AreEqual(expectedCount, sectionCount);
 			}
 		}
+
+		[TestMethod]
+		public void ForSubject_CurrentRegistrationQuarter()
+		{
+			using (OdsRepository repository = new OdsRepository())
+			{
+				string subject = "ENGL";
+				YearQuarter yrq = repository.CurrentRegistrationQuarter;
+
+				int sectionCount = repository.SectionCountForCourse(subject, yrq, TestHelper.GetFacets(false));
+				Assert.IsTrue(sectionCount > 0, string.Format("No sections found for '{0}' in '{1}'", subject, yrq.FriendlyName));
+
+				int expectedCount = _dataVerifier.GetSectionCount(string.Format("YearQuarterID = '{0}' AND CourseID LIKE '{1}%' AND NOT CourseID LIKE '%&%'", yrq, subject));
+				Assert.AreEqual(expectedCount, sectionCount);
+			}
+		}
+
+		[TestMethod]
+		public void ForSubjectCommonCourse_CurrentRegistrationQuarter()
+		{
+			using (OdsRepository repository = new OdsRepository())
+			{
+				string subject = "ENGL&";
+				YearQuarter yrq = repository.CurrentRegistrationQuarter;
+
+				int sectionCount = repository.SectionCountForCourse(subject, yrq, TestHelper.GetFacets(false));
+				Assert.IsTrue(sectionCount > 0, string.Format("No sections found for '{0}' in '{1}'", subject, yrq.FriendlyName));
+
+				int expectedCount = _dataVerifier.GetSectionCount(string.Format("YearQuarterID = '{0}' AND CourseID LIKE '{1}%' AND CourseID LIKE '%&%'", yrq, subject));
+				Assert.AreEqual(expectedCount, sectionCount);
+			}
+		}
+
 	}
 }
