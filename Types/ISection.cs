@@ -117,7 +117,7 @@ namespace Ctc.Ods.Types
         /// <summary>
         /// 
         /// </summary>
-        bool IsLateStart {get;}
+        bool IsDifferentStartDate {get;}
 
 		/// <summary>
 		/// 

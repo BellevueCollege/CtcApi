@@ -585,6 +585,46 @@ namespace Ctc.Ods.Tests
 			}
 		}
 
+		[TestMethod]
+		public void GetSections_StartDateDifferentFromQuarter()
+		{
+			using (OdsRepository repository = new OdsRepository())
+			{
+				IList<Section> sections = repository.GetSections(TestHelper.GetFacets());
+				Assert.IsTrue(sections.Count > 0, "No records were returned.");
+
+				int count = sections.Where(s => s.IsDifferentStartDate).Count();
+				Assert.IsTrue(count > 0, "No DifferentStartDate records were found.");
+
+				int allSectionCount = _dataVerifier.AllSectionsCount;
+				Assert.IsTrue(count < allSectionCount, "ALL Section records were returned.");
+
+				string whereClause = "NOT StartDate IS NULL AND StartDate <> (select top 1 yq.FirstClassDay from vw_YearQuarter yq where yq.YearQuarterID = Vw_Class.YearQuarterID)";
+				int expectedCount = _dataVerifier.GetSectionCount(whereClause);
+				Assert.AreEqual(expectedCount, count);
+			}
+		}
+
+		[TestMethod]
+		public void GetSections_EndDateDifferentFromQuarter()
+		{
+			using (OdsRepository repository = new OdsRepository())
+			{
+				IList<Section> sections = repository.GetSections(TestHelper.GetFacets());
+				Assert.IsTrue(sections.Count > 0, "No records were returned.");
+
+				int count = sections.Where(s => s.IsDifferentEndDate).Count();
+				Assert.IsTrue(count > 0, "No DifferentEndDate records were found.");
+
+				int allSectionCount = _dataVerifier.AllSectionsCount;
+				Assert.IsTrue(count < allSectionCount, "ALL Section records were returned.");
+
+				string whereClause = "NOT EndDate IS NULL AND EndDate <> (select top 1 yq.LastClassDay from vw_YearQuarter yq where yq.YearQuarterID = Vw_Class.YearQuarterID)";
+				int expectedCount = _dataVerifier.GetSectionCount(whereClause);
+				Assert.AreEqual(expectedCount, count);
+			}
+		}
+
 		#region Private members
 		/// <summary>
 		/// 

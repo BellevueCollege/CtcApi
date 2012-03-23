@@ -146,7 +146,7 @@ namespace Ctc.Ods.Types
 		/// 
 		/// </summary>
 		[DataMember]
-		public bool IsLateStart { get; protected internal set; }
+		public bool IsDifferentStartDate { get; protected internal set; }
 
 		/// <summary>
 		/// 
@@ -245,47 +245,6 @@ namespace Ctc.Ods.Types
 			set
 			{
 				LastRegistrationDate = value.HasValue ? value.Value : DateTime.MinValue;
-			}
-		}
-		/// <summary>
-		/// 
-		/// </summary>
-		internal bool? _VariableCredits
-		{
-			set
-			{
-				if (value.HasValue)
-				{
-					IsVariableCredits = value.Value;
-				}
-			}
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		internal bool? _LateStart
-		{
-			set
-			{
-				if (value.HasValue)
-				{
-					IsLateStart = value.Value;
-				}
-			}
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		internal bool? _DifferentEndDate
-		{
-			set
-			{
-				if (value.HasValue)
-				{
-					IsDifferentEndDate = value.Value;
-				}
 			}
 		}
 
@@ -475,24 +434,6 @@ namespace Ctc.Ods.Types
 		/// <seealso cref="EndDate"/>
 		public DateTime LastRegistrationDate{get;set;}
 
-/* Commented out due to property name collision: Class Schedule's inherited class defines a .CourseFootnotes property.
- *	2/23/2012, shawn.south@bellevuecollege.edu
- *	
-		/// <summary>
-		/// The <see cref="Course"/> footnotes associated with this <see cref="Section"/>
-		/// </summary>
-		public IList<string> CourseFootnotes
-		{
-			get
-			{
-				return _CourseFootnotes != null ? _CourseFootnotes.ToList() : new List<string>();
-			}
-			protected internal set
-			{
-				_CourseFootnotes = value;
-			}
-		}
-*/
 		#endregion
 
 		#region Equality methods

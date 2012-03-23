@@ -632,12 +632,13 @@ namespace Ctc.Ods.Data
 		/// </remarks>
 		private IQueryable<Section> GetSections(SectionFilters filters)
 		{
+			// TODO: move this master query into a Mapper class.
+
 			// NOTE: Linq to Entities can't handle values more complex than simple data types
 			// TODO: encapsulate config settings in a handler class
 			string emailDomain = ConfigurationManager.AppSettings["EmailDomain"];
       DefaultSectionDaysNode defaultDaysValue = Settings.SectionDaysDefault;
 			string waitlistStatus = Settings.Waitlist.Status;
-      ushort lateStartDays = Settings.ClassFlags.LateStartDaysCount;
 
 			// construct the Section object we will pass back to the caller
 			IQueryable<Section> sections = _DbContext.Set<SectionEntity>().CompoundWhere(filters.FilterArray)
@@ -658,8 +659,8 @@ namespace Ctc.Ods.Data
 					                   			Credits = section.joinedData.sectionData.Credits,
 					                   			SectionCode = section.joinedData.sectionData.Section,
 					                   			_YearQuarterID = section.joinedData.sectionData.YearQuarterID,
-                                                StartDate = section.joinedData.sectionData.StartDate,
-                                                EndDate = section.joinedData.sectionData.EndDate,
+                                  StartDate = section.joinedData.sectionData.StartDate,
+                                  EndDate = section.joinedData.sectionData.EndDate,
 					                   			// count up how many students are waitlisted for each section
 					                   			WaitlistCount = _DbContext.WaitListCounts.Where(w => w.Status == waitlistStatus && w.ClassID == section.joinedData.sectionData.ClassID).Count(),
 					                   			// Construct the collection of instructor/day/time/location information...
@@ -705,15 +706,18 @@ namespace Ctc.Ods.Data
                                   _ContinuousSequentialIndicator = section.joinedData.sectionData.ContinuousSequentialIndicator,
 																	// As per SBCTC policy (http://www.sbctc.ctc.edu/general/policymanual/_a-policymanual-ch5Append.aspx), the default
 																	// "last registration date" is the "last instructional day of the course" - 2/24/2012, shawn.south@bellevuecollege.edu
+																	// TODO: Use LastClassDay of quarter if EndDate is null
 					                   			_LastRegistrationDate = section.joinedData.sectionData.LastRegistrationDate ?? section.joinedData.sectionData.EndDate,
-					                   			_VariableCredits = section.joinedData.sectionData.VariableCredits,
-					                   			_LateStart = SqlFunctions.DateAdd("day", (lateStartDays * -1), section.joinedData.sectionData.StartDate) >=
+					                   			IsVariableCredits = section.joinedData.sectionData.VariableCredits ?? false,
+					                   			IsDifferentStartDate = section.joinedData.sectionData.StartDate.HasValue && section.joinedData.sectionData.StartDate !=
 					                   			             _DbContext.YearQuarters.Where(y => y.YearQuarterID == section.joinedData.sectionData.YearQuarterID)
 					                   			             		.Select(y => y.FirstClassDay)
+																									.DefaultIfEmpty(DateTime.MaxValue)
 					                   			             		.FirstOrDefault(),
-					                   			_DifferentEndDate = section.joinedData.sectionData.EndDate !=
+					                   			IsDifferentEndDate = section.joinedData.sectionData.EndDate.HasValue && section.joinedData.sectionData.EndDate !=
 					                   			                    _DbContext.YearQuarters.Where(y => y.YearQuarterID == section.joinedData.sectionData.YearQuarterID)
 					                   			                    		.Select(y => y.LastClassDay)
+																													.DefaultIfEmpty(DateTime.MaxValue)
 					                   			                    		.FirstOrDefault(),
 
 					                   	});
