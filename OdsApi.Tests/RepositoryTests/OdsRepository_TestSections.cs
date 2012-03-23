@@ -567,6 +567,24 @@ namespace Ctc.Ods.Tests
 			}
 		}
 
+		/* This test exists for spot-checking research. It should NOT be included in the standard test run. - 3/22/2012, shawn.south@bellevuecollege.edu
+		[TestMethod]
+		public void GetSections_VerifyLinkedSections()
+		{
+			IList<ISectionFacet> facets = TestHelper.GetFacets();
+
+			using (OdsRepository repository = new OdsRepository())
+			{
+				IList<string> subjects = new List<string> {"ENGL", "ENGL&"};
+				IList<Section> sections = repository.GetSections(subjects, YearQuarter.FromString("B124"), facets);
+				Assert.IsTrue(sections.Count > 0, "No Sections were returned!");
+
+				IList<Section> linked = sections.Where(s => !string.IsNullOrWhiteSpace(s.LinkedTo)).ToList();
+				Assert.IsTrue(linked.Count > 0, "No linked Sections found!");
+			}
+		}
+//		 */
+
 		[TestMethod]
 		public void GetSections_VerifyContinuousEnrollementHasLastRegistrationDate()
 		{
