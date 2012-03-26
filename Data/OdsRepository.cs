@@ -182,6 +182,27 @@ namespace Ctc.Ods.Data
 																	}).ToList();
 		}
 
+		/// <summary>
+		/// Gets a list of future <see cref="YearQuarter"/>s, starting with the current registration quarter.
+		/// </summary>
+		/// <param name="count">Total number of <see cref="YearQuarter"/>s to return (including the current quarter).</param>
+		/// <returns>A list of <see cref="YearQuarter"/> objects, with the first being the current registration quarter.</returns>
+		public IList<YearQuarter> GetFutureQuarters(int count = 1)
+		{
+			string maxYrq = Settings.YearQuarter.Max;
+			DateTime today = Utility.Today;
+
+			IQueryable<YearQuarterEntity> quarters = _DbContext.YearQuarters.Where(y => y.FirstClassDay >= today || (y.FirstClassDay >= today && y.LastClassDay <= today))
+																																			.OrderBy(y => y.YearQuarterID);
+
+			return quarters.FromCache(CacheItemPriority.Default, TimeSpan.FromMinutes(Settings.YearQuarter.Cache))
+										.Take(count)
+										.Select(q => new YearQuarter
+										{
+											ID = q.YearQuarterID
+										}).ToList();
+		}
+
 		#endregion
 
 		#region Course
