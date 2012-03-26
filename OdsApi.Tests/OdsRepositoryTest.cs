@@ -172,6 +172,47 @@ namespace Ctc.Ods.Tests
 			}
 		}
 
+		/// <summary>
+		/// Confirms the default retrieval of the current registration quarter when no parameters are specified.
+		/// </summary>
+		[TestMethod]
+		public void GetFutureQuarters()
+		{
+			using (OdsRepository repository = new OdsRepository())
+			{
+				IList<YearQuarter> yrqList = repository.GetFutureQuarters();
+
+				int listCount = yrqList.Count;
+				Assert.IsTrue(listCount == 1, "Returned {0} items, expected 1", listCount);	// NOTE: test does not yet account for SUMMER/FALL overlapping registration period
+
+				Assert.AreEqual(repository.CurrentRegistrationQuarter.ID, yrqList[0].ID, "The quarter returned is not the current reigstration quarter.");
+			}
+		}
+
+		/// <summary>
+		/// Confirms retrieval of current registration quarter, plus 2 future quarters.
+		/// </summary>
+		[TestMethod]
+		public void GetFutureQuarters_CurrentAnd2More()
+		{
+			using (OdsRepository repository = new OdsRepository())
+			{
+				IList<YearQuarter> yrqList = repository.GetFutureQuarters(3);
+
+				int listCount = yrqList.Count;
+				Assert.IsTrue(listCount == 3, "Returned {0} items, expected 3", listCount);	// NOTE: test does not yet account for SUMMER/FALL overlapping registration period
+
+				int i = 0;
+				foreach (YearQuarter yrq in yrqList)
+				{
+					Assert.IsNotNull(yrq, "List index {0} is null", i);
+					Assert.IsFalse(string.IsNullOrWhiteSpace(yrq.ID), "ID for item #{0} is null/empty", i);
+					Assert.IsFalse(string.IsNullOrWhiteSpace(yrq.FriendlyName), "FriendlyName for item #{0} is null/empty", i++);
+				}
+
+				Assert.AreEqual(repository.CurrentRegistrationQuarter.ID, yrqList[0].ID, "The quarter returned is not the current reigstration quarter.");
+			}
+		}
 		#endregion
 
 
