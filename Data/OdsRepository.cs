@@ -28,7 +28,6 @@ using Ctc.Ods.Config;
 using Ctc.Ods.Customizations;
 using Ctc.Ods.Extensions;
 using Ctc.Ods.Types;
-using System.Data.Objects.SqlClient;
 
 namespace Ctc.Ods.Data
 {
@@ -191,9 +190,19 @@ namespace Ctc.Ods.Data
 		{
 			string maxYrq = Settings.YearQuarter.Max;
 			DateTime today = Utility.Today;
+			// Registration information should be available *before* registration begins
+			// NOTE: we jump ahead n days to simulate date lookup n days prior to the registration date
+			DateTime registrationDate = today.Add(new TimeSpan(Settings.YearQuarter.RegistrationLeadDays, 0, 0, 0));
 
-			IQueryable<YearQuarterEntity> quarters = _DbContext.YearQuarters.Where(y => y.FirstClassDay >= today || (y.FirstClassDay >= today && y.LastClassDay <= today))
-																																			.OrderBy(y => y.YearQuarterID);
+			IQueryable<YearQuarterEntity> quarters = from y in _DbContext.YearQuarters
+																													join r in _DbContext.WebRegistrationSettings on y.YearQuarterID equals r.YearQuarterID into y_r
+																													from r in y_r.DefaultIfEmpty()
+																													where (r.FirstRegistrationDate != null && r.FirstRegistrationDate >= registrationDate
+																														// include the quarter we're currently in, even if registration is no longer open for it
+																														 || y.LastClassDay >= today)
+																														 && y.YearQuarterID != maxYrq
+																													orderby y.YearQuarterID ascending 
+																													select y;
 
 			return quarters.FromCache(CacheItemPriority.Default, TimeSpan.FromMinutes(Settings.YearQuarter.Cache))
 										.Take(count)
@@ -233,8 +242,7 @@ namespace Ctc.Ods.Data
 																					course => course.CourseID,
 																					section => section.CourseID,
 																					(course, section) => new { course, section })
-																		.Where(h => (h.course.YearQuarterBegin ?? Settings.YearQuarter.Min).CompareTo(yrqId) <= 0
-																								&& (h.course.YearQuarterEnd ?? Settings.YearQuarter.Max).CompareTo(yrqId) >= 0)
+																		.Where(h => (h.course.YearQuarterEnd ?? Settings.YearQuarter.Max).CompareTo(yrqId) >= 0)
 																		.OrderBy(h => h.course.CourseID.Replace(_commonCourseChar, " "))
 																		.Distinct()
 																		.Select(h => new Course
@@ -244,9 +252,9 @@ namespace Ctc.Ods.Data
 						             														Title = h.course.Title2 ?? h.course.Title1,
 						             														_CourseDescriptions1 = _DbContext.CourseDescriptions1.Where(d => d.CourseID == h.course.CourseID),
 						             														_CourseDescriptions2 = _DbContext.CourseDescriptions2.Where(d => d.CourseID == h.course.CourseID),
-						             														_YearQuarter = yrqId,
+																										_YearQuarterBegin = h.course.YearQuarterBegin,
+																										_YearQuarterEnd = h.course.YearQuarterEnd,
 																										IsVariableCredits = (h.course.VariableCredits ?? false),
-	// TODO: Refactor how YRQ is associated with Courses (which don't naturally have a YRQ). See Task #16
 																										//_Footnotes = _DbContext.Footnote.Where(f => h.course.FootnoteID1 == f.FootnoteId || h.course.FootnoteID2 == f.FootnoteId)
 																										//                                .Select(f => f.FootnoteText)
 						             												});
@@ -256,7 +264,7 @@ namespace Ctc.Ods.Data
 				courses = GetAllCourses();
 			}
 
-			return courses.ToList();
+			return courses.OrderBy(c => c.CourseID.Replace(_commonCourseChar, " ")).ThenBy(c => c._YearQuarterBegin).ToList();
 		}
 
 		///<summary>
@@ -278,7 +286,7 @@ namespace Ctc.Ods.Data
 				                                section => section.CourseID,
 				                                (course, section) => new { course, section })
 																	.Where(h => h.course.CourseID.Substring(0,5).Trim().ToUpper() == subject.ToUpper())
-																	.Where(h => (h.course.YearQuarterBegin ?? Settings.YearQuarter.Min).CompareTo(yrqId) <= 0 && (h.course.YearQuarterEnd ?? Settings.YearQuarter.Max).CompareTo(yrqId) >= 0)
+																	.Where(h => (h.course.YearQuarterEnd ?? Settings.YearQuarter.Max).CompareTo(yrqId) >= 0)
 																	.Distinct()
 																	.Select(h => new Course
 						             												{
@@ -287,7 +295,8 @@ namespace Ctc.Ods.Data
 						             														Title = h.course.Title2 ?? h.course.Title1,
 						             														_CourseDescriptions1 = _DbContext.CourseDescriptions1.Where(d => d.CourseID == h.course.CourseID),
 						             														_CourseDescriptions2 = _DbContext.CourseDescriptions2.Where(d => d.CourseID == h.course.CourseID),
-						             														_YearQuarter = yrqId,
+																										_YearQuarterBegin = h.course.YearQuarterBegin,
+																										_YearQuarterEnd = h.course.YearQuarterEnd,
 																										IsVariableCredits = h.course.VariableCredits ?? false
 						             												});
 			}
@@ -296,7 +305,7 @@ namespace Ctc.Ods.Data
 				courses = GetAllCourses(subjects: subject);
 			}
 
-			return courses.OrderBy(c => c.CourseID.Replace(_commonCourseChar, " ")).ToList();
+			return courses.OrderBy(c => c.CourseID.Replace(_commonCourseChar, " ")).ThenBy(c => c._YearQuarterBegin).ToList();
 		}
 
 		/// <summary>
@@ -324,7 +333,7 @@ namespace Ctc.Ods.Data
 				                                section => section.CourseID,
 				                                (course, section) => new { course, section })
 																	.Where(h => subjects.Select(s => s.ToUpper()).Contains(h.course.CourseID.Substring(0,5).Trim().ToUpper()))
-																	.Where(h => (h.course.YearQuarterBegin ?? Settings.YearQuarter.Min).CompareTo(yrqId) <= 0 && (h.course.YearQuarterEnd ?? Settings.YearQuarter.Max).CompareTo(yrqId) >= 0)
+																	.Where(h => (h.course.YearQuarterEnd ?? Settings.YearQuarter.Max).CompareTo(yrqId) >= 0)
 																	.Distinct()
 																	.Select(h => new Course
 						             												{
@@ -333,7 +342,8 @@ namespace Ctc.Ods.Data
 						             														Title = h.course.Title2 ?? h.course.Title1,
 						             														_CourseDescriptions1 = _DbContext.CourseDescriptions1.Where(d => d.CourseID == h.course.CourseID),
 						             														_CourseDescriptions2 = _DbContext.CourseDescriptions2.Where(d => d.CourseID == h.course.CourseID),
-						             														_YearQuarter = yrqId,
+																										_YearQuarterBegin = h.course.YearQuarterBegin,
+																										_YearQuarterEnd = h.course.YearQuarterEnd,
 																										IsVariableCredits = h.course.VariableCredits ?? false
 						             												});
 			}
@@ -342,7 +352,7 @@ namespace Ctc.Ods.Data
 				courses = GetAllCourses(subjects: subjects.ToArray());
 			}
 
-			return courses.OrderBy(c => c.CourseID.Replace(_commonCourseChar, " ")).ToList();
+			return courses.OrderBy(c => c.CourseID.Replace(_commonCourseChar, " ")).ThenBy(c => c._YearQuarterBegin).ToList();
 		}
 
 		/// <summary>
@@ -380,10 +390,7 @@ namespace Ctc.Ods.Data
 								h =>
 								h.course.CourseID.Substring(0, 5).Trim().ToUpper() == courseId.Subject.ToUpper()
 								&& h.course.CourseID.EndsWith(courseId.Number))
-						.Where(
-								h =>
-								(h.course.YearQuarterBegin ?? Settings.YearQuarter.Min).CompareTo(yrqId) <= 0
-								&& (h.course.YearQuarterEnd ?? Settings.YearQuarter.Max).CompareTo(yrqId) >= 0)
+						.Where(h => (h.course.YearQuarterEnd ?? Settings.YearQuarter.Max).CompareTo(yrqId) >= 0)
 						.Distinct()
 						.Select(h => new Course
 						             	{
@@ -392,7 +399,8 @@ namespace Ctc.Ods.Data
 						             			Title = h.course.Title2 ?? h.course.Title1,
 						             			_CourseDescriptions1 = _DbContext.CourseDescriptions1.Where(d => d.CourseID == h.course.CourseID),
 						             			_CourseDescriptions2 = _DbContext.CourseDescriptions2.Where(d => d.CourseID == h.course.CourseID),
-						             			_YearQuarter = yrqId,
+			                        _YearQuarterBegin = h.course.YearQuarterBegin,
+															_YearQuarterEnd = h.course.YearQuarterEnd,
 						             			IsVariableCredits = h.course.VariableCredits ?? false
 						             												});
 			}
@@ -401,7 +409,7 @@ namespace Ctc.Ods.Data
 				courses = GetAllCourses(courseId: courseId);
 			}
 
-			return courses.OrderBy(c => c.CourseID.Replace(_commonCourseChar, " ")).ToList();
+			return courses.OrderBy(c => c.CourseID.Replace(_commonCourseChar, " ")).ThenBy(c => c._YearQuarterBegin).ToList();
 		}
 
 		/// <summary>
@@ -427,7 +435,7 @@ namespace Ctc.Ods.Data
 
 			string yrqId = (yrq != null) ? yrq.ID : CurrentYearQuarter.ID;
 			
-			courseData = courseData.Where(c => (c.YearQuarterBegin ?? Settings.YearQuarter.Min).CompareTo(yrqId) <= 0 && (c.YearQuarterEnd ?? Settings.YearQuarter.Max).CompareTo(yrqId) >= 0);
+			courseData = courseData.Where(c => (c.YearQuarterEnd ?? Settings.YearQuarter.Max).CompareTo(yrqId) >= 0);
 
 			if (courseId != null)
 			{
@@ -453,9 +461,9 @@ namespace Ctc.Ods.Data
 			                                      Title = c.Title2 ?? c.Title1,
 			                                      _CourseDescriptions1 = _DbContext.CourseDescriptions1.Where(d => d.CourseID == c.CourseID),
 			                                      _CourseDescriptions2 = _DbContext.CourseDescriptions2.Where(d => d.CourseID == c.CourseID),
-			                                      _YearQuarter = CurrentYearQuarter.ID,
+			                                      _YearQuarterBegin = c.YearQuarterBegin,
+																						_YearQuarterEnd = c.YearQuarterEnd,
 																						IsVariableCredits = c.VariableCredits ?? false,
-	// TODO: Refactor how YRQ is associated with Courses (which don't naturally have a YRQ). See Task #16
 																						//_Footnotes = _DbContext.Footnote.Where(f => c.FootnoteID1 == f.FootnoteId || c.FootnoteID2 == f.FootnoteId)
 																						//                                .Select(f => f.FootnoteText)
 			                                  });

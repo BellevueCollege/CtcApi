@@ -132,11 +132,8 @@ namespace Ctc.Ods.Tests
 		/// <returns></returns>
 		public int GetCourseCount(string whereClause)
 		{
-			//string yrqFilter = string.Format(" and (CourseID in (select d1.CourseID from vw_CourseDescription d1 where d1.EffectiveYearQuarterBegin <= '{0}') or CourseID in (select d2.CourseID from vw_CourseDescription2 d2 where d2.EffectiveYearQuarterBegin <= '{0}')) ",
-			//                                CurrentYrq);
-			string yrqFilter = string.Format(" and isnull(EffectiveYearQuarterBegin, '0000') <= '{0}' and isnull(EffectiveYearQuarterEnd, 'Z999') >= '{0}' ",
-																			CurrentYrq);
-			string sql = string.Format("select count(distinct replace(CourseID,'&', ' ')) from vw_Course where {0} {1}", whereClause, yrqFilter);
+			string yrqFilter = string.Format(" and isnull(EffectiveYearQuarterEnd, 'Z999') >= '{0}' ", CurrentYrq);
+			string sql = string.Format("select count(c.CourseID) FROM (select DISTINCT replace(CourseID,'&', ' ') AS CourseID, EffectiveYearQuarterBegin, EffectiveYearQuarterEnd from vw_Course WHERE {0} {1}) c", whereClause, yrqFilter);
 
 			try
 			{

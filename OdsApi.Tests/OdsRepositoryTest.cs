@@ -265,7 +265,7 @@ namespace Ctc.Ods.Tests
 				IList<Course> courses = repository.GetCourses();
 				int expectedCount = _dataVerifier.GetCourseCount("CourseID like '%&%'");
 
-				Assert.AreEqual(expectedCount, courses.Where(c => c.IsCommonCourse).Select(c => c.CourseID).Distinct().Count());
+				Assert.AreEqual(expectedCount, courses.Where(c => c.IsCommonCourse).Count());
 			}
 		}
 

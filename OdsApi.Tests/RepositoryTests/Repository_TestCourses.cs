@@ -13,7 +13,6 @@
 //You should have received a copy of the GNU Lesser General Public
 //License and GNU General Public License along with this program.
 //If not, see <http://www.gnu.org/licenses/>.
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Ctc.Ods.Data;
@@ -86,7 +85,7 @@ namespace Ctc.Ods.Tests.RepositoryTests
 				Assert.IsTrue(courses.Count > 0);
 
 				int count = _dataVerifier.GetCourseCount("rtrim(left(CourseID, 5)) = 'ENGL'");
-				Assert.AreEqual(count, courses.Select(c => c.CourseID).Distinct().Count());
+				Assert.AreEqual(count, courses.Count());
 			}
 		}
 
@@ -148,7 +147,7 @@ namespace Ctc.Ods.Tests.RepositoryTests
 				Assert.IsTrue(courses.Count > 0);
 
 				int count = _dataVerifier.GetCourseCount("(rtrim(left(CourseID, 5)) = 'ENGL' or rtrim(left(CourseID, 5)) = 'ENGL&')");
-				Assert.AreEqual(count, courses.Select(c => c.CourseID).Distinct().Count());
+				Assert.AreEqual(count, courses.Count());
 			}
 		}
 
@@ -165,7 +164,7 @@ namespace Ctc.Ods.Tests.RepositoryTests
 				Assert.IsTrue(courses.Count > 0);
 
 				int count = _dataVerifier.GetCourseCount("(rtrim(left(CourseID, 5)) = 'ENGL' or rtrim(left(CourseID, 5)) = 'ENGL&') AND isnull(VariableCredits, 0) = 1");
-				Assert.AreEqual(count, courses.Where(c => c.IsVariableCredits).Select(c => c.CourseID).Distinct().Count());
+				Assert.AreEqual(count, courses.Where(c => c.IsVariableCredits).Count());
 			}
 		}
 

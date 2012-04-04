@@ -63,5 +63,25 @@ namespace Ctc.Ods.Types
 		/// </summary>
 		/// <seealso cref="Subject"/>
 		bool IsCommonCourse { get; }
+
+		/// <summary>
+		/// The <see cref="YearQuarter"/> that the current <see cref="Course"/> becomes active.
+		/// </summary>
+		YearQuarter YearQuarterBegin{get;}
+
+		/// <summary>
+		/// The <see cref="YearQuarter"/> that the current <see cref="Course"/> records expires.
+		/// </summary>
+		YearQuarter YearQuarterEnd{get;}
+
+		/// <summary>
+		/// Indicates whether this <see cref="Course"/> can be taken for a variable number of <see cref="Credits"/>.
+		/// </summary>
+		bool IsVariableCredits{get;}
+
+		/// <summary>
+		/// Provides a collection of Footnotes associated with the current <see cref="Course"/>
+		/// </summary>
+		IList<string> Footnotes{get;}
 	}
 }

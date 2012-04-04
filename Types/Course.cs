@@ -29,6 +29,7 @@ namespace Ctc.Ods.Types
 	[DataContract]
 	public class Course : ICourse, IEquatable<Course>
 	{
+		private ApiSettings _settings;
 		private RegexSettings _regexPatterns;
 		private IList<CourseDescription> _courseDescriptions;
 		private string _courseId;
@@ -37,12 +38,23 @@ namespace Ctc.Ods.Types
 		/// <summary>
 		/// Provides a reference to configuration settings
 		/// </summary>
+		private ApiSettings Settings
+		{
+			get
+			{
+				return _settings ?? (_settings = ConfigurationManager.GetSection(ApiSettings.SectionName) as ApiSettings);
+			}
+		}
+
+		/// <summary>
+		/// Provides a reference to regular expression patterns from configuration settings
+		/// </summary>
 		/// <seealso cref="ApiSettings"/>
 		private RegexSettings Patterns
 		{
 			get
 			{
-				return _regexPatterns ?? (_regexPatterns = (ConfigurationManager.GetSection(ApiSettings.SectionName) as ApiSettings).RegexPatterns);
+				return _regexPatterns ?? (_regexPatterns = Settings.RegexPatterns);
 			}
 		}
 
@@ -60,7 +72,7 @@ namespace Ctc.Ods.Types
 			{
 				return _courseId;
 			}
-			internal set
+			internal protected set
 			{
 				bool isCommonCourse;
 				string subject, number;
@@ -78,20 +90,20 @@ namespace Ctc.Ods.Types
 		/// </summary>
 		/// <seealso cref="Number"/>
 		[DataMember]
-		public string Subject { get; internal set; }
+		public string Subject { get; internal protected set; }
 
 		/// <summary>
 		/// The (typically numeric) identifier for the course (e.g. 101)
 		/// </summary>
 		/// <seealso cref="Subject"/>
 		[DataMember]
-		public string Number { get; internal set; }
+		public string Number { get; internal protected set; }
 
 		/// <summary>
 		/// Short title of the course (e.g. Beginning Art)
 		/// </summary>
 		[DataMember]
-		public string Title { get; internal set; }
+		public string Title { get; internal protected set; }
 
 		/// <summary>
 		/// One or more long descriptions (defined by <see cref="ICourseDescription.YearQuarterBegin">begin date</see>) for the course
@@ -103,7 +115,7 @@ namespace Ctc.Ods.Types
 			{
 				if (_courseDescriptions == null)
 				{
-					_courseDescriptions = OdsRepository.GetCourseDescriptions(Ods.CourseID.FromString(CourseID), YearQuarter.FromString(_YearQuarter),
+					_courseDescriptions = OdsRepository.GetCourseDescriptions(Ods.CourseID.FromString(CourseID), YearQuarter.FromString(_YearQuarterBegin),
 																																		_CourseDescriptions1, _CourseDescriptions2);
 				}
 				return _courseDescriptions;
@@ -114,21 +126,31 @@ namespace Ctc.Ods.Types
 		/// Number of credits earned upon completion of the course
 		/// </summary>
 		[DataMember]
-		public Decimal Credits { get; internal set; }
+		public Decimal Credits { get; internal protected set; }
+
+		/// <summary>
+		/// The <see cref="YearQuarter"/> that the current <see cref="Course"/> becomes active.
+		/// </summary>
+		public YearQuarter YearQuarterBegin{get; internal protected set;}
+
+		/// <summary>
+		/// The <see cref="YearQuarter"/> that the current <see cref="Course"/> records expires.
+		/// </summary>
+		public YearQuarter YearQuarterEnd{get; internal protected set;}
 
 		/// <summary>
 		/// Indicates whether this is a <a href="http://www.sbctc.ctc.edu/college/e_commoncoursenumbering.aspx">Common Course</a>
 		/// </summary>
 		[DataMember]
-		public bool IsCommonCourse { get; protected set; }
+		public bool IsCommonCourse { get; internal protected set; }
 
 		/// <summary>
-		/// 
+		/// Indicates whether this <see cref="Course"/> can be taken for a variable number of <see cref="Credits"/>.
 		/// </summary>
 		public bool IsVariableCredits { get; internal protected set; }
 
 		/// <summary>
-		/// 
+		/// Provides a collection of Footnotes associated with the current <see cref="Course"/>
 		/// </summary>
 		public IList<string> Footnotes
 		{
@@ -155,14 +177,34 @@ namespace Ctc.Ods.Types
 		internal IEnumerable<CourseDescription2Entity> _CourseDescriptions2 { private get; set; }
 
 		/// <summary>
-		/// Allows EF + LINQ to attach the year/quarter
+		/// Allows EF + LINQ to attach the effective year/quarter begin
 		/// </summary>
-		internal string _YearQuarter { private get; set; }
+		internal string _YearQuarterBegin
+		{
+			get {return YearQuarterBegin.ID;}
+			set
+			{
+				YearQuarterBegin = YearQuarter.FromString(string.IsNullOrWhiteSpace(value) ? _settings.YearQuarter.Min : value);
+			}
+		}
+
+		/// <summary>
+		/// Allows EF + LINQ to attach the effective year/quarter end
+		/// </summary>
+		internal string _YearQuarterEnd
+		{
+			get {return YearQuarterEnd.ID;}
+			set
+			{
+				YearQuarterEnd = YearQuarter.FromString(string.IsNullOrWhiteSpace(value) ? _settings.YearQuarter.Max : value);
+			}
+		}
 
 		/// <summary>
 		/// 
 		/// </summary>
 		internal IEnumerable<string> _Footnotes{get;set;}
+
 		#endregion
 
 		#endregion
