@@ -255,8 +255,8 @@ namespace Ctc.Ods.Data
 																										_YearQuarterBegin = h.course.YearQuarterBegin,
 																										_YearQuarterEnd = h.course.YearQuarterEnd,
 																										IsVariableCredits = (h.course.VariableCredits ?? false),
-																										//_Footnotes = _DbContext.Footnote.Where(f => h.course.FootnoteID1 == f.FootnoteId || h.course.FootnoteID2 == f.FootnoteId)
-																										//                                .Select(f => f.FootnoteText)
+																										_Footnotes = _DbContext.Footnote.Where(f => h.course.FootnoteID1 == f.FootnoteId || h.course.FootnoteID2 == f.FootnoteId)
+																										                                .Select(f => f.FootnoteText)
 						             												});
 			}
 			else
@@ -297,7 +297,9 @@ namespace Ctc.Ods.Data
 						             														_CourseDescriptions2 = _DbContext.CourseDescriptions2.Where(d => d.CourseID == h.course.CourseID),
 																										_YearQuarterBegin = h.course.YearQuarterBegin,
 																										_YearQuarterEnd = h.course.YearQuarterEnd,
-																										IsVariableCredits = h.course.VariableCredits ?? false
+																										IsVariableCredits = h.course.VariableCredits ?? false,
+																										_Footnotes = _DbContext.Footnote.Where(f => h.course.FootnoteID1 == f.FootnoteId || h.course.FootnoteID2 == f.FootnoteId)
+																										                                .Select(f => f.FootnoteText)
 						             												});
 			}
 			else
@@ -344,7 +346,9 @@ namespace Ctc.Ods.Data
 						             														_CourseDescriptions2 = _DbContext.CourseDescriptions2.Where(d => d.CourseID == h.course.CourseID),
 																										_YearQuarterBegin = h.course.YearQuarterBegin,
 																										_YearQuarterEnd = h.course.YearQuarterEnd,
-																										IsVariableCredits = h.course.VariableCredits ?? false
+																										IsVariableCredits = h.course.VariableCredits ?? false,
+																										_Footnotes = _DbContext.Footnote.Where(f => h.course.FootnoteID1 == f.FootnoteId || h.course.FootnoteID2 == f.FootnoteId)
+																										                                .Select(f => f.FootnoteText)
 						             												});
 			}
 			else
@@ -401,8 +405,10 @@ namespace Ctc.Ods.Data
 						             			_CourseDescriptions2 = _DbContext.CourseDescriptions2.Where(d => d.CourseID == h.course.CourseID),
 			                        _YearQuarterBegin = h.course.YearQuarterBegin,
 															_YearQuarterEnd = h.course.YearQuarterEnd,
-						             			IsVariableCredits = h.course.VariableCredits ?? false
-						             												});
+						             			IsVariableCredits = h.course.VariableCredits ?? false,
+															_Footnotes = _DbContext.Footnote.Where(f => h.course.FootnoteID1 == f.FootnoteId || h.course.FootnoteID2 == f.FootnoteId)
+																										          .Select(f => f.FootnoteText)
+						             	});
 			}
 			else
 			{
@@ -446,11 +452,11 @@ namespace Ctc.Ods.Data
 				if (subjects.Count() == 1)
 				{
 					string subject = subjects[0].ToUpper();
-					courseData = courseData.Where(c => c.CourseID.Substring(0,5).Trim().ToUpper() == subject);
+					courseData = courseData.Where(c => c.CourseID.Substring(0,5).Replace(Settings.RegexPatterns.CommonCourseChar, " ").Trim().ToUpper() == subject);
 				}
 				else
 				{
-					courseData = courseData.Where(c => subjects.Select(s => s.ToUpper()).Contains(c.CourseID.Substring(0, 5).Trim().ToUpper()));
+					courseData = courseData.Where(c => subjects.Select(s => s.ToUpper()).Contains(c.CourseID.Substring(0, 5).Replace(Settings.RegexPatterns.CommonCourseChar, " ").Trim().ToUpper()));
 				}
 			}
 
@@ -464,8 +470,8 @@ namespace Ctc.Ods.Data
 			                                      _YearQuarterBegin = c.YearQuarterBegin,
 																						_YearQuarterEnd = c.YearQuarterEnd,
 																						IsVariableCredits = c.VariableCredits ?? false,
-																						//_Footnotes = _DbContext.Footnote.Where(f => c.FootnoteID1 == f.FootnoteId || c.FootnoteID2 == f.FootnoteId)
-																						//                                .Select(f => f.FootnoteText)
+																						_Footnotes = _DbContext.Footnote.Where(f => c.FootnoteID1 == f.FootnoteId || c.FootnoteID2 == f.FootnoteId)
+																						                                .Select(f => f.FootnoteText)
 			                                  });
 		}
 

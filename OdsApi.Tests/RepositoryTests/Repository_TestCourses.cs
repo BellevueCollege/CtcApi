@@ -84,7 +84,7 @@ namespace Ctc.Ods.Tests.RepositoryTests
 				IList<Course> courses = repository.GetCourses("ENGL");
 				Assert.IsTrue(courses.Count > 0);
 
-				int count = _dataVerifier.GetCourseCount("rtrim(left(CourseID, 5)) = 'ENGL'");
+				int count = _dataVerifier.GetCourseCount("rtrim(left(replace(CourseID, '&', ' '), 5)) = 'ENGL'");
 				Assert.AreEqual(count, courses.Count());
 			}
 		}

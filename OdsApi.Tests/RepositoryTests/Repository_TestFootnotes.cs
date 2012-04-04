@@ -14,6 +14,7 @@
 //License and GNU General Public License along with this program.
 //If not, see <http://www.gnu.org/licenses/>.
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Ctc.Ods.Data;
 using Ctc.Ods.Tests.ClassDataFilterTests;
@@ -110,19 +111,35 @@ namespace Ctc.Ods.Tests
 		}
 */
 		[TestMethod]
-		[Ignore]	// NOTE: Proper implementation requires restructuring the GetCourses() calls. See Task #16.
+//		[Ignore]	// NOTE: Proper implementation requires restructuring the GetCourses() calls. See Task #16.
 		public void CourseFootnotes_Success()
 		{
 			using (OdsRepository repository = new OdsRepository())
 			{
-				IList<Course> courses = repository.GetCourses(TestHelper.GetFacets());
-//				IList<Section> sections = repository.GetSections(CourseID.FromString("engl", "093"), facetOptions:TestHelper.GetFacets());
+				IList<Course> courses = repository.GetCourses();
+//				IList<Course> courses = repository.GetCourses("engl");
 				Assert.IsTrue(courses.Count > 0, "No courses returned");
 
-				IEnumerable<Course> withFootnotes = courses.Where(s => s.Footnotes.Count > 0);
-				int actual = withFootnotes.Count();
+#if DEBUG
+				Debug.Print("==== All courses returned ({0}) ====", courses.Count);
+				foreach (Course course in courses)
+				{
+					Debug.Print("{0}", course.CourseID);
+				}
+#endif
 
-				int expected = _dataVerifier.GetCourseCount("(isnull(FootnoteID1, '') <> '' or ISNULL(FootnoteID2, '') <> '')");
+				IEnumerable<Course> withFootnotes = courses.Where(c => c.Footnotes.Count > 0);
+
+#if DEBUG
+				Debug.Print("==== Courses with footnotes ({0}) ====", withFootnotes.Count());
+				foreach (Course course in withFootnotes)
+				{
+					Debug.Print("{0}\t({1})", course.CourseID, course.Footnotes.Count);
+				}
+#endif
+				int actual = withFootnotes.Count();
+				int expected = _dataVerifier.GetCourseCount("((FootnoteID1 IN (SELECT f.footnoteid FROM dbo.vw_Footnote f) or FootnoteID2 IN (SELECT f.FootnoteID FROM dbo.vw_Footnote f)))");
+//				int expected = _dataVerifier.GetCourseCount("(isnull(FootnoteID1, '') <> '' or ISNULL(FootnoteID2, '') <> '') and rtrim(left(replace(CourseID, '&', ' '), 5)) = 'engl'");
 				Assert.AreEqual(expected, actual);
 			}
 		}
