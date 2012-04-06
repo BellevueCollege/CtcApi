@@ -77,14 +77,33 @@ namespace Ctc.Ods.Tests.RepositoryTests
 		#endregion
 
 		[TestMethod]
-		public void GetCourses_WithSubject_Success()
+		public void WithSubject_Success()
 		{
+			const string SUBJECT = "ENGL";
+
 			using (OdsRepository repository = new OdsRepository())
 			{
-				IList<Course> courses = repository.GetCourses("ENGL");
+				IList<Course> courses = repository.GetCourses(SUBJECT);
 				Assert.IsTrue(courses.Count > 0);
 
 				int count = _dataVerifier.GetCourseCount("rtrim(left(replace(CourseID, '&', ' '), 5)) = 'ENGL'");
+				Assert.AreEqual(count, courses.Count());
+			}
+		}
+
+		[TestMethod]
+		public void WithCommonCourseSubject_Success()
+		{
+			const string SUBJECT = "ASTR";
+
+			using (OdsRepository repository = new OdsRepository())
+			{
+				string ccnSubject = string.Concat(SUBJECT, "&");
+
+				IList<Course> courses = repository.GetCourses(ccnSubject);
+				Assert.IsTrue(courses.Count > 0, "No records were returned for '{0}'!", ccnSubject);
+
+				int count = _dataVerifier.GetCourseCount(string.Format("rtrim(left(replace(CourseID, '&', ' '), 5)) = '{0}'", SUBJECT));
 				Assert.AreEqual(count, courses.Count());
 			}
 		}

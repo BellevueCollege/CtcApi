@@ -338,6 +338,16 @@ namespace Ctc.Ods
 			}
 		}
 
+		/// <summary>
+		/// Removes the <see cref="ApiSettings.RegexPatterns.CommonCourseChar"/> from the end of a string.
+		/// </summary>
+		/// <param name="courseSubject"></param>
+		/// <returns>A new string with the trailing <see cref="ApiSettings.RegexPatterns.CommonCourseChar"/> removed.</returns>
+		static public string TrimCommonCourseChar(string courseSubject)
+		{
+			string commonCourseChar = GetApiSettings().RegexPatterns.CommonCourseChar;
+			return courseSubject.EndsWith(commonCourseChar) ? courseSubject.Replace(commonCourseChar, string.Empty) : courseSubject;
+		}
 	}
 }
 

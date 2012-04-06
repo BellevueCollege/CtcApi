@@ -451,7 +451,7 @@ namespace Ctc.Ods.Data
 			{
 				if (subjects.Count() == 1)
 				{
-					string subject = subjects[0].ToUpper();
+					string subject = Utility.TrimCommonCourseChar(subjects[0]).ToUpper();
 					courseData = courseData.Where(c => c.CourseID.Substring(0,5).Replace(Settings.RegexPatterns.CommonCourseChar, " ").Trim().ToUpper() == subject);
 				}
 				else
