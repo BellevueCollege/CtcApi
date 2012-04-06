@@ -445,18 +445,18 @@ namespace Ctc.Ods.Data
 
 			if (courseId != null)
 			{
-				courseData = courseData.Where(c => c.CourseID.Substring(0,5).Replace(Settings.RegexPatterns.CommonCourseChar, " ").Trim().ToUpper() == courseId.Subject.ToUpper() && c.CourseID.EndsWith(courseId.Number));
+				courseData = courseData.Where(c => c.CourseID.Substring(0,5).Trim().ToUpper() == courseId.Subject.ToUpper() && c.CourseID.EndsWith(courseId.Number));
 			}
 			if (subjects != null && subjects.Count() > 0)
 			{
 				if (subjects.Count() == 1)
 				{
-					string subject = Utility.TrimCommonCourseChar(subjects[0]).ToUpper();
-					courseData = courseData.Where(c => c.CourseID.Substring(0,5).Replace(Settings.RegexPatterns.CommonCourseChar, " ").Trim().ToUpper() == subject);
+					string subject = subjects[0].ToUpper();	// LINQ-to-Entities doesn't support indexed array values
+					courseData = courseData.Where(c => c.CourseID.Substring(0,5).Trim().ToUpper() == subject);
 				}
 				else
 				{
-					courseData = courseData.Where(c => subjects.Select(s => s.ToUpper()).Contains(c.CourseID.Substring(0, 5).Replace(Settings.RegexPatterns.CommonCourseChar, " ").Trim().ToUpper()));
+					courseData = courseData.Where(c => subjects.Select(s => s.ToUpper()).Contains(c.CourseID.Substring(0, 5).Trim().ToUpper()));
 				}
 			}
 

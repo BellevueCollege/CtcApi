@@ -14,6 +14,7 @@
 //License and GNU General Public License along with this program.
 //If not, see <http://www.gnu.org/licenses/>.
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Ctc.Ods.Data;
 using Ctc.Ods.Types;
@@ -79,14 +80,22 @@ namespace Ctc.Ods.Tests.RepositoryTests
 		[TestMethod]
 		public void WithSubject_Success()
 		{
-			const string SUBJECT = "ENGL";
+			const string SUBJECT = "NURS";
 
 			using (OdsRepository repository = new OdsRepository())
 			{
 				IList<Course> courses = repository.GetCourses(SUBJECT);
-				Assert.IsTrue(courses.Count > 0);
+				Assert.IsTrue(courses.Count > 0, "No records were returned for '{0}'!", SUBJECT);
 
-				int count = _dataVerifier.GetCourseCount("rtrim(left(replace(CourseID, '&', ' '), 5)) = 'ENGL'");
+#if DEBUG
+				Debug.Print("==== All courses returned ({0}) ====", courses.Count);
+				foreach (Course course in courses)
+				{
+					Debug.Print("{0}\tCCN: {1}", course.CourseID, course.IsCommonCourse);
+				}
+#endif
+
+				int count = _dataVerifier.GetCourseCount(string.Format("rtrim(left(CourseID, 5)) = '{0}'", SUBJECT));
 				Assert.AreEqual(count, courses.Count());
 			}
 		}
@@ -103,7 +112,15 @@ namespace Ctc.Ods.Tests.RepositoryTests
 				IList<Course> courses = repository.GetCourses(ccnSubject);
 				Assert.IsTrue(courses.Count > 0, "No records were returned for '{0}'!", ccnSubject);
 
-				int count = _dataVerifier.GetCourseCount(string.Format("rtrim(left(replace(CourseID, '&', ' '), 5)) = '{0}'", SUBJECT));
+#if DEBUG
+				Debug.Print("==== All courses returned ({0}) ====", courses.Count);
+				foreach (Course course in courses)
+				{
+					Debug.Print("{0}\tCCN: {1}", course.CourseID, course.IsCommonCourse);
+				}
+#endif
+
+				int count = _dataVerifier.GetCourseCount(string.Format("rtrim(left(CourseID, 5)) = '{0}'", ccnSubject));
 				Assert.AreEqual(count, courses.Count());
 			}
 		}
@@ -113,10 +130,10 @@ namespace Ctc.Ods.Tests.RepositoryTests
 		{
 			using (OdsRepository repository = new OdsRepository())
 			{
-				IList<Course> courses = repository.GetCourses(CourseID.FromString("ASTR 101"));
-				Assert.IsTrue(courses.Count > 0);
+				IList<Course> courses = repository.GetCourses(CourseID.FromString("ART 101"));
+				Assert.IsTrue(courses.Count > 0, "No records were returned for 'ART 101'!");
 
-				int count = _dataVerifier.GetCourseCount("CourseID like 'ASTR%101'");
+				int count = _dataVerifier.GetCourseCount("CourseID like 'ART%101' and CourseID not like '%&%'");
 				Assert.AreEqual(count, courses.Count);
 			}
 		}

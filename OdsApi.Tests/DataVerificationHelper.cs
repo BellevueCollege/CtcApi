@@ -19,6 +19,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using Ctc.Ods.Types;
 
 namespace Ctc.Ods.Tests
@@ -145,6 +146,7 @@ namespace Ctc.Ods.Tests
 				{
 					cmd.CommandText = sql;
 
+					Debug.Print("==> EXECUTING SQL QUERY: {0}", sql);
 					return int.Parse(cmd.ExecuteScalar().ToString());
 				}
 			}
@@ -384,8 +386,8 @@ namespace Ctc.Ods.Tests
 		/// </summary>
 		public void Dispose()
 		{
-			Dispose(true);
 			GC.SuppressFinalize(this);
+			Dispose(true);
 		}
 
 		/// <summary>
