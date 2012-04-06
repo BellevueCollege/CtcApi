@@ -13,6 +13,7 @@
 //You should have received a copy of the GNU Lesser General Public
 //License and GNU General Public License along with this program.
 //If not, see <http://www.gnu.org/licenses/>.
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -80,64 +81,32 @@ namespace Ctc.Ods.Tests.RepositoryTests
 		[TestMethod]
 		public void WithSubject_Success()
 		{
-			const string SUBJECT = "NURS";
-
-			using (OdsRepository repository = new OdsRepository())
-			{
-				IList<Course> courses = repository.GetCourses(SUBJECT);
-				Assert.IsTrue(courses.Count > 0, "No records were returned for '{0}'!", SUBJECT);
-
-#if DEBUG
-				Debug.Print("==== All courses returned ({0}) ====", courses.Count);
-				foreach (Course course in courses)
-				{
-					Debug.Print("{0}\tCCN: {1}", course.CourseID, course.IsCommonCourse);
-				}
-#endif
-
-				int count = _dataVerifier.GetCourseCount(string.Format("rtrim(left(CourseID, 5)) = '{0}'", SUBJECT));
-				Assert.AreEqual(count, courses.Count());
-			}
+			AssertCourseCount("NURS");
 		}
 
 		[TestMethod]
 		public void WithCommonCourseSubject_Success()
 		{
-			const string SUBJECT = "ASTR";
-
-			using (OdsRepository repository = new OdsRepository())
-			{
-				string ccnSubject = string.Concat(SUBJECT, "&");
-
-				IList<Course> courses = repository.GetCourses(ccnSubject);
-				Assert.IsTrue(courses.Count > 0, "No records were returned for '{0}'!", ccnSubject);
-
-#if DEBUG
-				Debug.Print("==== All courses returned ({0}) ====", courses.Count);
-				foreach (Course course in courses)
-				{
-					Debug.Print("{0}\tCCN: {1}", course.CourseID, course.IsCommonCourse);
-				}
-#endif
-
-				int count = _dataVerifier.GetCourseCount(string.Format("rtrim(left(CourseID, 5)) = '{0}'", ccnSubject));
-				Assert.AreEqual(count, courses.Count());
-			}
+			AssertCourseCount("ASTR&");
 		}
 
 		[TestMethod]
 		public void GetCourses_WithCourseID_Success()
 		{
-			using (OdsRepository repository = new OdsRepository())
-			{
-				IList<Course> courses = repository.GetCourses(CourseID.FromString("ART 101"));
-				Assert.IsTrue(courses.Count > 0, "No records were returned for 'ART 101'!");
-
-				int count = _dataVerifier.GetCourseCount("CourseID like 'ART%101' and CourseID not like '%&%'");
-				Assert.AreEqual(count, courses.Count);
-			}
+			AssertCourseCount("ART", "101");
 		}
 
+		[TestMethod]
+		public void WithCourseID_ACCT_CommonCourse_Success()
+		{
+			AssertCourseCount("ACCT&", "201");
+		}
+
+		[TestMethod]
+		public void WithCourseID_ACCT_Success()
+		{
+			AssertCourseCount("ACCT", "101");
+		}
 
 		[TestMethod]
 		public void GetCourses_VerifyCommonCourseCharacterRemovedFromCourseID()
@@ -176,15 +145,7 @@ namespace Ctc.Ods.Tests.RepositoryTests
 		[TestMethod]
 		public void GetCourses_WithSubjectList_Success()
 		{
-			using (OdsRepository repository = new OdsRepository())
-			{
-				IList<string> subjects = new List<string> {"ENGL", "ENGL&"};
-				IList<Course> courses = repository.GetCourses(subjects);
-				Assert.IsTrue(courses.Count > 0);
-
-				int count = _dataVerifier.GetCourseCount("(rtrim(left(CourseID, 5)) = 'ENGL' or rtrim(left(CourseID, 5)) = 'ENGL&')");
-				Assert.AreEqual(count, courses.Count());
-			}
+			AssertCourseCount(new List<string> {"ENGL", "ENGL&"});
 		}
 
 		/// <summary>
@@ -204,6 +165,85 @@ namespace Ctc.Ods.Tests.RepositoryTests
 			}
 		}
 
+		#region Private members
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="subject"></param>
+		private void AssertCourseCount(string subject)
+		{
+			using (OdsRepository repository = new OdsRepository())
+			{
+				IList<Course> courses = repository.GetCourses(subject);
+				Assert.IsTrue(courses.Count > 0, "No records were returned for '{0}'!", subject);
+
+				AssertCourseCount(courses, string.Format("rtrim(LEFT(CourseID, 5)) = '{0}'", subject));
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="subject"></param>
+		/// <param name="number"></param>
+		private void AssertCourseCount(string subject, string number)
+		{
+			using (OdsRepository repository = new OdsRepository())
+			{
+				ICourseID courseID = CourseID.FromString(subject, number);
+				IList<Course> courses = repository.GetCourses(courseID);
+				Assert.IsTrue(courses.Count > 0, "No records were returned for '{0} {1}'!", subject, number);
+
+				AssertCourseCount(courses, string.Format("rtrim(LEFT(CourseID, 5)) = '{0}' and LTRIM(RTRIM(SUBSTRING(CourseID, 6, 5))) = '{1}'", subject, number));
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="subjects"></param>
+		private void AssertCourseCount(IList<string> subjects)
+		{
+			using (OdsRepository repository = new OdsRepository())
+			{
+				IList<Course> courses = repository.GetCourses(subjects);
+				Assert.IsTrue(courses.Count > 0, "No records were returned for '{0}'!", subjects);
+
+				string whereClause = string.Empty;
+				if (subjects.Count > 0)
+				{
+					whereClause = "(";
+					for (int i = 0; i < subjects.Count; i++)
+					{
+						whereClause = string.Concat(whereClause, i > 0 ? " or " : string.Empty, String.Format("rtrim(LEFT(CourseID, 5)) = '{0}'", subjects[i]));
+					}
+					whereClause = string.Concat(whereClause, ")");
+				}
+
+				AssertCourseCount(courses, whereClause);
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="courses"></param>
+		/// <param name="whereClause"></param>
+		private void AssertCourseCount(IList<Course> courses, string whereClause)
+		{
+#if DEBUG
+			Debug.Print("==== All courses returned ({0}) ====", courses.Count);
+			foreach (Course course in courses)
+			{
+				Debug.Print("{0}\tCCN: {1}", course.CourseID, course.IsCommonCourse);
+			}
+#endif
+
+			int count = _dataVerifier.GetCourseCount(whereClause);
+			Assert.AreEqual(count, courses.Count());
+		}
+
+		#endregion
 
 	}
 }

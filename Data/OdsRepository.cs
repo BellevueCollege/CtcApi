@@ -216,12 +216,12 @@ namespace Ctc.Ods.Data
 
 		#region Course
 		/// <summary>
-		/// Retrieves all courses from the database
+		/// Retrieves all <see cref="Course"/>s from the ODS
 		/// </summary>
 		/// <returns></returns>
 		/// <remarks>
 		///		<example>
-		///			<code>
+		///			<code type="cs">
 		/// using (OdsRepository repository = new OdsRepository())
 		///	{
 		///		IEnumerable&lt;Course&gt; courses = repository.GetCourses();
@@ -268,6 +268,7 @@ namespace Ctc.Ods.Data
 		}
 
 		///<summary>
+		/// Retrieves the specified <see cref="Course"/>s from the ODS
 		///</summary>
 		///<param name="subject"></param>
 		///<param name="facetOptions"></param>
@@ -311,7 +312,7 @@ namespace Ctc.Ods.Data
 		}
 
 		/// <summary>
-		/// 
+		/// Retrieves the specified <see cref="Course"/>s from the ODS
 		/// </summary>
 		/// <param name="subjects"></param>
 		/// <param name="facetOptions"></param>
@@ -360,22 +361,24 @@ namespace Ctc.Ods.Data
 		}
 
 		/// <summary>
-		/// Retrieves the specified course from the database
+		/// Retrieves the specified <see cref="Course"/>s from the ODS
 		/// </summary>
 		/// <param name="courseId"></param>
-		///<param name="facetOptions"></param>
-		///<returns></returns>
+		/// <param name="facetOptions"></param>
+		/// <returns>
+		///		<note type="note">
+		///		This method may return more than one <see cref="Course"/> record.
+		///		</note>
+		/// </returns>
 		/// <remarks>
-		/// NOTE: This may return more than one <see cref="Course"/> record.
-		/// 
-		/// <example>
-		///		<code>
-		/// using (OdsRepository repository = new OdsRepository())
-		///	{
-		///		IEnumerable&lt;Course&gt; courses = repository.GetCourses(CourseID.FromString("art 101"));
-		/// }
-		///		</code>
-		/// </example>
+		///		<example>
+		///			<code type="cs">
+		///		using (OdsRepository repository = new OdsRepository())
+		///		{
+		///			IList&lt;Course&gt; courses = repository.GetCourses(CourseID.FromString("ART 101"));
+		///		}
+		///			</code>
+		///		</example>
 		/// </remarks>
 		public IList<Course> GetCourses(ICourseID courseId, IList<ISectionFacet> facetOptions = null)
 		{
@@ -383,8 +386,10 @@ namespace Ctc.Ods.Data
 
 			if (facetOptions != null)
 			{
-				string yrqId = CurrentYearQuarter.ID;
 				SectionFilters filters	= new SectionFilters(this) {facetOptions};
+				// LINQ to Entities only supports simple data types
+				string yrqId = CurrentYearQuarter.ID;
+				string realSubject = (courseId.IsCommonCourse ? string.Concat(courseId.Subject, Settings.RegexPatterns.CommonCourseChar) : courseId.Subject).ToUpper();
 
 				courses = _DbContext.Courses.Join(_DbContext.Sections.CompoundWhere(filters.FilterArray),
 				                                  course => course.CourseID,
@@ -392,7 +397,7 @@ namespace Ctc.Ods.Data
 				                                  (course, section) => new {course, section})
 						.Where(
 								h =>
-								h.course.CourseID.Substring(0, 5).Trim().ToUpper() == courseId.Subject.ToUpper()
+								h.course.CourseID.Substring(0, 5).Trim().ToUpper() == realSubject
 								&& h.course.CourseID.EndsWith(courseId.Number))
 						.Where(h => (h.course.YearQuarterEnd ?? Settings.YearQuarter.Max).CompareTo(yrqId) >= 0)
 						.Distinct()
@@ -432,8 +437,16 @@ namespace Ctc.Ods.Data
 
 		#region Private members
 		/// <summary>
-		/// 
+		/// Returns all <see cref="Course"/>s without <see cref="Section"/> filtering
 		/// </summary>
+		/// <param name="yrq">Only retrieve <see cref="Course"/>s that are active for the specified <see cref="YearQuarter"/></param>
+		/// <param name="courseId">Only retrieve <see cref="Course"/>s for the specified <see cref="ICourseID"/></param>
+		/// <param name="subjects">Only retrieve <see cref="Course"/>s with the specified subject prefix(es).</param>
+		/// <remarks>
+		///		If any <see cref="GetCourses()"/> method was called without specifying any <see cref="ISectionFacet"/>s, this method
+		///		will retrieve all current and future <see cref="Course"/>s after applying the remaining filter requests (e.g.
+		///		<paramref name="courseId"/>, <paramref name="subjects"/>, etc.)
+		/// </remarks>
 		/// <returns></returns>
 		protected IQueryable<Course> GetAllCourses(YearQuarter yrq = null, ICourseID courseId = null, params string[] subjects)
 		{
@@ -441,12 +454,19 @@ namespace Ctc.Ods.Data
 
 			string yrqId = (yrq != null) ? yrq.ID : CurrentYearQuarter.ID;
 			
+			// filter by active-in-current-or-future YRQ
 			courseData = courseData.Where(c => (c.YearQuarterEnd ?? Settings.YearQuarter.Max).CompareTo(yrqId) >= 0);
 
+			// filter by course
 			if (courseId != null)
 			{
-				courseData = courseData.Where(c => c.CourseID.Substring(0,5).Trim().ToUpper() == courseId.Subject.ToUpper() && c.CourseID.EndsWith(courseId.Number));
+				// LINQ-to-Entities only support simple data types
+				string realSubject = (courseId.IsCommonCourse ? string.Concat(courseId.Subject, Settings.RegexPatterns.CommonCourseChar) : courseId.Subject).ToUpper();
+
+				courseData = courseData.Where(c => c.CourseID.Substring(0,5).Trim().ToUpper() == realSubject && c.CourseID.EndsWith(courseId.Number));
 			}
+
+			// filter by subject(s)
 			if (subjects != null && subjects.Count() > 0)
 			{
 				if (subjects.Count() == 1)
