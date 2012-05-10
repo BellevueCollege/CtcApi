@@ -21,7 +21,7 @@ using Ctc.Ods.Config;
 using Ctc.Ods.Data;
 using Ctc.Ods.Types;
 
-namespace Ctc.Ods.Tests.ClassDataFilterTests
+namespace Ctc.Ods.Tests
 {
 	public static class TestHelper
 	{
@@ -104,6 +104,77 @@ namespace Ctc.Ods.Tests.ClassDataFilterTests
 			{
 				ApiSettings settings = ConfigurationManager.GetSection(ApiSettings.SectionName) as ApiSettings;
 				return settings != null ? settings.YearQuarter.Max : "Z999";
+			}
+		}
+
+		/// <summary>
+		/// Provides college-specific data for testing.
+		/// </summary>
+		public static class Data
+		{
+			public static ICourseID CourseIDOfferedEveryQuarter
+			{
+				get
+				{
+					string courseID = ConfigurationManager.AppSettings["Testing_CourseIDOfferedEveryQuarter"];
+					return CourseID.FromString(courseID);
+				}
+			}
+
+			static public string NonClassWhereClause
+			{
+				get
+				{
+					return ConfigurationManager.AppSettings["Testing_WhereClauseForNonClasses"];
+				}
+			}
+
+			static public YearQuarter YearQuarterWithSections
+			{
+				get
+				{
+					return YearQuarter.FromString(ConfigurationManager.AppSettings["Testing_YearQuarterWithSections"]);
+				}
+			}
+
+			static public string[] CourseSubjectNotInYRQ
+			{
+				get
+				{
+					return ConfigurationManager.AppSettings["Testing_CourseSubjectNotInYRQ"].Split('|');
+				}
+			}
+
+			static public string CourseSubjectOfferedEveryQuarter
+			{
+				get
+				{
+					return ConfigurationManager.AppSettings["Testing_CourseSubjectOfferedEveryQuarter"];
+				}
+			}
+
+			static public string ShortCourseSubject
+			{
+				get
+				{
+					return ConfigurationManager.AppSettings["Testing_ShortCourseSubject"];
+				}
+			}
+
+			static public string ShortCourseSubjectNumber
+			{
+				get
+				{
+					return ConfigurationManager.AppSettings["Testing_ShortCourseSubjectNumber"];
+				}
+			}
+
+			static public string CommonCourseCharacter
+			{
+				get
+				{
+					return ConfigurationManager.AppSettings["Testing_CommonCourseCharacter"];
+				}
 			}
 		}
 	}

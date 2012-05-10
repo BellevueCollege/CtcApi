@@ -224,23 +224,6 @@ namespace Ctc.Ods.Tests
 		{
 			string excludedSection = _dataVerifier.GetRandomClassID(@"isnull(SectionStatusID1, '') like '%X%'
 																																and isnull(SectionStatusID1, '') not like '%Z%'
-																																and isnull(SectionStatusID2, '') not like '%A%'
-																																and isnull(SectionStatusID4, '') not like '%M%'
-																																and isnull(SectionStatusID4, '') not like '%N%'");
-
-			AssertExcludedSection(excludedSection);
-		}
-
-		/// <summary>
-		/// Test exclusion of classes that have an 'A' in the SectionStatusID2 field
-		/// </summary>
-		[TestMethod]
-//		[Ignore]	// Test is not properly failing
-		public void GetSections_ExcludeSectionsExcludedFromGrading()
-		{
-			string excludedSection = _dataVerifier.GetRandomClassID(@"isnull(SectionStatusID2, '') like '%A%'
-																																and isnull(SectionStatusID1, '') not like '%Z%'
-																																and isnull(SectionStatusID1, '') not like '%X%'
 																																and isnull(SectionStatusID4, '') not like '%M%'
 																																and isnull(SectionStatusID4, '') not like '%N%'");
 
@@ -257,7 +240,6 @@ namespace Ctc.Ods.Tests
 			string excludedSection = _dataVerifier.GetRandomClassID(@"isnull(SectionStatusID4, '') like '%M%'
 																																and isnull(SectionStatusID1, '') not like '%Z%'
 																																and isnull(SectionStatusID1, '') not like '%X%'
-																																and isnull(SectionStatusID2, '') not like '%A%'
 																																and isnull(SectionStatusID4, '') not like '%N%'");
 
 			AssertExcludedSection(excludedSection);
@@ -415,14 +397,17 @@ namespace Ctc.Ods.Tests
 		[TestMethod]
 		public void GetSections_ByCourseIDCollection_WithYrq_Success()
 		{
-			int courseIdCount = 3;
-			IList<ICourseID> ids = _dataVerifier.GetCourseIDListFromQuery("stud", courseIdCount, " and YearQuarterID = 'B122' ");
 
 			using (OdsRepository repository = new OdsRepository())
 			{
-				IList<Section> sections = repository.GetSections(ids, YearQuarter.FromString("B122"), TestHelper.GetFacets());
+				YearQuarter yrq = repository.CurrentYearQuarter;
 
+				int courseIdCount = 3;
+				IList<ICourseID> ids = _dataVerifier.GetCourseIDListFromQuery("eng", courseIdCount, string.Format(" and YearQuarterID = '{0}' ", yrq));
+
+				IList<Section> sections = repository.GetSections(ids, yrq, TestHelper.GetFacets());
 				int sectionCount = sections.Count;
+
 				Assert.IsTrue(courseIdCount <= sectionCount, "Sections returned ({0}) is less than # of CourseIDs ({1})", sectionCount, courseIdCount);
 			}
 		}
@@ -484,7 +469,9 @@ namespace Ctc.Ods.Tests
 		{
 			using (OdsRepository repository = new OdsRepository())
 			{
-				IList<Section> sections = repository.GetSections(CourseID.FromString("ART 150"), YearQuarter.FromString("B122"), TestHelper.GetFacets());
+				YearQuarter yrq = repository.CurrentYearQuarter;
+
+				IList<Section> sections = repository.GetSections(TestHelper.Data.CourseIDOfferedEveryQuarter, yrq, TestHelper.GetFacets());
 
 				Assert.IsTrue(sections.Where(s => s.Offered != null).Count() > 0, "InstructionDetails are not being populated from the database");	// check for all NULL from the database
 

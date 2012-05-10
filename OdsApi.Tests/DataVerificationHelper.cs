@@ -31,7 +31,7 @@ namespace Ctc.Ods.Tests
 		/// <summary>
 		/// Filters out non-classes
 		/// </summary>
-		private readonly string _sectionFilter = " and (not isnull(SectionStatusID1, '') like '%Z%' and not isnull(SectionStatusID1, '') like '%X%' and not isnull(SectionStatusID2, '') like '%A%' and not isnull(SectionStatusID4, '') like '%M%' and not isnull(SectionStatusID4, '') like '%n%') ";
+		private readonly string _sectionFilter =  string.Format(" {0} ", TestHelper.Data.NonClassWhereClause);
 		private string _yrqFilter;
 
 		private DbProviderFactory _provider;
@@ -163,8 +163,7 @@ namespace Ctc.Ods.Tests
 		/// <returns></returns>
 		public int GetCourseIDCountForSections(string whereClause)
 		{
-			string courseYrqFilter = string.Format(" isnull(EffectiveYearQuarterBegin, '0000') <= '{0}' and isnull(EffectiveYearQuarterEnd, 'Z999') >= '{0}' ",
-																							CurrentYrq);
+			string courseYrqFilter = string.Format(" isnull(EffectiveYearQuarterEnd, 'Z999') >= '{0}' ", CurrentYrq);
 			string sql = string.Format("select count(distinct replace(CourseID,'&', ' ')) from vw_Class where {0} and CourseID in (select CourseID from vw_Course where {3}) {1} {2}",
 																whereClause, _sectionFilter, _yrqFilter, courseYrqFilter);
 			try
@@ -226,6 +225,20 @@ namespace Ctc.Ods.Tests
 																	whereClause, applySectionFilter ? _sectionFilter : string.Empty);
 
 			return int.Parse(ExecuteScalar(sql));
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="whereClause"></param>
+		/// <param name="applySectionFilter"></param>
+		/// <returns></returns>
+		public string GetRandomCourseSubject(string whereClause, bool applySectionFilter = false)
+		{
+			string sql = String.Format("SELECT TOP 1 REPLACE(p.[CoursePrefixID], '&', '') FROM vw_CoursePrefix AS p where p.[CoursePrefixID] in (select LEFT(CourseID, 5) from vw_Class where {0} {1})",
+																	whereClause, applySectionFilter ? _sectionFilter : string.Empty);
+
+			return ExecuteScalar(String.Concat(sql, " ORDER BY NEWID()"));
 		}
 
 		/// <summary>

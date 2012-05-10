@@ -127,21 +127,22 @@ namespace Ctc.Ods.Tests.RepositoryTests
 		}
 
 		/// <summary>
-		/// Test that we can return a list of course subjects which have active sections in the specified quarter
+		/// 
 		/// </summary>
 		[TestMethod]
-		public void GetSubjects_VerifyNoAdultFitnessInFall2011()
+		public void GetSubjects_VerifyCourseSubjectIsCorrectlyExcluded()
 		{
+			YearQuarter yrq = TestHelper.Data.YearQuarterWithSections;
+
 			using (OdsRepository repo = new OdsRepository())
 			{
-				YearQuarter yearQuarter = YearQuarter.FromFriendlyName("Fall2011");
-				IList<CoursePrefix> actual = repo.GetCourseSubjects(yearQuarter);
+				IList<CoursePrefix> actual = repo.GetCourseSubjects(yrq);
+				Assert.IsTrue(actual.Count > 0, "No subjects were returned for {0} ({1})", yrq.FriendlyName, yrq);
 
-				int expectedCount = _dataVerifier.GetCourseSubjectCountForSections(string.Format("YearQuarterID = '{0}'", yearQuarter.ID), true);
-				Assert.AreEqual(expectedCount, actual.Count);
+				string subject = _dataVerifier.GetRandomCourseSubject(string.Format("YearQuarterID <> '{0}'", yrq.ID), true);
 
-				int adfitCount = actual.Where(s => s.Subject.Equals("ADFIT")).Count();
-				Assert.IsFalse(adfitCount > 0, "Adult Fitness found ({0} times)", adfitCount);
+				int adfitCount = actual.Where(s => s.Subject.ToUpper() == subject.ToUpper()).Count();
+				Assert.IsFalse(adfitCount > 0, "{0} found in {1} ({2})", adfitCount, yrq.FriendlyName, yrq);
 			}
 		}
 

@@ -16,6 +16,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Ctc.Ods.Data;
@@ -185,7 +186,7 @@ namespace Ctc.Ods.Tests
 				int listCount = yrqList.Count;
 				Assert.IsTrue(listCount == 1, "Returned {0} items, expected 1", listCount);	// NOTE: test does not yet account for SUMMER/FALL overlapping registration period
 
-				Assert.AreEqual(repository.CurrentRegistrationQuarter.ID, yrqList[0].ID, "The quarter returned is not the current reigstration quarter.");
+				Assert.AreEqual(repository.CurrentYearQuarter.ID, yrqList[0].ID, "The quarter returned is not the current quarter.");
 			}
 		}
 
@@ -210,7 +211,7 @@ namespace Ctc.Ods.Tests
 					Assert.IsFalse(string.IsNullOrWhiteSpace(yrq.FriendlyName), "FriendlyName for item #{0} is null/empty", i++);
 				}
 
-				Assert.AreEqual(repository.CurrentRegistrationQuarter.ID, yrqList[0].ID, "The quarter returned is not the current reigstration quarter.");
+				Assert.AreEqual(repository.CurrentYearQuarter.ID, yrqList[0].ID, "The quarter returned is not the current quarter.");
 			}
 		}
 		#endregion
@@ -371,7 +372,17 @@ namespace Ctc.Ods.Tests
 			{
 				IList<ISectionFacet> facets = TestHelper.GetFacets(new ModalityFacet(ModalityFacet.Options.Online));
 
-				int count = repository.GetCourses(facets).Select(c => c.CourseID).Distinct().Count();
+				IList<Course> courses = repository.GetCourses(facets);
+				Debug.Print("==> Online course count before DISTINCT: {0}", courses.Count);
+
+				int count = courses.Select(c => c.CourseID).Distinct().Count();
+				Debug.Print("==> Online course count after DISTINCT: {0}", count);
+#if DEBUG
+				foreach (string courseid in courses.Select(c => c.CourseID).Distinct())
+				{
+					Debug.Print(courseid);
+				}
+#endif
 
 				int expectedCount = _dataVerifier.GetCourseIDCountForSections(String.Format("SBCTCMisc1 like '3%'"));
 				Assert.AreEqual(expectedCount, count);

@@ -111,32 +111,32 @@ namespace Ctc.Ods.Tests.ClassDataFilterTests
 		}
 
 		/// <summary>
-		/// Simulates actual call from Online Class Schedule application
+		/// 
 		/// </summary>
 		[TestMethod]
-		public void GetSections_ART_Fall2011_Online_Success()
+		public void GetSections_SimulateClassScheduleApplication()
 		{
-			string subject = "ART";
-			string yrq = "B122";
-			int count;
-
+			// Simulates actual call from Online Class Schedule application - which passes extra 
 			IList<ISectionFacet> facets = TestHelper.GetFacets(new ModalityFacet(ModalityFacet.Options.Online));
 			facets.Add(new TimeFacet(new TimeSpan(0, 0, 0), new TimeSpan(23, 59, 0)));
 			facets.Add(new DaysFacet(DaysFacet.Options.All));
 
 			using (OdsRepository repository = new OdsRepository())
 			{
-				IList<Section> sections = repository.GetSections(subject, YearQuarter.FromString(yrq), facets);
+				YearQuarter yrq = repository.CurrentYearQuarter;
 				
-				count = sections.Count;
+				string subject = TestHelper.Data.CourseSubjectOfferedEveryQuarter;
+				IList<Section> sections = repository.GetSections(subject, yrq, facets);
+				
+				int count = sections.Count;
 				Assert.IsTrue(count > 0, "No records returned.");
+
+				int expectedSectionCount = _dataVerifier.GetSectionCount(string.Format("(CourseID like '{0}%' and SBCTCMisc1 like '3%' and YearQuarterID = '{1}')", subject, yrq.ID));
+				Assert.AreEqual(expectedSectionCount, count);
+
+				int allSectionCount = _dataVerifier.GetSectionCount("not ClassID is null");
+				Assert.IsTrue(allSectionCount > count, "Query failed: ALL records were returned.");
 			}
-
-			int expectedSectionCount = _dataVerifier.GetSectionCount(string.Format("(CourseID like '{0}%' and SBCTCMisc1 like '3%' and YearQuarterID = '{1}')", subject, yrq));
-			Assert.AreEqual(expectedSectionCount, count);
-
-			int allSectionCount = _dataVerifier.GetSectionCount("not ClassID is null");
-			Assert.IsTrue(allSectionCount > count, "Query failed: ALL records were returned.");
 		}
 
 		/// <summary>
