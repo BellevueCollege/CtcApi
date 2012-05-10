@@ -14,7 +14,6 @@
 //License and GNU General Public License along with this program.
 //If not, see <http://www.gnu.org/licenses/>.
 using System;
-using System.Configuration;
 using System.Text.RegularExpressions;
 using Ctc.Ods.Config;
 using Ctc.Ods.Types;
@@ -29,12 +28,12 @@ namespace Ctc.Ods
 	/// </remarks>
 	public class CourseID : ICourseID, IEquatable<CourseID>
 	{
-		private string _commonCourseChar;
+		private static string _commonCourseChar;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		protected string CommonCourseChar
+		protected static string CommonCourseChar
 		{
 			get
 			{
@@ -93,10 +92,10 @@ namespace Ctc.Ods
 			courseId = courseId.ToUpper();
 
 			// handle Course IDs w/ separating whitespace (e.g. user-/developer-entered)
-			if (Regex.IsMatch(courseId, @"\w+\s+\w+"))
+			if (Regex.IsMatch(courseId, string.Format(@"[\w\{0}]+[ \t]+\w+", CommonCourseChar)))
 			{
 				// contains whitespace in the middle
-				string[] parts = Regex.Split(courseId, @"\s+");
+				string[] parts = Regex.Split(courseId, @"[ \t]+");
 				// use values w/o leading/trailing whitespace
 				return new CourseID(parts[0].Trim(), parts[1].Trim());
 			}
@@ -113,7 +112,7 @@ namespace Ctc.Ods
 		/// <returns></returns>
 		static public CourseID FromString(string subject, string number)
 		{
-			return FromString(String.Concat(subject, " ", number));
+			return new CourseID(subject, number);
 		}
 
 		#endregion

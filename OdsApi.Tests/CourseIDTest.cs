@@ -113,6 +113,20 @@ namespace Ctc.Ods.Tests
 		}
 
 		[TestMethod()]
+		public void FromString_SubjectAndNumber_CommonCourse_2charSubject()
+		{
+			// this test comes from a real-world scenario which revealed a bug. 5/07/2012, shawn.south@bellevuecollege.edu
+			string subject = TestHelper.Data.ShortCourseSubject;
+			string number = TestHelper.Data.ShortCourseSubjectNumber;
+
+			ICourseID actual = CourseID.FromString(string.Concat(subject, TestHelper.Data.CommonCourseCharacter), number);
+
+			Assert.AreEqual(subject, actual.Subject);
+			Assert.AreEqual(number, actual.Number);
+			Assert.IsTrue(actual.IsCommonCourse, "Common Course flag is not set");
+		}
+
+		[TestMethod()]
 		public void ToStringConversion()
 		{
 			ICourseID target = CourseID.FromString("ART", "101");
