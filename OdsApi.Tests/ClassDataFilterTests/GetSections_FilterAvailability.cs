@@ -15,9 +15,6 @@
 //If not, see <http://www.gnu.org/licenses/>.
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using System.Linq;
-using System.Collections.Generic;
-using Ctc.Ods.Types;
 using Ctc.Ods.Config;
 using System.Configuration;
 
