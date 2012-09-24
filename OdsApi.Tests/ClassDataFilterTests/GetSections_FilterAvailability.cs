@@ -15,6 +15,12 @@
 //If not, see <http://www.gnu.org/licenses/>.
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using System.Linq;
+using System.Collections.Generic;
+using Ctc.Ods.Types;
+using Ctc.Ods.Config;
+using System.Configuration;
+
 namespace Ctc.Ods.Tests.ClassDataFilterTests
 {
 	/// <summary>
@@ -84,11 +90,14 @@ namespace Ctc.Ods.Tests.ClassDataFilterTests
 		[TestMethod]
 		public void GetSections_Open_Success()
 		{
+			ApiSettings settings = (ApiSettings)ConfigurationManager.GetSection(ApiSettings.SectionName);
+			Assert.IsNotNull(settings, "Unable to create an instance of the ApiSettings.");
+
 			int count = TestHelper.GetSectionCountWithFilter(new AvailabilityFacet(AvailabilityFacet.Options.Open));
 
 			string openClusteredSections = "select c.ClassID from vw_Class c where not c.ClusterItemNumber is null group by c.ClassID having (max(c.ClusterCapacity) - sum(c.StudentsEnrolled)) > 0";
 			string openRegularSections = "select c2.ClassID from vw_Class c2 where c2.ClusterItemNumber is null and ((c2.ClassCapacity - c2.StudentsEnrolled) > 0)";
-			int allSectionCount = _dataVerifier.GetSectionCount(string.Format("ClassID in ({0} union {1}) and not ClassID in (select w.ClassID from vw_Waitlist w)", openClusteredSections, openRegularSections));
+			int allSectionCount = _dataVerifier.GetSectionCount(string.Format("ClassID in ({0} union {1}) and not ClassID in (select w.ClassID from vw_Waitlist w where w.Status = '{2}')", openClusteredSections, openRegularSections, settings.Waitlist.Status));
 
 			Assert.AreEqual(allSectionCount, count);
 		}
