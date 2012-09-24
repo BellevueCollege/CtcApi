@@ -19,6 +19,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using Ctc.Ods.Data;
 using Ctc.Ods.Types;
+using Ctc.Ods.Config;
+using System.Configuration;
 
 namespace Ctc.Ods
 {
@@ -51,6 +53,7 @@ namespace Ctc.Ods
 	public class AvailabilityFacet : ISectionFacet
 	{
 		private Options _options;
+		private string _waitlistStatus;
 
 		///<summary>
 		///</summary>
@@ -73,6 +76,8 @@ namespace Ctc.Ods
 		///<param name="options"></param>
 		public AvailabilityFacet(Options options)
 		{
+			ApiSettings settings = ConfigurationManager.GetSection(ApiSettings.SectionName) as ApiSettings;
+			_waitlistStatus = settings != null ? settings.Waitlist.Status : String.Empty;
 			_options = options;
 		}
 
@@ -111,7 +116,7 @@ namespace Ctc.Ods
 				if (dbContext != null)
 				{
 					OdsContext db = dbContext as OdsContext;
-
+					
 					if (db != null)
 					{
 						return s => db.Sections.Where(section => section.ClusterItemNumber != null)
@@ -128,7 +133,7 @@ namespace Ctc.Ods
 								     							 							 .Where(sect => sect.ClassCapacity - sect.StudentsEnrolled > 0)
 								     							 							 .Select(sect => sect.ClassID)
 								     							 )
-								     							 .Where(id => !db.WaitListCounts.Select(w => w.ClassID).Contains(id))
+																	 .Where(id => !db.WaitListCounts.Where(w => w.Status == _waitlistStatus).Select(w => w.ClassID).Contains(id))
 								     							 .Contains(s.ClassID);
 					}
 
