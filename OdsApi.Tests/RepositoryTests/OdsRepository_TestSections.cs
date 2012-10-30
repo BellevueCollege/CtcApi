@@ -92,6 +92,13 @@ namespace Ctc.Ods.Tests
 			using (OdsRepository repository = new OdsRepository())
 			{
 				IList<Section> sections = repository.GetSections(TestHelper.GetFacets());
+
+				/* Additional Debugging
+				string yrq = "B233";
+				string[] ins = {"3468", "3472"};
+				IEnumerable<Section> sec = sections.Where(s => ins.Contains(s.ID.ItemNumber) && s.ID.YearQuarter == yrq);
+				// */
+
 				Assert.IsTrue(sections.Count > 0);
 			}
 		}
