@@ -66,10 +66,9 @@ namespace Ctc.Ods.Tests.ClassDataFilterTests
     	public void GetSections_Verify_IsVariableCredits_Flag()
     	{
     		IList<Section> sections = TestHelper.GetSectionsWithFilter(new YearQuarterFacet(YearQuarter.FromString("B123")));
-    		IList<Section> engl = sections.Where(s => s.CourseSubject.ToUpper() == "ENGL" && s.CourseNumber == "299").ToList();
+//    		IList<Section> engl = sections.Where(s => s.CourseSubject.ToUpper() == "ENGL" && s.CourseNumber == "299").ToList();
 
 				int actual = sections.Where(s => s.IsVariableCredits).Count();
-				Assert.IsTrue(actual > 0, "No Sections have their IsVariableCredits flag set.");
 
     		int expected = _dataVerifier.GetSectionCount("isnull(VariableCredits, 0) <> 0 and YearQuarterID = 'B123'");
     		Assert.AreEqual(expected, actual);
