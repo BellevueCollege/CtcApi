@@ -33,17 +33,15 @@ namespace CtcApi.Config
 	///		to load the <see cref="ConfigurationSection"/> with the <i>name</i> retrieved.
 	///		</para>
 	/// </typeparam>
-	public abstract class CtcConfigBase<T>
+	public abstract class CtcConfigBase<T> where T : class
 	{
 		/// <summary>
-		/// 
+		/// Gets the name of the XML section (i.e. node) associated with the inheriting child <i>class</i>
 		/// </summary>
-		/// <remarks>
-		///		<para>
-		///		This 
-		///		</para>
-		/// </remarks>
-		/// <returns></returns>
+		/// <returns>
+		///		The name of the <see cref="XmlTypeAttribute"/> attached to the child <i>class</i> which
+		///		inherits from <see cref="CtcConfigBase{T}"/>
+		/// </returns>
 		public static string GetSectionName()
 		{
 			System.Reflection.MemberInfo info = typeof(T);
@@ -57,6 +55,19 @@ namespace CtcApi.Config
 			}
 				
 			throw new InvalidOperationException(string.Format("Unable to find an XmlTypeAttribute for '{0}'", typeof(T)));
+		}
+
+		/// <summary>
+		/// Load settings from the application's .config file.
+		/// </summary>
+		/// <remarks>
+		///		This method loads settings from the XML node which matches the name of the <see cref="XmlTypeAttribute"/>
+		///		for the child <i>class</i> which inherits from <see cref="CtcConfigBase{T}"/>
+		/// </remarks>
+		/// <returns></returns>
+		public static T Load()
+		{
+			return ConfigurationManager.GetSection(GetSectionName()) as T;
 		}
 	}
 }
