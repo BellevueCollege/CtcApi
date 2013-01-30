@@ -16,6 +16,7 @@
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <PackageDir>Package\$(Configuration)</PackageDir>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -61,9 +62,9 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Testing\FakeHttpHelper.cs" />
-    <Compile Include="Web\DictionaryStateProvider.cs" />
-    <Compile Include="Web\DummyWebResponse.cs" />
-    <Compile Include="Web\IStateProvider.cs" />
+    <Compile Include="Testing\DictionaryStateProvider.cs" />
+    <Compile Include="Net\DummyWebResponse.cs" />
+    <Compile Include="IStateProvider.cs" />
     <Compile Include="Web\Mvc\AuthorizeFromConfigAttribute.cs" />
     <Compile Include="Web\Mvc\BaseController.cs" />
     <Compile Include="Web\Mvc\CustomControllerFactory.cs" />
@@ -71,15 +72,27 @@
     <Compile Include="Web\SessionStateProvider.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="CtcApi.nuspec">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="mkpkg.cmd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
+			 Other similar extension points exist, see Microsoft.Common.targets.
+	<Target Name="BeforeBuild">
+	</Target>
+	<Target Name="AfterBuild">
+	</Target>
+	-->
+  <!-- NuGet packaging code obtained from http://blog.richardadleta.com/2011/06/automating-nuget-packing-and-publishing.html -->
+  <Target Name="Package">
+    <!-- Ensure the Package directory exists for this project -->
+    <RemoveDir Directories="$(PackageDir)" />
+    <MakeDir Directories="$(PackageDir)" />
+    <!-- Package the project -->
+    <Exec Command="NuGet.exe pack -Symbols -OutputDir &quot;$(PackageDir)&quot; -Properties Configuration=$(Configuration)" />
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
