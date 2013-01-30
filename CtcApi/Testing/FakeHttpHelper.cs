@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 // This file contains classes adapted from the examples published at
 // http://blog.salamandersoft.co.uk/index.php/2009/10/how-to-mock-httpwebrequest-when-unit-testing/
-namespace CanvasImportTests
+namespace CtcApi.Testing
 {
   /// <summary>
   /// Provides functionality for injecting mock HTTP objects into standard .NET calls

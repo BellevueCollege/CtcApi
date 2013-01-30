@@ -13,27 +13,12 @@
 //You should have received a copy of the GNU Lesser General Public
 //License and GNU General Public License along with this program.
 //If not, see <http://www.gnu.org/licenses/>.
-using System.Collections.Generic;
-using CtcApi.Web;
 
-namespace CanvasImportTests
+namespace CtcApi
 {
-	public class DictionaryStateProvider : IStateProvider
+	public interface IStateProvider
 	{
-		private Dictionary<string,object> _collection = new Dictionary<string,object>();
-
-		public object this[string key]
-		{
-			get
-			{
-				return _collection.ContainsKey(key) ? _collection[key] : null;
-			}
-			set {_collection[key] = value;}
-		}
-
-		public void Remove(string key)
-		{
-			_collection.Remove(key);
-		}
+		object this[string key] { get;set; }
+		void Remove(string key);
 	}
 }

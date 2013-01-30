@@ -13,12 +13,14 @@
 //You should have received a copy of the GNU Lesser General Public
 //License and GNU General Public License along with this program.
 //If not, see <http://www.gnu.org/licenses/>.
+using System.Net;
 
-namespace CtcApi.Web
+namespace CtcApi.Net
 {
-	public interface IStateProvider
+	/// <summary>
+	/// 
+	/// </summary>
+	public class DummyWebResponse : WebResponse
 	{
-		object this[string key] { get;set; }
-		void Remove(string key);
 	}
 }

@@ -13,14 +13,27 @@
 //You should have received a copy of the GNU Lesser General Public
 //License and GNU General Public License along with this program.
 //If not, see <http://www.gnu.org/licenses/>.
-using System.Net;
+using System.Collections.Generic;
+using CtcApi.Web;
 
-namespace CtcApi.Web
+namespace CtcApi.Testing
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	public class DummyWebResponse : WebResponse
+	public class DictionaryStateProvider : IStateProvider
 	{
+		private Dictionary<string,object> _collection = new Dictionary<string,object>();
+
+		public object this[string key]
+		{
+			get
+			{
+				return _collection.ContainsKey(key) ? _collection[key] : null;
+			}
+			set {_collection[key] = value;}
+		}
+
+		public void Remove(string key)
+		{
+			_collection.Remove(key);
+		}
 	}
 }
