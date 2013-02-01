@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("CtcApi")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Common API for use by Washington State community and technical colleges. For more info, visit http://codemastershawn.com/kb/index.php/CTC_API")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Washington State Board Community and Technical Colleges - Information Technology (SBCTC-IT)")]
 [assembly: AssemblyProduct("CtcApi")]
-[assembly: AssemblyCopyright("Copyright ©  2013")]
+[assembly: AssemblyCopyright("Copyright © 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
