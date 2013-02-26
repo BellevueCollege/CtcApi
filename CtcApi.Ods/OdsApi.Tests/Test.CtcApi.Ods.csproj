@@ -84,7 +84,7 @@
     <Compile Include="RepositoryTests\Repository_TestSubjects.cs" />
     <Compile Include="SearchTests\GetSections_Search.cs" />
     <Compile Include="TestHelper.cs" />
-    <Compile Include="CourseDescriptionTest.cs" />
+    <Compile Include="RepositoryTests\Repository_TestCourseDescription.cs" />
     <Compile Include="CourseIDTest.cs" />
     <Compile Include="CoursesTest.cs" />
     <Compile Include="DataVerificationHelper.cs" />

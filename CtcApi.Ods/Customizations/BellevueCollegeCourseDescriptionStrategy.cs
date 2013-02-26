@@ -15,7 +15,9 @@
 //If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using Ctc.Ods.Config;
 using Ctc.Ods.Data;
 using Ctc.Ods.Types;
 
@@ -27,8 +29,9 @@ namespace Ctc.Ods.Customizations
 	internal class BellevueCollegeCourseDescriptionStrategy : ICourseDescriptionStrategy
 	{
 		private IEnumerable<CourseDescription1Entity> _descriptionsEntity;
+	  private readonly ApiSettings _settings = ConfigurationManager.GetSection(ApiSettings.SectionName) as ApiSettings;
 
-		/// <summary>
+	  /// <summary>
 		/// Encapsulates Bellevue College's business logic for retrieving course descriptions
 		/// </summary>
 		/// <param name="descriptionsEntity">A collection of <see cref="Course"/> descriptions from the first table in the ODS.</param>
@@ -75,7 +78,7 @@ namespace Ctc.Ods.Customizations
 				{
 					// Where() expressions within Entity Framework queries can only use primitive data types
 					string strYrqId = yrq.ID;
-					string subject = courseId.Subject;
+				  string subject = courseId.IsCommonCourse ? String.Concat(courseId.Subject, _settings.RegexPatterns.CommonCourseChar) : courseId.Subject;
 					string courseNumber = courseId.Number;
 
 					IEnumerable<CourseDescription> list = _descriptionsEntity.Where(desc => desc.CourseID.StartsWith(subject) && desc.CourseID.EndsWith(courseNumber))
