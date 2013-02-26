@@ -65,10 +65,13 @@
     <Compile Include="Testing\DictionaryStateProvider.cs" />
     <Compile Include="Net\DummyWebResponse.cs" />
     <Compile Include="IStateProvider.cs" />
+    <Compile Include="Web\Mvc\ActionOutputCacheAttribute.cs" />
     <Compile Include="Web\Mvc\AuthorizeFromConfigAttribute.cs" />
     <Compile Include="Web\Mvc\BaseController.cs" />
     <Compile Include="Web\Mvc\CustomControllerFactory.cs" />
+    <Compile Include="Web\Mvc\HtmlExtensions.cs" />
     <Compile Include="Web\Security\ActiveDirectoryRoleProvider.cs" />
+    <Compile Include="Web\Security\CasAuthorizeAttribute.cs" />
     <Compile Include="Web\SessionStateProvider.cs" />
   </ItemGroup>
   <ItemGroup>

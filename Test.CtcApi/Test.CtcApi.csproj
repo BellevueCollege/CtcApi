@@ -63,7 +63,10 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionOutputCacheAttributeTest.cs" />
+    <Compile Include="CasAuthorizeAttributeTest.cs" />
     <Compile Include="CtcConfigBaseTest.cs" />
+    <Compile Include="HtmlExtensionsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestConfigHandler.cs" />
   </ItemGroup>

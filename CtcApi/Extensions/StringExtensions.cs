@@ -39,7 +39,7 @@ namespace CtcApi.Extensions
 		private static readonly char _urlSeparator = '/';
 
 		/// <summary>
-		/// 
+		/// Combines two or more strings into a valid file/folder path.
 		/// </summary>
 		/// <param name="src"></param>
 		/// <param name="pathParts"></param>
@@ -63,11 +63,12 @@ namespace CtcApi.Extensions
 		}
 
 		/// <summary>
-		/// 
+		/// Combines two or more strings into a URL.
 		/// </summary>
 		/// <param name="src"></param>
 		/// <param name="urlPart"></param>
 		/// <returns></returns>
+		/// <seealso cref="Path.Combine(string[])"/>
 		public static string UriCombine(this string src, params string[] urlPart)
 		{
 			// TODO: rename to CombineUrl()
@@ -90,7 +91,7 @@ namespace CtcApi.Extensions
 		}
 
 		/// <summary>
-		/// 
+		/// Capitalizes the first letter of each word in the string.
 		/// </summary>
 		/// <param name="src"></param>
 		/// <remarks>
@@ -138,7 +139,7 @@ namespace CtcApi.Extensions
 		}
 
 		/// <summary>
-		/// 
+		/// Joins an array of strings into one.
 		/// </summary>
 		/// <param name="src"></param>
 		/// <param name="seperator"></param>
@@ -158,15 +159,39 @@ namespace CtcApi.Extensions
 		}
 
 		/// <summary>
-		/// 
+		/// Saves the string to a file.
 		/// </summary>
 		/// <param name="str"></param>
 		/// <param name="filename"></param>
 		/// <returns></returns>
+		/// <seealso cref="ByteExtensions.ToFile"/>
 		public static bool ToFile(this string str, string filename)
 		{
 			byte[] data = Encoding.UTF8.GetBytes(str);
 			return data.ToFile(filename, str.Length);
 		}
-	}
+
+	  /// <summary>
+	  /// Safely converts a string to an int.
+	  /// </summary>
+	  /// <param name="value"></param>
+	  /// <param name="defaultValue">A default value to return if the <param name="value"/> cannot be converted to an int.</param>
+	  /// <returns>
+	  ///   The <see>parsed<cref>Int32.Parse</cref></see> value of the <param name="value">string</param>,
+	  ///   otherwise the <param name="defaultValue"/>.
+	  /// </returns>
+	  public static int SafeToInt32(this string value, int defaultValue)
+    {
+      if (!string.IsNullOrWhiteSpace(value))
+      {
+        int outValue;
+
+        if (int.TryParse(value, out outValue))
+        {
+          return outValue;
+        }
+      }
+      return defaultValue;
+    }
+  }
 }
