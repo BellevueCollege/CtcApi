@@ -143,7 +143,10 @@ namespace Ctc.Ods.Tests.RepositoryTests
 
 				IEnumerable<CoursePrefix> shouldBeEmpty = actual.Where(s => s.Subject.ToUpper() == subject.ToUpper());
 				int emptyCount = shouldBeEmpty.Count();
-				Assert.IsFalse(emptyCount > 0, "{0} found in {1} ({2})", emptyCount, yrq.FriendlyName, yrq);
+			  if (emptyCount > 0)
+			  {
+			    Assert.Fail("{0} found in {1} ({2})", emptyCount, yrq.FriendlyName, yrq);
+			  }
 			}
 		}
 

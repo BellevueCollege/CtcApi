@@ -65,7 +65,7 @@ namespace Ctc.Ods.Tests.ClassDataFilterTests
     	[TestMethod]
     	public void GetSections_Verify_IsVariableCredits_Flag()
     	{
-    		IList<Section> sections = TestHelper.GetSectionsWithFilter(new YearQuarterFacet(YearQuarter.FromString("B123")));
+    		IList<Section> sections = TestHelper.GetSectionsWithFilter(new YearQuarterFacet(YearQuarter.FromString("B123")), false);
 //    		IList<Section> engl = sections.Where(s => s.CourseSubject.ToUpper() == "ENGL" && s.CourseNumber == "299").ToList();
 
 				int actual = sections.Where(s => s.IsVariableCredits).Count();

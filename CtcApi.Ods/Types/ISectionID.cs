@@ -52,5 +52,11 @@ namespace Ctc.Ods.Types
 		/// <param name="other"></param>
 		/// <returns></returns>
 		bool Equals(string other);
+
+	  /// <summary>
+	  /// 
+	  /// </summary>
+	  /// <returns></returns>
+	  string ToString();
 	}
 }

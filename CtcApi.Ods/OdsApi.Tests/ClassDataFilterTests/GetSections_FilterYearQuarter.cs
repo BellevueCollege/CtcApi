@@ -65,7 +65,7 @@ namespace Ctc.Ods.Tests.ClassDataFilterTests
         /// 
         /// </summary>
         [TestMethod]
-        public void GetSections_B121_Success()
+        public void GetSections_OneQuarter_Success()
         {
           IList<YearQuarter> yearQuartersToFilter = new List<YearQuarter>();
 //          yearQuartersToFilter.Add(YearQuarter.FromString("B121"));
@@ -101,7 +101,7 @@ namespace Ctc.Ods.Tests.ClassDataFilterTests
 					yearQuartersToFilter.Add(YearQuarter.FromString("B121"));
 					yearQuartersToFilter.Add(YearQuarter.FromString("B122"));
 
-          int returnedCount = TestHelper.GetSectionCountWithFilter(new YearQuarterFacet(yearQuartersToFilter));
+          int returnedCount = TestHelper.GetSectionCountWithFilter(new YearQuarterFacet(yearQuartersToFilter), false);
         	int actualCount = _dataVerifier.GetSectionCount(string.Format("YearQuarterID in ('{0}', '{1}', '{2}')",
         																																yearQuartersToFilter[0].ID,
 																																				yearQuartersToFilter[1].ID,

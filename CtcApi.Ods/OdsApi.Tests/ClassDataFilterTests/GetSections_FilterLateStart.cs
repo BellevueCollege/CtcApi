@@ -95,7 +95,7 @@ namespace Ctc.Ods.Tests.ClassDataFilterTests
       int count = TestHelper.GetSectionCountWithFilter(new LateStartFacet());
 
 			int allSectionCount = _dataVerifier.AllSectionsCount;
-			Assert.IsTrue(allSectionCount > count);
+			Assert.IsTrue(allSectionCount > count, "Returned all Sections instead of a sub-set.");
 
 			int expectedCount = _dataVerifier.GetSectionCount(whereClause);
 			Assert.AreEqual(expectedCount, count);

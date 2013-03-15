@@ -70,6 +70,7 @@ namespace Test.CtcApi
     ///A test for Include
     ///</summary>
     [TestMethod()]
+    [Ignore]  // TODO: Create unit test for HtmlExtensions.Include()
     public void IncludeTest()
     {
       HtmlHelper html = null; // TODO: Initialize to an appropriate value

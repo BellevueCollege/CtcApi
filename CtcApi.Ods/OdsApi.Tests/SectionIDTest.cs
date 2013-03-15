@@ -122,5 +122,54 @@ namespace Ctc.Ods.Tests
 			Assert.AreNotEqual("1234B012", actual);
 		}
 
+    [TestMethod]
+    public void ID_ToString()
+    {
+      string sectionId = "4321A121";
+      ISectionID actual = SectionID.FromString(sectionId);
+
+      string actualString = actual.ToString();
+      Assert.AreEqual(sectionId, actualString);
+    }
+
+    [TestMethod]
+    public void SubClassed_NewFromISectionID()
+    {
+      string sectionId = "4321A121";
+      ISectionID actual = SectionID.FromString(sectionId);
+
+      SubclassedSectionID subclassed = new SubclassedSectionID(actual);
+
+      Assert.IsNotNull(subclassed);
+      Assert.AreEqual(sectionId, subclassed.ToString());
+    }
+
+    [TestMethod]
+    [Ignore]  // this cast doesn't seem to work. Would like to make it work somehow. shawn.south@bellevuecollege.edu 3/14/2013
+    public void SubClassed_SafeCast()
+    {
+      string sectionId = "4321A121";
+      ISectionID actual = SectionID.FromString(sectionId);
+
+      SubclassedSectionID subclassed = actual as SubclassedSectionID;
+
+      Assert.IsNotNull(subclassed);
+    }
 	}
+
+  public class SubclassedSectionID : SectionID
+  {
+    /// <summary>
+    /// Creates a new <see cref="SectionID"/> from an item # and YRQ
+    /// </summary>
+    /// <param name="itemNumber"></param>
+    /// <param name="yrq"></param>
+    protected SubclassedSectionID(string itemNumber, string yrq) : base(itemNumber, yrq)
+    {
+    }
+
+    public SubclassedSectionID(ISectionID sectionID) : base(sectionID.ItemNumber, sectionID.YearQuarter)
+    {
+    }
+  }
 }

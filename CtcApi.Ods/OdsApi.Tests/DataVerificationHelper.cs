@@ -20,6 +20,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 using Ctc.Ods.Types;
 
 namespace Ctc.Ods.Tests
@@ -32,6 +33,7 @@ namespace Ctc.Ods.Tests
 		/// Filters out non-classes
 		/// </summary>
 		private readonly string _sectionFilter =  string.Format(" {0} ", TestHelper.Data.NonClassWhereClause);
+
 		private string _yrqFilter;
 
 		private DbProviderFactory _provider;
@@ -192,8 +194,16 @@ namespace Ctc.Ods.Tests
 		/// <returns></returns>
 		public int GetSectionCount(string whereClause)
 		{
-			string sql = String.Format("SELECT count(DISTINCT ClassID) FROM vw_Class where {0} {1} {2}", whereClause, _sectionFilter, _yrqFilter);
-			
+      string sql = String.Format("SELECT count(DISTINCT ClassID) FROM vw_Class where {0} {1}", whereClause, _sectionFilter);
+
+      // Only include the default YRQ filter if the caller hasn't explicitly defined a direct YRQ where clause
+      Regex explicitWhere = new Regex(@"(^|\s+)YearQuarterID\s+(in\s+\(|[=><])\s*('|select)", RegexOptions.IgnoreCase);
+      if (!explicitWhere.IsMatch(sql))
+		  {
+		    sql = string.Format("{0} {1}", sql, _yrqFilter);
+		  }
+			Debug.Print("Executing >> {0}", sql);
+
 			try
 			{
 				if (_conn.State != ConnectionState.Open) {
