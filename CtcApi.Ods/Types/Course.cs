@@ -32,7 +32,7 @@ namespace Ctc.Ods.Types
 		private ApiSettings _settings;
 		private RegexSettings _regexPatterns;
 		private IList<CourseDescription> _courseDescriptions;
-		private string _courseId;
+		private ICourseID _courseId;
 		private IList<string> _footnotes;
 
 		/// <summary>
@@ -70,18 +70,16 @@ namespace Ctc.Ods.Types
 		{
 			get
 			{
-				return _courseId;
+				return _courseId.ToString();
 			}
 			internal protected set
 			{
-				bool isCommonCourse;
-				string subject, number;
+        // leverage the logic already coded in CourseID to convert from a string.
+        _courseId = Types.CourseID.FromString(value);
 
-				_courseId = Utility.ParseCourseID(value, out isCommonCourse, out subject, out number, Patterns.CommonCourseChar);
-
-				IsCommonCourse = isCommonCourse;
-				Subject = subject;
-				Number = number;
+				IsCommonCourse = _courseId.IsCommonCourse;
+				Subject = _courseId.Subject;
+				Number = _courseId.Number;
 			}
 		}
 
@@ -115,7 +113,7 @@ namespace Ctc.Ods.Types
 			{
 				if (_courseDescriptions == null)
 				{
-					_courseDescriptions = OdsRepository.GetCourseDescriptions(Ods.CourseID.FromString(CourseID), YearQuarter.FromString(_YearQuarterBegin),
+					_courseDescriptions = OdsRepository.GetCourseDescriptions(Types.CourseID.FromString(CourseID), YearQuarter.FromString(_YearQuarterBegin),
 																																		_CourseDescriptions1, _CourseDescriptions2);
 				}
 				return _courseDescriptions;
@@ -184,7 +182,7 @@ namespace Ctc.Ods.Types
 			get {return YearQuarterBegin.ID;}
 			set
 			{
-				YearQuarterBegin = YearQuarter.FromString(string.IsNullOrWhiteSpace(value) ? _settings.YearQuarter.Min : value);
+				YearQuarterBegin = YearQuarter.FromString(string.IsNullOrWhiteSpace(value) ? Settings.YearQuarter.Min : value);
 			}
 		}
 
@@ -196,7 +194,7 @@ namespace Ctc.Ods.Types
 			get {return YearQuarterEnd.ID;}
 			set
 			{
-				YearQuarterEnd = YearQuarter.FromString(string.IsNullOrWhiteSpace(value) ? _settings.YearQuarter.Max : value);
+				YearQuarterEnd = YearQuarter.FromString(string.IsNullOrWhiteSpace(value) ? Settings.YearQuarter.Max : value);
 			}
 		}
 

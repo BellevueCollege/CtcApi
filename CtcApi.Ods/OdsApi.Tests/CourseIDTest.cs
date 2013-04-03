@@ -13,6 +13,8 @@
 //You should have received a copy of the GNU Lesser General Public
 //License and GNU General Public License along with this program.
 //If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using Ctc.Ods.Types;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -75,29 +77,160 @@ namespace Ctc.Ods.Tests
 		[TestMethod()]
 		public void FromString_SingleParameter()
 		{
-			ICourseID actual = CourseID.FromString("art 101");
-			Assert.AreEqual("ART", actual.Subject);
-			Assert.AreEqual("101", actual.Number);
-			Assert.IsFalse(actual.IsCommonCourse);
+		  string subject = "ART";
+		  string number = "101";
+		  string courseId = string.Concat(subject, " ", number);
+
+		  ICourseID actual = CourseID.FromString(courseId);
+			
+      Assert.AreEqual(subject, actual.Subject);
+			Assert.AreEqual(number, actual.Number);
+      Assert.AreEqual(courseId, actual.ToString());
+			
+      Assert.IsFalse(actual.IsCommonCourse);
 		}
 
 		[TestMethod()]
-		public void FromString_SingleParameter_CommonCourse()
+		public void FromString_SingleParameter_TabSeparator()
 		{
-			ICourseID actual = CourseID.FromString("art& 101");
-			Assert.AreEqual("ART", actual.Subject);
-			Assert.AreEqual("101", actual.Number);
+		  string subject = "ART";
+		  string number = "101";
+      string realCourseID = string.Concat(subject, "\t", number);
+
+		  ICourseID actual = CourseID.FromString(realCourseID);
+			
+      Assert.AreEqual(subject, actual.Subject);
+			Assert.AreEqual(number, actual.Number);
+      Assert.AreEqual(string.Concat(subject, " ", number), actual.ToString());
+			
+      Assert.IsFalse(actual.IsCommonCourse);
+		}
+
+		[TestMethod()]
+		public void FromString_SingleParameter_CommonCourse_SpaceSeparator()
+		{
+      string subject = "ART";
+      string number = "101";
+      string courseId = string.Concat(subject, " ", number);
+      string realCourseID = string.Concat(subject, "& ", number);
+
+      ICourseID actual = CourseID.FromString(realCourseID);
+			Assert.AreEqual(subject, actual.Subject);
+			Assert.AreEqual(number, actual.Number);
+      Assert.AreEqual(courseId, actual.ToString());
+
 			Assert.IsTrue(actual.IsCommonCourse);
 		}
 
 		[TestMethod()]
+		public void FromString_SingleParameter_CommonCourse_TabSeparator()
+		{
+      string subject = "ART";
+      string number = "101";
+      string courseId = string.Concat(subject, " ", number);
+      string realCourseID = string.Concat(subject, "&\t", number);
+
+      ICourseID actual = CourseID.FromString(realCourseID);
+			Assert.AreEqual(subject, actual.Subject);
+			Assert.AreEqual(number, actual.Number);
+      Assert.AreEqual(courseId, actual.ToString());
+
+			Assert.IsTrue(actual.IsCommonCourse);
+		}
+
+    [TestMethod]
+	  public void FromString_SingleParameter_CommonCourse_NoSeparatingSpace()
+	  {
+      string subject = "ACCT";
+      string number = "101";
+      string courseId = string.Concat(subject, " ", number);
+      string realCourseID = string.Concat(subject, "&", number);
+
+      ICourseID actual = CourseID.FromString(realCourseID);
+      Assert.AreEqual(subject, actual.Subject);
+      Assert.AreEqual(number, actual.Number);
+      Assert.AreEqual(courseId, actual.ToString());
+
+      Assert.IsTrue(actual.IsCommonCourse);
+    }
+
+    [TestMethod()]
+    public void FromString_SingleParameter_WithSpaces()
+    {
+      string subject = "C J";
+      string number = "100";
+      string courseId = string.Concat(subject, " ", number);
+
+      ICourseID actual = CourseID.FromString(courseId);
+
+      Assert.AreEqual(subject, actual.Subject);
+      Assert.AreEqual(number, actual.Number);
+      Assert.AreEqual(courseId, actual.ToString());
+
+      Assert.IsFalse(actual.IsCommonCourse);
+    }
+
+    [TestMethod()]
+    public void FromString_SingleParameter_WithSpaces_TabSeparated()
+    {
+      string subject = "C J";
+      string number = "100";
+      string realCourseID = string.Concat(subject, "\t", number);
+
+      ICourseID actual = CourseID.FromString(realCourseID);
+
+      Assert.AreEqual(subject, actual.Subject);
+      Assert.AreEqual(number, actual.Number);
+      Assert.AreEqual(string.Concat(subject, " ", number), actual.ToString());
+
+      Assert.IsFalse(actual.IsCommonCourse);
+    }
+
+    [TestMethod()]
+    public void FromString_SingleParameter_WithSpaces_CommonCourse()
+    {
+      string subject = "C J";
+      string number = "100";
+      string courseId = string.Concat(subject, " ", number);
+      string realCourseID = string.Concat(subject, "& ", number);
+
+      ICourseID actual = CourseID.FromString(realCourseID);
+
+      Assert.AreEqual(subject, actual.Subject);
+      Assert.AreEqual(number, actual.Number);
+      Assert.AreEqual(courseId, actual.ToString());
+
+      Assert.IsTrue(actual.IsCommonCourse);
+    }
+
+    [TestMethod()]
+    public void FromString_SingleParameter_WithSpaces_CommonCourse_TabSeparated()
+    {
+      string subject = "C J";
+      string number = "100";
+      string courseId = string.Concat(subject, " ", number);
+      string realCourseID = string.Concat(subject, "&\t", number);
+
+      ICourseID actual = CourseID.FromString(realCourseID);
+
+      Assert.AreEqual(subject, actual.Subject);
+      Assert.AreEqual(number, actual.Number);
+      Assert.AreEqual(courseId, actual.ToString());
+
+      Assert.IsTrue(actual.IsCommonCourse);
+    }
+
+    [TestMethod()]
 		public void FromString_SubjectAndNumber()
 		{
-			string subject = "ART";
-			string number = "101";
+			string subject = "CEO";
+			string number = "196";
+
 			ICourseID actual = CourseID.FromString(subject, number);
 			Assert.AreEqual(subject, actual.Subject);
 			Assert.AreEqual(number, actual.Number);
+      Assert.AreEqual(string.Concat(subject, " ", number), actual.ToString());
+
 			Assert.IsFalse(actual.IsCommonCourse);
 		}
 
@@ -112,7 +245,37 @@ namespace Ctc.Ods.Tests
 			Assert.IsTrue(actual.IsCommonCourse, "Common Course flag is not set");
 		}
 
-		[TestMethod()]
+    [TestMethod()]
+    public void FromString_SubjectAndNumber_WithSpaces()
+    {
+      string subject = "C J";
+      string number = "100";
+
+      ICourseID actual = CourseID.FromString(subject, number);
+
+      Assert.AreEqual(subject, actual.Subject);
+      Assert.AreEqual(number, actual.Number);
+      Assert.AreEqual(string.Concat(subject, " ", number), actual.ToString());
+
+      Assert.IsFalse(actual.IsCommonCourse);
+    }
+
+    [TestMethod()]
+    public void FromString_SubjectAndNumber_WithSpaces_CommonCourse()
+    {
+      string subject = "P E";
+      string number = "100";
+
+      ICourseID actual = CourseID.FromString(string.Concat(subject, "&"), number);
+
+      Assert.AreEqual(subject, actual.Subject);
+      Assert.AreEqual(number, actual.Number);
+      Assert.AreEqual(string.Concat(subject, " ", number), actual.ToString());
+
+      Assert.IsTrue(actual.IsCommonCourse);
+    }
+
+    [TestMethod()]
 		public void FromString_SubjectAndNumber_CommonCourse_2charSubject()
 		{
 			// this test comes from a real-world scenario which revealed a bug. 5/07/2012, shawn.south@bellevuecollege.edu
@@ -136,6 +299,15 @@ namespace Ctc.Ods.Tests
 			Assert.IsFalse(target.IsCommonCourse);
 		}
 
+		public void ToStringConversion_SpacesInSubject()
+		{
+			ICourseID target = CourseID.FromString("C S C", "112");
+			string expected = "C S C 112";
+			string actual = target.ToString();
+			Assert.AreEqual(expected, actual);
+			Assert.IsFalse(target.IsCommonCourse);
+		}
+
 		[TestMethod()]
 		public void ToStringConversion_CommonCourse()
 		{
@@ -145,6 +317,20 @@ namespace Ctc.Ods.Tests
 			Assert.AreEqual(expected, actual);
 			Assert.IsTrue(target.IsCommonCourse);
 		}
+
+		[TestMethod()]
+		public void ToStringConversion_CommonCourse_SpacesInSubject()
+		{
+			ICourseID target = CourseID.FromString("C J&", "101");
+			string expected = "C J 101";
+			string actual = target.ToString();
+			Assert.AreEqual(expected, actual);
+			Assert.IsTrue(target.IsCommonCourse);
+		}
+
+
+
+
 
 		// TODO: equality tests
 	}

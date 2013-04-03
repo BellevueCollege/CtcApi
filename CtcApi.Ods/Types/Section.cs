@@ -45,7 +45,7 @@ namespace Ctc.Ods.Types
 
 		private string _courseTitle;
 		private string _classID;
-		private string _courseId;
+		private ICourseID _courseId;
 		private IList<CourseDescription> _courseDescriptions;
 		private IList<string> _footnotes;
 		private RegexSettings _validationPatterns;
@@ -81,7 +81,7 @@ namespace Ctc.Ods.Types
 			{
 				if (_courseDescriptions == null)
 				{
-					_courseDescriptions = OdsRepository.GetCourseDescriptions(Ods.CourseID.FromString(CourseID), Yrq,
+					_courseDescriptions = OdsRepository.GetCourseDescriptions(Types.CourseID.FromString(CourseID), Yrq,
 																																		_CourseDescriptions1, _CourseDescriptions2);
 				}
 				return _courseDescriptions;
@@ -299,19 +299,20 @@ namespace Ctc.Ods.Types
 		[DataMember]
 		public string CourseID
 		{
-			get { return _courseId; }
-			protected internal set
-			{
-				bool isCommonCourse;
-				string subject, number;
+      get
+      {
+        return _courseId.ToString();
+      }
+      internal protected set
+      {
+        // leverage the logic already coded in CourseID to convert from a string.
+        _courseId = Types.CourseID.FromString(value);
 
-				_courseId = Utility.ParseCourseID(value, out isCommonCourse, out subject, out number, Patterns.CommonCourseChar);
-
-				IsCommonCourse = isCommonCourse;
-				CourseSubject = subject;
-				CourseNumber = number;
-			}
-		}
+        IsCommonCourse = _courseId.IsCommonCourse;
+        CourseSubject = _courseId.Subject;
+        CourseNumber = _courseId.Number;
+      }
+    }
 
 		/// <summary>
 		/// 

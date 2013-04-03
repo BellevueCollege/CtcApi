@@ -13,12 +13,12 @@
 //You should have received a copy of the GNU Lesser General Public
 //License and GNU General Public License along with this program.
 //If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Text.RegularExpressions;
 using Ctc.Ods.Config;
-using Ctc.Ods.Types;
 
-namespace Ctc.Ods
+namespace Ctc.Ods.Types
 {
 	/// <summary>
 	/// Representa the unique ID for a <see cref="Course"/>
@@ -66,18 +66,19 @@ namespace Ctc.Ods
 		public bool IsCommonCourse{get;set;}
 
 		#region Constructors
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="subject"></param>
-		/// <param name="number"></param>
-		protected CourseID(string subject, string number)
+	  /// <summary>
+	  /// 
+	  /// </summary>
+	  /// <param name="subject"></param>
+	  /// <param name="number"></param>
+	  /// <param name="isCommonCourse"></param>
+	  public CourseID(string subject, string number, bool isCommonCourse = false)
 		{
 			subject = subject.Trim();
 			number = number.Trim();
 
-			IsCommonCourse = subject.EndsWith(CommonCourseChar);
-			Subject = IsCommonCourse ? subject.Substring(0, subject.Length - CommonCourseChar.Length) : subject;
+			IsCommonCourse = isCommonCourse || subject.EndsWith(CommonCourseChar);
+			Subject = IsCommonCourse ? subject.Replace(CommonCourseChar, string.Empty) : subject;
 			Number = number;
 		}
 
@@ -89,19 +90,28 @@ namespace Ctc.Ods
 		/// <returns></returns>
 		public static CourseID FromString(string courseId)
 		{
-			courseId = courseId.ToUpper();
+		  bool isCommonCourse = false;
+      courseId = courseId.ToUpper();
 
-			// handle Course IDs w/ separating whitespace (e.g. user-/developer-entered)
-			if (Regex.IsMatch(courseId, string.Format(@"[\w\{0}]+[ \t]+\w+", CommonCourseChar)))
-			{
-				// contains whitespace in the middle
-				string[] parts = Regex.Split(courseId, @"[ \t]+");
-				// use values w/o leading/trailing whitespace
-				return new CourseID(parts[0].Trim(), parts[1].Trim());
-			}
+      // handle Course IDs w/ separating whitespace (e.g. user-/developer-entered)
+      if (Regex.IsMatch(courseId, string.Format(@"[\w\{0}]+[\s\t]\w+", CommonCourseChar)))
+      {
+        // the following regex doesn't handle CommonCourseChar, so if present set out flag and strip it out
+        if (courseId.Contains(CommonCourseChar))
+        {
+          isCommonCourse = true;
+          courseId = courseId.Replace(CommonCourseChar, "");
+        }
 
-			// handle Course IDs that may not have whitespace - assuming fixed length (e.g. from HP)
-			return new CourseID(courseId.Substring(0, 5), courseId.Length > 5 ? courseId.Substring(5) : String.Empty);
+        // contains whitespace in the middle or the course subject
+        string[] parts = Regex.Split(courseId, @"(?<=\p{L}[\p{Z}\t]?)(?=\p{N})"); // magic regex - handles e.g. "C S C 112", "P E 108"
+
+        // use values w/o leading/trailing whitespace
+        return new CourseID(parts[0].Trim(), parts[1].Trim(), isCommonCourse);
+      }
+
+      // handle Course IDs that may not have whitespace - assuming fixed length (e.g. from HP)
+      return new CourseID(courseId.Substring(0, 5), courseId.Length > 5 ? courseId.Substring(5) : String.Empty, isCommonCourse);
 		}
 
 		/// <summary>

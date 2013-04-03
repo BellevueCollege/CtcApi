@@ -29,7 +29,7 @@ namespace Ctc.Ods.Types
     /// </summary>
     /// <param name="itemNumber"></param>
     /// <param name="yrq"></param>
-    protected SectionID(string itemNumber, string yrq)
+    public SectionID(string itemNumber, string yrq)
     {
       // validation checks
       if (itemNumber.Length != 4)

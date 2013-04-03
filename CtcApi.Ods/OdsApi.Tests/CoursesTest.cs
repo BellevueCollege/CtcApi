@@ -13,6 +13,8 @@
 //You should have received a copy of the GNU Lesser General Public
 //License and GNU General Public License along with this program.
 //If not, see <http://www.gnu.org/licenses/>.
+
+using Ctc.Ods.Types;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Ctc.Ods.Tests
@@ -43,6 +45,24 @@ namespace Ctc.Ods.Tests
                 testContextInstance = value;
             }
         }
+
+
+    [TestMethod]
+    public void CourseID_PropertyAssignment()
+    {
+      string courseID = "CEO 196";
+      DerivedCourse actual = new DerivedCourse(courseID);
+      Assert.AreEqual(courseID, actual.CourseID);
+    }
+
+      // Course objects do not allow external setting of CourseID by design
+      private class DerivedCourse : Course
+      {
+        public DerivedCourse(string courseID)
+        {
+          CourseID = courseID;
+        }
+      }
 
         #region Additional test attributes
         // 

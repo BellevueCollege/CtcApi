@@ -165,6 +165,22 @@ namespace Ctc.Ods.Tests.RepositoryTests
 			}
 		}
 
+    [TestMethod]
+    [Ignore]  // specific research, not part of the standard test suite
+    public void Research()
+    {
+      using (OdsRepository repository = new OdsRepository())
+      {
+        string courseId = "CEO 196";
+        IList<Course> courses = repository.GetCourses(CourseID.FromString(courseId));
+        Assert.IsTrue(courses.Count > 0);
+
+        var foo = courses.Select(c => c.CourseID);
+        Assert.AreEqual(courses.Count, courses.Count(c => c.CourseID == courseId));
+
+      }
+    }
+
 		#region Private members
 		/// <summary>
 		/// 

@@ -172,36 +172,7 @@ namespace Ctc.Ods
 			return bool.TryParse(value, out result) ? result : false;
 		}
 
-		///<summary>
-		/// Retrieves the various components of an HP3000 CourseID value
-		///</summary>
-		///<param name="value">The <see langref="string"/> value to parse.</param>
-		///<param name="isCommonCourse"><i>True</i> if the CourseID is for a Common Course, otherwise <i>false</i>.</param>
-		///<param name="subject">The subject abbreviation for the <see cref="Course"/> (e.g. ENGL).</param>
-		///<param name="number">The number for the <see cref="Course"/> (e.g. 101).</param>
-		///<param name="commonCourseChar">The character(s) to use to identify whether or not the CourseID represents a Common Course.</param>
-		///<returns>A <see langref="string"/> representing the CourseID without the Common Course Identifier.</returns>
-		/// <remarks>
-		///		<note type="caution">THIS MEMBER DOES NOT YET HAVE UNIT TESTS</note>
-		///		<para>A standard HP3000 CourseID is represented by:</para>
-		///		<example>
-		///			[<i>subject</i>][<i>&amp;</i>] [<i>number</i>]
-		///		</example>
-		///		<para>Where &amp; denotes a Common Course. Ex: <b>ENGL& 101</b></para>
-		///	</remarks>
-		static public string ParseCourseID(string value, out bool isCommonCourse, out string subject, out string number, string commonCourseChar)
-		{
-			isCommonCourse = value.Contains(commonCourseChar);
-
-			char[] trimChars = commonCourseChar.ToCharArray();
-
-			subject = isCommonCourse ? value.Substring(0, 5).Trim().Trim(trimChars) : value.Substring(0, 5).Trim();
-			number = value.Length > 5 ? (isCommonCourse ? value.Substring(5).Trim().Trim(trimChars) : value.Substring(5).Trim()) : string.Empty;
-
-			return String.Format("{0} {1}", subject, number);
-		}
-
-		/// <summary>
+	  /// <summary>
 		/// Identifies whether or not the supplied value contains letters and/or numbers
 		/// </summary>
 		/// <param name="strValue">The value to check.</param>
