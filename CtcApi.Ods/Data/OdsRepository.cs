@@ -709,7 +709,7 @@ namespace Ctc.Ods.Data
 					                   			CourseID = section.joinedData.sectionData.CourseID,
 																	// use CourseTitle2 from the Course table, otherwise fall back to CourseTitle, then the course title from the Section (i.e. Class) table
 																	// NOTE: This is Bellevue College logic. If different logic is desired, we should move this to the Section class
-																	_CourseTitle = _DbContext.Courses.Where(c => c.CourseID == section.joinedData.sectionData.CourseID && c.YearQuarterEnd.CompareTo(section.joinedData.sectionData.YearQuarterID) > 0)
+																	_CourseTitle = _DbContext.Courses.Where(c => c.CourseID == section.joinedData.sectionData.CourseID && c.YearQuarterEnd.CompareTo(section.joinedData.sectionData.YearQuarterID) >= 0)
 																																	 .Select(c => c.Title2 ?? c.Title1).DefaultIfEmpty(section.joinedData.sectionData.CourseTitle).FirstOrDefault(),
 					                   			Credits = section.joinedData.sectionData.Credits,
 					                   			SectionCode = section.joinedData.sectionData.Section,
