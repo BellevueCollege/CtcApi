@@ -24,6 +24,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Web;
 using System.Web.Caching;
+using Common.Logging;
 using Ctc.Ods.Config;
 using Ctc.Ods.Customizations;
 using Ctc.Ods.Extensions;
@@ -36,6 +37,8 @@ namespace Ctc.Ods.Data
 	/// </summary>
 	public class OdsRepository : IDisposable
 	{
+    private ILog _log = LogManager.GetCurrentClassLogger();
+
 		OdsContext _context;
 		private YearQuarter _currentYearQuarter;
 		private ApiSettings _settings;
@@ -123,11 +126,16 @@ namespace Ctc.Ods.Data
 			{
 				if (_currentYearQuarter == null)
 				{
-					YearQuarterEntity yrq = _DbContext.YearQuarters.FromCache(CacheItemPriority.Default, TimeSpan.FromMinutes(Settings.YearQuarter.Cache))
+          _log.Debug("Retrieving current YearQuarter from DB or HttpRuntime.Cache");
+					YearQuarterEntity yrq = _DbContext.YearQuarters.FromCache(TimeSpan.FromMinutes(Settings.YearQuarter.Cache))
 																												.Where(quarter => quarter.LastClassDay >= Utility.Today && quarter.YearQuarterID != Settings.YearQuarter.Max)
 																												.OrderBy(quarter => quarter.YearQuarterID)
 																												.Take(1).Single();
 					_currentYearQuarter = YearQuarter.FromString(yrq.YearQuarterID);
+				}
+				else
+				{
+          _log.Debug("Using current YearQuarter already in memory. (NOTE: This is NOT cache - it is a class variable.");
 				}
 				return _currentYearQuarter;
 			}
@@ -173,7 +181,8 @@ namespace Ctc.Ods.Data
 																													orderby y.YearQuarterID descending 
 																													select y;
 
-			return quarters.FromCache(CacheItemPriority.Default, TimeSpan.FromMinutes(Settings.YearQuarter.Cache))
+      _log.Debug("Retrieving current YearQuarter from DB or HttpRuntime.Cache");
+      return quarters.FromCache(TimeSpan.FromMinutes(Settings.YearQuarter.Cache))
 										.Take(count)
 										.Select(q => new YearQuarter
 																	{
@@ -204,7 +213,8 @@ namespace Ctc.Ods.Data
 																													orderby y.YearQuarterID ascending 
 																													select y;
 
-			return quarters.FromCache(CacheItemPriority.Default, TimeSpan.FromMinutes(Settings.YearQuarter.Cache))
+      _log.Debug("Retrieving current YearQuarter from DB or HttpRuntime.Cache");
+      return quarters.FromCache(TimeSpan.FromMinutes(Settings.YearQuarter.Cache))
 										.Take(count)
 										.Select(q => new YearQuarter
 										{

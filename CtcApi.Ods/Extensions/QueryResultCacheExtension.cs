@@ -23,6 +23,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Web;
 using System.Web.Caching;
+using Common.Logging;
 
 namespace Ctc.Ods.Extensions
 {
@@ -42,14 +43,27 @@ namespace Ctc.Ods.Extensions
 	/// </remarks>
 	public static class QueryResultCacheExtension
 	{
-		/// <summary>
+	  private static readonly CacheItemPriority _cacheItemPriority = CacheItemPriority.Low;
+	  private static ILog _log = LogManager.GetCurrentClassLogger();
+
+	  /// <summary>
 		/// Returns the result of the query; if possible from the cache, otherwise
 		/// the query is materialized and the result cached before being returned.
 		/// The cache entry has a one minute sliding expiration with normal priority.
 		/// </summary>
 		public static IQueryable<T> FromCache<T>(this IQueryable<T> query) where T : class
 		{
-			return query.FromCache(CacheItemPriority.Normal, TimeSpan.FromMinutes(0));
+			return query.FromCache(_cacheItemPriority, TimeSpan.FromMinutes(0));
+		}
+
+		/// <summary>
+		/// Returns the result of the query; if possible from the cache, otherwise
+		/// the query is materialized and the result cached before being returned.
+		/// The cache entry has a one minute sliding expiration with normal priority.
+		/// </summary>
+    public static IQueryable<T> FromCache<T>(this IQueryable<T> query, TimeSpan slidingExpiration) where T : class
+		{
+      return query.FromCache(_cacheItemPriority, slidingExpiration);
 		}
 
 		/// <summary>
@@ -65,32 +79,38 @@ namespace Ctc.Ods.Extensions
 				// try to get the query result from the cache
 				var result = HttpRuntime.Cache.Get(key) as IList<T>;
 
-				if (result == null)
-				{
-					// todo: ... ensure that the query results do not
-					// hold on to resources for your particular data source
-					//
-					//////// for entity framework queries, set to NoTracking
-					var entityQuery = query as ObjectQuery<T>;
-					if (entityQuery != null)
-					{
-						entityQuery.MergeOption = MergeOption.NoTracking;
-					}
+			  if (result != null)
+			  {
+          _log.Debug(m => m("Using query results already found in HttpRuntime.Cache."));
+			  }
+			  else
+			  {
+          _log.Debug(m => m("Query results not found in HttpRuntime.Cache - executing query."));
 
-					// materialize the query
-					result = query.ToList();
+          // todo: ... ensure that the query results do not
+          // hold on to resources for your particular data source
+          //
+          //////// for entity framework queries, set to NoTracking
+          var entityQuery = query as ObjectQuery<T>;
+          if (entityQuery != null)
+          {
+            entityQuery.MergeOption = MergeOption.NoTracking;
+          }
 
-					HttpRuntime.Cache.Insert(
-							key,
-							result,
-							null, // no cache dependency
-							Cache.NoAbsoluteExpiration,
-							slidingExpiration,
-							priority,
-							null); // no removal notification
-				}
+          // materialize the query
+          result = query.ToList();
 
-				return result.AsQueryable();
+          HttpRuntime.Cache.Insert(
+            key,
+            result,
+            null, // no cache dependency
+            Cache.NoAbsoluteExpiration,
+            slidingExpiration,
+            priority,
+            null); // no removal notification
+        }
+
+			  return result.AsQueryable();
 			}
 
 			return query;
