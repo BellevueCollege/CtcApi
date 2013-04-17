@@ -69,9 +69,8 @@ namespace CtcApi.Extensions
 		/// <param name="urlPart"></param>
 		/// <returns></returns>
 		/// <seealso cref="Path.Combine(string[])"/>
-		public static string UriCombine(this string src, params string[] urlPart)
+		public static string CombineUrl(this string src, params string[] urlPart)
 		{
-			// TODO: rename to CombineUrl()
 			if (urlPart != null && urlPart.Length > 0)
 			{
 				StringBuilder buffer = new StringBuilder(src.TrimEnd(_urlSeparator));
@@ -192,6 +191,52 @@ namespace CtcApi.Extensions
         }
       }
       return defaultValue;
+    }
+
+    /// <summary>
+    /// Identifies whether or not a string can be converted to a number
+    /// </summary>
+    /// <param name="value">The <see cref="String"/> to evaluate.</param>
+    /// <returns>
+    ///   <i>True</i> if <paramref name="value"/> can be successfully converted to a <see cref="Double"/>, otherwise <i>false</i>.
+    /// </returns>
+    public static bool IsNumber(this string value)
+    {
+      double bucket;
+      if (double.TryParse(value, out bucket))
+      {
+        return true;
+      }
+      return false;
+    }
+
+    /// <summary>
+    /// Identifies whether or not a string can be converted to an <see cref="Int32">int</see>
+    /// </summary>
+    /// <param name="value">The <see cref="String"/> to evaluate.</param>
+    /// <returns>
+    ///   <i>True</i> if <paramref name="value"/> can be successfully converted to an <see cref="Int32">int</see>, otherwise <i>false</i>.
+    /// </returns>
+    public static bool IsInt(this string value)
+    {
+      int bucket;
+      if (int.TryParse(value, out bucket))
+      {
+        return true;
+      }
+      return false;
+    }
+
+    /// <summary>
+    /// Converts an empty <see cref="String"/> to <i>null</i>
+    /// </summary>
+    /// <param name="value">The <see cref="String"/> to evaluate.</param>
+    /// <returns>
+    ///   A <i>null</i> <see cref="String"/> if <paramref name="value"/> is either <i>null</i> or contains only whitespace, otherwise <paramref name="value"/>.
+    /// </returns>
+    public static string Nullify(this string value)
+    {
+      return String.IsNullOrWhiteSpace(value) ? null : value;
     }
   }
 }
