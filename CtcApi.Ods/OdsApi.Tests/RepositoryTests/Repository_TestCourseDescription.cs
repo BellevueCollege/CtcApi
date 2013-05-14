@@ -84,8 +84,8 @@ namespace Ctc.Ods.Tests
     {
       using (OdsRepository ods = new OdsRepository())
       {
-        ICourseID courseID = CourseID.FromString("MATH&107");
-        IList<CourseDescription> descs =  ods.GetCourseDescription(courseID, YearQuarter.FromString("B233"));
+        ICourseID courseID = CourseID.FromString("ECON&201");
+        IList<CourseDescription> descs =  ods.GetCourseDescription(courseID, YearQuarter.FromString("B234"));
 
         Assert.IsNotNull(descs);
 
@@ -94,7 +94,7 @@ namespace Ctc.Ods.Tests
           Console.Out.WriteLine("[{0}] {1}", desc.YearQuarterBegin, desc.Description);
         }
 
-        Assert.IsTrue(descs.Count > 1, "MATH& 107 should have 2 descriptions, but only has {0}", descs.Count);
+        Assert.IsTrue(descs.Count > 1, "ECON& 201 should have 2 descriptions, but only has {0}", descs.Count);
       }
     }
 
