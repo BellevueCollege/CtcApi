@@ -20,6 +20,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Ctc.Ods.Config;
 using Ctc.Ods.Data;
+using CtcApi;
 
 namespace Ctc.Ods
 {
@@ -32,8 +33,7 @@ namespace Ctc.Ods
 		private DateTime _registrationDate;
 		private string _yrqMax;
 		private ApiSettings _settings;
-
-		/// <summary>
+	  /// <summary>
 		/// 
 		/// </summary>
 		private ApiSettings Settings
@@ -47,15 +47,32 @@ namespace Ctc.Ods
 
 		///<summary>
 		///</summary>
-		public RegistrationQuartersFacet() : this(1)
+		public RegistrationQuartersFacet() : this(1, new ApplicationContext())
 		{
 		}
 
-		///<summary>
-		///</summary>
-		///<param name="quarterCount"></param>
-		///<exception cref="InvalidOperationException"><paramref name="quarterCount"/> cannot be zero (0).</exception>
-		public RegistrationQuartersFacet(int quarterCount)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="appContext"></param>
+    public RegistrationQuartersFacet(ApplicationContext appContext) : this(1, appContext)
+    {
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <paramref name="quarterCount"/>
+    public RegistrationQuartersFacet(int quarterCount) : this(quarterCount, new ApplicationContext())
+    {
+    }
+
+	  /// <summary>
+	  /// </summary>
+	  /// <param name="quarterCount"></param>
+	  /// <param name="appContext"></param>
+	  /// <exception cref="InvalidOperationException"><paramref name="quarterCount"/> cannot be zero (0).</exception>
+	  public RegistrationQuartersFacet(int quarterCount, ApplicationContext appContext)
 		{
 			if (quarterCount == 0) {
 				throw new InvalidOperationException("Quarter count cannot be zero (0). It must be a positive or negative number.");
@@ -63,7 +80,7 @@ namespace Ctc.Ods
 			_quarterCount = quarterCount;
 
 			// LINQ for EF only supports primitive variables
-			_today = Utility.Today;
+			_today = appContext.CurrentDate ?? DateTime.Now;
 			_yrqMax = Settings.YearQuarter.Max;
 			// Registration information should be available *before* registration begins
 			// NOTE: we jump ahead n days to simulate date lookup n days prior to the registration date

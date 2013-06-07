@@ -29,17 +29,8 @@ namespace Ctc.Ods
 	public class Utility
 	{
 		// AppSettings keys
-		/// <summary>
-		/// If present in &gt;appSettings&lt; this value will override <see cref="Today"/>
-		/// </summary>
-		/// <remarks>
-		/// This &gt;appSettings&lt; key is currently <i>CurrentDateOverride</i>
-		/// </remarks>
-		private const string DATE_OVERRIDE_KEY = "CurrentDateOverride";	// optional
 
-		private static DateTime _today = DateTime.MinValue;
-
-		/// <summary>
+	  /// <summary>
 		/// The canononical name of the currently executing <see cref="Assembly"/>
 		/// </summary>
 		/// <remarks>
@@ -50,33 +41,7 @@ namespace Ctc.Ods
 			get { return Assembly.GetExecutingAssembly().GetName().ToString(); }
 		}
 
-		/// <summary>
-		/// Replacement for <see cref="DateTime.Today"/> which can be overriden in the .config file
-		/// </summary>
-		/// <remarks>
-		///		<note type="caution">THIS MEMBER DOES NOT YET HAVE UNIT TESTS</note>
-		/// Use this property in place of <see cref="DateTime.Today"/> becuase it permits overriding the
-		/// current date by setting the <see cref="DATE_OVERRIDE_KEY"/> in the application's .config
-		/// file. This can be very useful for testing and/or troubleshooting.
-		/// </remarks>
-		/// <value>Either the <see cref="DateTime">Date</see> provided by <see cref="DATE_OVERRIDE_KEY"/> or <see cref="DateTime.Today"/></value>
-		static public DateTime Today
-		{
-			get
-			{
-				if (_today == DateTime.MinValue)
-				{
-					string todayOverride = ConfigurationManager.AppSettings[DATE_OVERRIDE_KEY];
-					if (string.IsNullOrWhiteSpace(todayOverride) || !DateTime.TryParse(todayOverride, out _today))
-					{
-						_today = DateTime.Today;
-					}
-				}
-				return _today;
-			}
-		}
-
-		/// <summary>
+	  /// <summary>
 		/// 
 		/// </summary>
 		/// <returns></returns>

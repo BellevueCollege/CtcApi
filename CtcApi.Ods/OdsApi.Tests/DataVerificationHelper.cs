@@ -22,6 +22,7 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using Ctc.Ods.Types;
+using CtcApi;
 
 namespace Ctc.Ods.Tests
 {
@@ -57,16 +58,23 @@ namespace Ctc.Ods.Tests
 			}
 		}
 
+    /// <summary>
+    /// 
+    /// </summary>
+		public DataVerificationHelper() : this(new ApplicationContext())
+		{
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>
-		public DataVerificationHelper()
+		public DataVerificationHelper(ApplicationContext appContext)
 		{
 			_provider = DbProviderFactories.GetFactory("System.Data.SqlClient");
 			_conn = _provider.CreateConnection();
 			_conn.ConnectionString = ConfigurationManager.ConnectionStrings["OdsContext"].ConnectionString;
 
-			DateTime today = Utility.Today;
+			DateTime today = appContext.CurrentDate ?? DateTime.Now;
 			CurrentYrq = GetYearQuarterID(string.Format("LastClassDay >= cast('{0}' as datetime)", today));
 
 			_yrqFilter = String.Format(" and YearQuarterID in (SELECT TOP (4) y.[YearQuarterID] FROM [vw_YearQuarter] AS y LEFT OUTER JOIN [vw_WebRegistrationSetting] AS r ON y.[YearQuarterID] = r.[YearQuarterID] WHERE (((r.[FirstRegistrationDate] IS NOT NULL AND r.[FirstRegistrationDate] <= cast('{0}' as smalldatetime)) OR y.[FirstClassDay] <= cast('{1}' as smalldatetime)) AND y.[YearQuarterID] <> 'Z999') ORDER BY y.[YearQuarterID] DESC) ",

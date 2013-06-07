@@ -29,6 +29,7 @@ using Ctc.Ods.Config;
 using Ctc.Ods.Customizations;
 using Ctc.Ods.Extensions;
 using Ctc.Ods.Types;
+using CtcApi;
 
 namespace Ctc.Ods.Data
 {
@@ -44,8 +45,9 @@ namespace Ctc.Ods.Data
 		private ApiSettings _settings;
 		private HttpContextBase _httpContext;
 		private string _commonCourseChar;
+	  private ApplicationContext _appContext;
 
-		#region Properties
+	  #region Properties
 		/// <summary>
 		/// Gets a reference to the <see cref="DbContext"/> used by this object
 		/// </summary>
@@ -94,9 +96,10 @@ namespace Ctc.Ods.Data
 		/// Creates a new Repository instance for accessing data from the ODS
 		/// </summary>
 		/// <seealso cref="ApiSettings"/>
-		public OdsRepository()
+		public OdsRepository(ApplicationContext appContext)
 		{
-			Debug.Print("==> instantiating OdsRepository()...");
+		  _appContext = appContext;
+		  Debug.Print("==> instantiating OdsRepository()...");
 			_settings = ConfigurationManager.GetSection(ApiSettings.SectionName) as ApiSettings;
 			_commonCourseChar = Settings.RegexPatterns.CommonCourseChar;;
 		}
@@ -104,15 +107,9 @@ namespace Ctc.Ods.Data
 		/// <summary>
 		/// Creates a new Repository instance for accessing data from the ODS
 		/// </summary>
-		/// <param name="context">
-		///		The <see cref="HttpContextBase">HttpContext</see> of the calling application. This can be used
-		///		to obtain information about the currently executing context, store information in context-based
-		///		<i>state bags</i>, etc.
-		/// </param>
 		/// <seealso cref="ApiSettings"/>
-		public OdsRepository(HttpContextBase context) : this()
+		public OdsRepository() : this(new ApplicationContext())
 		{
-			_httpContext = context;
 		}
 
 		#region YearQuarter
@@ -128,7 +125,7 @@ namespace Ctc.Ods.Data
 				{
           _log.Debug("Retrieving current YearQuarter from DB or HttpRuntime.Cache");
 					YearQuarterEntity yrq = _DbContext.YearQuarters.FromCache(TimeSpan.FromMinutes(Settings.YearQuarter.Cache))
-																												.Where(quarter => quarter.LastClassDay >= Utility.Today && quarter.YearQuarterID != Settings.YearQuarter.Max)
+																												.Where(quarter => quarter.LastClassDay >= _appContext.CurrentDate && quarter.YearQuarterID != Settings.YearQuarter.Max)
 																												.OrderBy(quarter => quarter.YearQuarterID)
 																												.Take(1).Single();
 					_currentYearQuarter = YearQuarter.FromString(yrq.YearQuarterID);
@@ -166,7 +163,7 @@ namespace Ctc.Ods.Data
 		{
 			// LINQ for EF only supports primitive variables
 			string maxYrq = Settings.YearQuarter.Max;
-			DateTime today = Utility.Today;
+			DateTime today = _appContext.CurrentDate ?? DateTime.Now;
 			// Registration information should be available *before* registration begins
 			// NOTE: we jump ahead n days to simulate date lookup n days prior to the registration date
 			DateTime registrationDate = today.Add(new TimeSpan(Settings.YearQuarter.RegistrationLeadDays, 0, 0, 0));
@@ -198,7 +195,7 @@ namespace Ctc.Ods.Data
 		public IList<YearQuarter> GetFutureQuarters(int count = 1)
 		{
 			string maxYrq = Settings.YearQuarter.Max;
-			DateTime today = Utility.Today;
+			DateTime today = _appContext.CurrentDate ?? DateTime.Now;
 			// Registration information should be available *before* registration begins
 			// NOTE: we jump ahead n days to simulate date lookup n days prior to the registration date
 			DateTime registrationDate = today.Add(new TimeSpan(Settings.YearQuarter.RegistrationLeadDays, 0, 0, 0));
