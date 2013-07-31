@@ -148,6 +148,8 @@
     <None Include="CTCODS.nuspec">
       <SubType>Designer</SubType>
     </None>
+    <None Include="EXAMPLE-AppSettings.config" />
+    <None Include="EXAMPLE-ConnectionStrings.config" />
     <None Include="mkpkg.cmd" />
     <None Include="nuget\App.config.transform" />
     <None Include="nuget\Web.config.transform" />
@@ -156,9 +158,7 @@
   <ItemGroup>
     <None Include="readme.CtcOdsApi.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="lib\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="CtcOdsApi.shfbproj" />
     <None Include="license.CtcOdsApi.txt" />
@@ -213,7 +213,7 @@
   </Target>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildAction="ReBuild" BuildVersion_ConfigurationName="Release" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" />
+      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_ConfigurationName="Release" BuildVersion_BuildAction="ReBuild" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
