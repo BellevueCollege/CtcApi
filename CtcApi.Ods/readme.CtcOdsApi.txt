@@ -2,7 +2,7 @@
                     A common, reusable code library for
                Washington State Community & Technical Colleges
 
-DOCUMENTATION: http://j.mp/odsapidocs
+DOCUMENTATION: https://github.com/BellevueCollege/CtcApi/wiki
 
 LICENSE: GNU Lesser General Public License, version 3 (LGPLv3)
 
