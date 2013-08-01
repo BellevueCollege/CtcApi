@@ -23,3 +23,7 @@ In addition to the standard Visual Studio files, these projects include addition
     * **CtcODS.nuspec** - settings for [NuGet package creation](docs.nuget.org/docs/creating-packages/creating-and-publishing-a-package).
     * **CtcOdsApi.shfbproj** - project file for the [Sandcastle documentation compiler](https://sandcastle.codeplex.com/). See also these [notes on setting up and using Sandcastle](http://bit.ly/projdoc).
     * **mkpkg.cmd** - command-line script to create a NuGet release package (using custom MSBuild target).
+
+## Acknowledgements
+
+I'd like to especially thank [Jeremy](https://github.com/bneg) as a co-creator of this library. Unfortunately, the history of his contributions were lost during an internal TFS migration between Team Collections.
