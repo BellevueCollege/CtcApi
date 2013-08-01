@@ -8,7 +8,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D4ADC002-ADC7-4B0F-ABAD-EF227453C3F8}"
 	ProjectSection(SolutionItems) = preProject
 		API.vsmdi = API.vsmdi
+		LICENSE.txt = LICENSE.txt
 		Local.testsettings = Local.testsettings
+		README.md = README.md
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
 EndProject
@@ -55,8 +57,8 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_UseGlobalSettings = False
-		BuildVersion_ConfigurationName = Any
 		BuildVersion_BuildVersioningStyle = None.None.None.None
+		BuildVersion_ConfigurationName = Any
+		BuildVersion_UseGlobalSettings = False
 	EndGlobalSection
 EndGlobal
