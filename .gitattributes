@@ -2,12 +2,50 @@
 
 # The following file extensions should be treated as text files and use
 # Windows style line endings
-*.dbproj eol=crlf
-*.sln eol=crlf
-*.sql eol=crlf
-*.txt eol=crlf
-*.xaml eol=crlf
+*.Config	eol=crlf
+*.Master	eol=crlf
+*.XML		eol=crlf
+*.xml		eol=crlf
+*.asax		eol=crlf
+*.asmx		eol=crlf
+*.asp		eol=crlf
+*.aspx		eol=crlf
+*.cd		eol=crlf
+*.cmd		eol=crlf
+*.config	eol=crlf
+*.cs		eol=crlf
+*.cshtml	eol=crlf
+*.csproj	eol=crlf
+*.css		eol=crlf
+*.edmx		eol=crlf
+*.html		eol=crlf
+*.js		eol=crlf
+*.nuspec	eol=crlf
+*.php		eol=crlf
+*.ps1		eol=crlf
+*.pubxml	eol=crlf
+*.rgproj	eol=crlf
+*.scpf		eol=crlf
+*.sdc		eol=crlf
+*.settings	eol=crlf
+*.sln		eol=crlf
+*.sql		eol=crlf
+*.testsettings	eol=crlf
+*.transform	eol=crlf
+*.txt		eol=crlf
+*.vsmdi		eol=crlf
+*.dbproj  eol=crlf
+*.xaml  eol=crlf
 Properties/*.sql* eol=crlf
+
+# Treat binary files as binary
+*.dll		binary
+*.gif		binary
+*.jpg		binary
+*.nupkg		binary
+*.pdb		binary
+*.png		binary
+*.ssc		binary
 
 # Treat Microsoft Office Documents as Binary Files
 *.accda binary
