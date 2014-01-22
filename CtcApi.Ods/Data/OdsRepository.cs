@@ -123,7 +123,7 @@ namespace Ctc.Ods.Data
 			{
 				if (_currentYearQuarter == null)
 				{
-          _log.Debug("Retrieving current YearQuarter from DB or HttpRuntime.Cache");
+          _log.Trace("Retrieving current YearQuarter from DB or HttpRuntime.Cache");
 					YearQuarterEntity yrq = _DbContext.YearQuarters.FromCache(TimeSpan.FromMinutes(Settings.YearQuarter.Cache))
 																												.Where(quarter => quarter.LastClassDay >= _appContext.CurrentDate && quarter.YearQuarterID != Settings.YearQuarter.Max)
 																												.OrderBy(quarter => quarter.YearQuarterID)
@@ -178,7 +178,7 @@ namespace Ctc.Ods.Data
 																													orderby y.YearQuarterID descending 
 																													select y;
 
-      _log.Debug("Retrieving current YearQuarter from DB or HttpRuntime.Cache");
+      _log.Trace("Retrieving current YearQuarter from DB or HttpRuntime.Cache");
       return quarters.FromCache(TimeSpan.FromMinutes(Settings.YearQuarter.Cache))
 										.Take(count)
 										.Select(q => new YearQuarter
@@ -210,7 +210,7 @@ namespace Ctc.Ods.Data
 																													orderby y.YearQuarterID ascending 
 																													select y;
 
-      _log.Debug("Retrieving current YearQuarter from DB or HttpRuntime.Cache");
+      _log.Trace("Retrieving current YearQuarter from DB or HttpRuntime.Cache");
       return quarters.FromCache(TimeSpan.FromMinutes(Settings.YearQuarter.Cache))
 										.Take(count)
 										.Select(q => new YearQuarter
