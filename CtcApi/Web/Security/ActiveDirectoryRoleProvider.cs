@@ -78,7 +78,7 @@ namespace CtcApi.Web.Security
 		{
 			get
 			{
-				_log = _log ?? LogManager.GetCurrentClassLogger();
+				_log = _log ?? LogManager.GetLogger<ActiveDirectoryRoleProvider>();
 				return _log;
 			}
 		}
@@ -193,7 +193,7 @@ namespace CtcApi.Web.Security
 			if ( principal == null )
 				return;
 					
-			Debug.Print(principal.Name);
+			//Debug.Print(principal.Name);
 
 			List<string> res = null;
 			try
