@@ -242,7 +242,7 @@ namespace CtcApi.Web.Security
 					)
 				return ( (List<string>) ( HttpContext.Current.Session[ sessionKey ] ) ).ToArray();
 
-            using ( PrincipalContext context = new PrincipalContext( ContextType.Domain, _domain, null, ContextOptions.Negotiate ) )
+            using ( PrincipalContext context = new PrincipalContext( ContextType.Domain, _domain, null, ContextOptions.Negotiate | ContextOptions.Signing | ContextOptions.Sealing ) )
 			{
 				try
 				{
