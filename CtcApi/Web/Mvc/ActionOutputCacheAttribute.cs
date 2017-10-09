@@ -22,7 +22,7 @@ namespace CtcApi.Web.Mvc
 	{
     private const int DEFAULT_CACHE_DURATION = 0;
 
-    private readonly ILog _log = LogManager.GetCurrentClassLogger();
+    private readonly ILog _log = LogManager.GetLogger<ActionOutputCacheAttribute>();
     // This hack is optional; 
     private static MethodInfo _switchWriterMethod = typeof(HttpResponse).GetMethod("SwitchWriter", BindingFlags.Instance | BindingFlags.NonPublic);
     private int _cacheDuration;

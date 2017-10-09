@@ -9,7 +9,7 @@ namespace CtcApi.Extensions
 {
 	public static class ByteExtensions
 	{
-		private static ILog _log = LogManager.GetCurrentClassLogger();
+		private static ILog _log = LogManager.GetLogger(typeof(ByteExtensions));
 
 		/// <summary>
 		/// 
