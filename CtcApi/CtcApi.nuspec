@@ -19,17 +19,15 @@ If not, see <http://www.gnu.org/licenses/>.
 <package >
 	<metadata>
 		<id>CtcApi</id>
-		<version>$version$</version>
+		<version>0.9.16.0</version>
 		<title>CTC API (core)</title>
-		<authors>Shawn South</authors>
+		<authors>Bellevue College</authors>
 		<owners>$author$</owners>
 		<licenseUrl>http://www.opensource.org/licenses/lgpl-3.0.html</licenseUrl>
-		<projectUrl>http://codemastershawn.com/kb/index.php/CTC_API</projectUrl>
-		<iconUrl>https://sn2files.storage.live.com/y1piGsEP4o3zW3cU_o_64eFwkJ_J6uz6nB9qhLWGV6OM3DlpklUS72qdQc0uTUF9R_41yRLu2xwcDM/ctcodsapi-logo.jpg</iconUrl>
-		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<projectUrl>https://github.com/BellevueCollege/CtcApi</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<description>$description$</description>
 		<releaseNotes></releaseNotes>
-		<copyright>Copyright 2011 Washington State Board for Community and Technical Colleges</copyright>
 		<tags>CTC ODS API HP HP3000 SBCTC college Washington State</tags>
 	</metadata>
 </package>
