@@ -10,7 +10,7 @@ For more details about the projects themselves, see [Structure and examples](htt
 
  - CtcApi 
  	- 0.9.16 - for Commons Logging v3.3.1
- 	- 0.9.15-legacy - for Commons Logging v2.1.2 (see branch legacy-commonslogging2.1.2
+ 	- 0.9.15.1 - for Commons Logging v2.1.2 (see branch legacy-commonslogging2.1.2)
  - CtcApi.Ods
 	 - 0.9.15.1 (there was an error with 0.9.15 so this is merely a rebuilt package)  
 
