@@ -81,11 +81,11 @@ namespace Ctc.Ods.Extensions
 
                 if (result != null)
                 {
-                    _log.Debug(m => m("Using query results already found in HttpRuntime.Cache."));
+                    _log.Debug(m => m("Using sliding expiration query results already found in HttpRuntime.Cache."));
                 }
                 else
                 {
-                    _log.Debug(m => m("Query results not found in HttpRuntime.Cache - executing query."));
+                    _log.Debug(m => m("Query results not found in sliding expiration HttpRuntime.Cache - executing query."));
 
                     // todo: ... ensure that the query results do not
                     // hold on to resources for your particular data source
@@ -117,6 +117,67 @@ namespace Ctc.Ods.Extensions
         }
 
         /// <summary>
+        /// Returns the result of the query; if possible from the cache, otherwise
+        /// the query is materialized and the result cached before being returned.
+        /// The cache entry has the specified absolute expiration with standard priority.
+        /// </summary>
+        public static IQueryable<T> FromCache<T>(this IQueryable<T> query, DateTime absoluteExpiration) where T : class
+        {
+            return query.FromCache(_cacheItemPriority, absoluteExpiration);
+        }
+
+        /// <summary>
+        /// Returns the result of the query; if possible from the cache, otherwise
+        /// the query is materialized and the result cached before being returned.
+        /// Method uses absolute expiration.
+        /// </summary>
+        public static IQueryable<T> FromCache<T>(this IQueryable<T> query, CacheItemPriority priority, DateTime absoluteExpiration) where T : class
+        {
+            if (HttpRuntime.AppDomainAppId != null && absoluteExpiration > DateTime.UtcNow.Add(TimeSpan.FromMinutes(0)))
+            {
+                string key = query.GetCacheKey();
+
+                // try to get the query result from the cache
+                var result = HttpRuntime.Cache.Get(key) as IList<T>;
+
+                if (result != null)
+                {
+                    _log.Debug(m => m("Using absolute expiration query results already found in HttpRuntime.Cache."));
+                }
+                else
+                {
+                    _log.Debug(m => m("Query absolute expiration results not found in HttpRuntime.Cache - executing query."));
+
+                    // todo: ... ensure that the query results do not
+                    // hold on to resources for your particular data source
+                    //
+                    //////// for entity framework queries, set to NoTracking
+                    var entityQuery = query as ObjectQuery<T>;
+                    if (entityQuery != null)
+                    {
+                        entityQuery.MergeOption = MergeOption.NoTracking;
+                    }
+
+                    // materialize the query
+                    result = query.ToList();
+
+                    HttpRuntime.Cache.Insert(
+                      key,
+                      result,
+                      null, // no cache dependency
+                      absoluteExpiration,
+                      Cache.NoSlidingExpiration,
+                      priority,
+                      null); // no removal notification
+                }
+
+                return result.AsQueryable();
+            }
+
+            return query;
+        }
+
+        /// <summary>
         /// Gets a cache key for a query.
         /// </summary>
         public static string GetCacheKey(this IQueryable query)
@@ -131,6 +192,8 @@ namespace Ctc.Ods.Extensions
 
             // use the string representation of the expression for the cache key
             string key = expression.ToString();
+
+            //_log.Debug(m => m("GetCacheKey() - Generated cache key: {0}", key));
 
             // the key is potentially very long, so use an md5 fingerprint
             // (fine if the query result data isn't critically sensitive)

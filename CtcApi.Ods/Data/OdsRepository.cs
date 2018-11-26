@@ -124,7 +124,7 @@ namespace Ctc.Ods.Data
                 if (_currentYearQuarter == null)
                 {
                     _log.Trace("Retrieving current YearQuarter from DB or HttpRuntime.Cache");
-                    YearQuarterEntity yrq = _DbContext.YearQuarters.FromCache(TimeSpan.FromMinutes(Settings.YearQuarter.Cache))
+                    YearQuarterEntity yrq = _DbContext.YearQuarters.FromCache(DateTime.UtcNow.Add(TimeSpan.FromMinutes(Settings.YearQuarter.Cache)))
                                                                                                                 .Where(quarter => quarter.LastClassDay >= _appContext.CurrentDate && quarter.YearQuarterID != Settings.YearQuarter.Max)
                                                                                                                 .OrderBy(quarter => quarter.YearQuarterID)
                                                                                                                 .Take(1).Single();
@@ -179,7 +179,7 @@ namespace Ctc.Ods.Data
                                                      select y;
 
             _log.Trace("Retrieving current YearQuarter from DB or HttpRuntime.Cache");
-            return quarters.FromCache(TimeSpan.FromMinutes(Settings.YearQuarter.Cache))
+            return quarters.FromCache(DateTime.UtcNow.Add(TimeSpan.FromMinutes(Settings.YearQuarter.Cache)))
                                               .Take(count)
                                               .Select(q => new YearQuarter
                                               {
@@ -211,7 +211,7 @@ namespace Ctc.Ods.Data
                                                      select y;
 
             _log.Trace("Retrieving current YearQuarter from DB or HttpRuntime.Cache");
-            return quarters.FromCache(TimeSpan.FromMinutes(Settings.YearQuarter.Cache))
+            return quarters.FromCache(DateTime.UtcNow.Add(TimeSpan.FromMinutes(Settings.YearQuarter.Cache)))
                                               .Take(count)
                                               .Select(q => new YearQuarter
                                               {
