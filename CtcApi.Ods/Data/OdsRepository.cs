@@ -206,9 +206,9 @@ namespace Ctc.Ods.Data
             IQueryable<YearQuarterEntity> quarters = from y in _DbContext.YearQuarters
                                                      join r in _DbContext.WebRegistrationSettings on y.YearQuarterID equals r.YearQuarterID into y_r
                                                      from r in y_r.DefaultIfEmpty()
-                                                     where (r.FirstRegistrationDate != null && r.FirstRegistrationDate >= registrationDate
+                                                     where (r.FirstRegistrationDate != null && r.FirstRegistrationDate >= registrationDate.Date
                                                           // include the quarter we're currently in, even if registration is no longer open for it
-                                                          || y.LastClassDay >= today)
+                                                          || y.LastClassDay >= today.Date)
                                                           && y.YearQuarterID != maxYrq
                                                      orderby y.YearQuarterID ascending
                                                      select y;
