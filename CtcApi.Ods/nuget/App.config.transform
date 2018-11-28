@@ -27,7 +27,7 @@ If not, see <http://www.gnu.org/licenses/>.
 
 	<ctcOdsApiSettings>
 		<regex CommonCourseChar="&amp;"/>
-		<yearQuarter minValue="0000" maxValue="Z999" registrationLeadDays="14" cache="60"/>
+		<yearQuarter minValue="0000" maxValue="Z999" registrationLeadDays="0" postLastClassDays="180" cache="60" />
 		<waitlist status="W-LISTED"/>
 		<lateStartDefinition daysCount="8" />
 		<sectionDaysDefault valueToReplace="ARRANGED" newValue="Arranged" />

@@ -124,10 +124,11 @@ namespace Ctc.Ods.Data
                 if (_currentYearQuarter == null)
                 {
                     _log.Trace("Retrieving current YearQuarter from DB or HttpRuntime.Cache");
+                    DateTime curDate = _appContext.CurrentDate ?? DateTime.Now;
                     YearQuarterEntity yrq = _DbContext.YearQuarters.FromCache(DateTime.UtcNow.Add(TimeSpan.FromMinutes(Settings.YearQuarter.Cache)))
-                                                                                                                .Where(quarter => quarter.LastClassDay >= _appContext.CurrentDate && quarter.YearQuarterID != Settings.YearQuarter.Max)
-                                                                                                                .OrderBy(quarter => quarter.YearQuarterID)
-                                                                                                                .Take(1).Single();
+                                                    .Where(quarter => quarter.LastClassDay >= curDate.Date && quarter.YearQuarterID != Settings.YearQuarter.Max)
+                                                    .OrderBy(quarter => quarter.YearQuarterID)
+                                                    .Take(1).Single();
                     _currentYearQuarter = YearQuarter.FromString(yrq.YearQuarterID);
                 }
                 else
@@ -167,18 +168,20 @@ namespace Ctc.Ods.Data
             // Registration information should be available *before* registration begins
             // NOTE: we jump ahead n days to simulate date lookup n days prior to the registration date
             DateTime registrationDate = today.Add(new TimeSpan(Settings.YearQuarter.RegistrationLeadDays, 0, 0, 0));
+            // Set other boundary of included quarters - last class day of quarter is in future or within last n days
+            DateTime quarterSelectEndDate = today.Subtract(new TimeSpan(Settings.YearQuarter.PostLastClassDays, 0, 0, 0));
 
             IQueryable<YearQuarterEntity> quarters = from y in _DbContext.YearQuarters
                                                      join r in _DbContext.WebRegistrationSettings on y.YearQuarterID equals r.YearQuarterID into y_r
                                                      from r in y_r.DefaultIfEmpty()
-                                                     where (r.FirstRegistrationDate != null && r.FirstRegistrationDate <= registrationDate
+                                                     where (r.FirstRegistrationDate != null && r.FirstRegistrationDate <= registrationDate.Date)
                                                           // include the quarter we're currently in, even if registration is no longer open for it
-                                                          || y.LastClassDay <= today)
+                                                          && (y.LastClassDay >= quarterSelectEndDate.Date)
                                                           && y.YearQuarterID != maxYrq
                                                      orderby y.YearQuarterID descending
                                                      select y;
 
-            _log.Trace("Retrieving current YearQuarter from DB or HttpRuntime.Cache");
+            _log.Trace("Retrieving registration YearQuarters from DB or HttpRuntime.Cache");
             return quarters.FromCache(DateTime.UtcNow.Add(TimeSpan.FromMinutes(Settings.YearQuarter.Cache)))
                                               .Take(count)
                                               .Select(q => new YearQuarter
@@ -199,7 +202,7 @@ namespace Ctc.Ods.Data
             // Registration information should be available *before* registration begins
             // NOTE: we jump ahead n days to simulate date lookup n days prior to the registration date
             DateTime registrationDate = today.Add(new TimeSpan(Settings.YearQuarter.RegistrationLeadDays, 0, 0, 0));
-
+            
             IQueryable<YearQuarterEntity> quarters = from y in _DbContext.YearQuarters
                                                      join r in _DbContext.WebRegistrationSettings on y.YearQuarterID equals r.YearQuarterID into y_r
                                                      from r in y_r.DefaultIfEmpty()
@@ -210,7 +213,7 @@ namespace Ctc.Ods.Data
                                                      orderby y.YearQuarterID ascending
                                                      select y;
 
-            _log.Trace("Retrieving current YearQuarter from DB or HttpRuntime.Cache");
+            _log.Trace("Retrieving future YearQuarters from DB or HttpRuntime.Cache");
             return quarters.FromCache(DateTime.UtcNow.Add(TimeSpan.FromMinutes(Settings.YearQuarter.Cache)))
                                               .Take(count)
                                               .Select(q => new YearQuarter

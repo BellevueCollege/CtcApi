@@ -254,7 +254,31 @@ namespace Ctc.Ods.Config
 		/// <seealso cref="YearQuarterNode">&gt;yearQuarter&lt;</seealso>
 		[XmlAttribute("cache")]
 		public uint Cache{get;set;}
-	}
+
+        ///<summary>
+		/// Days post last class day to display the quarter
+		///</summary>
+		/// <remarks>
+		///		<para>This value specifies how many days after the last class day of a quarter 
+		///		the quarter is considered a registration quarter.</para>
+		///		<code lang="xml">
+		///			<configuration>
+		///			
+		///				<configSections>
+		///					<section name="ctcOdsApiSettings" type="Ctc.Ods.Config.SettingsConfigHandler, CtcOdsApi" />
+		///				</configSections>
+		///				
+		///				<ctcOdsApiSettings>
+		///					<yearQuarter postLastClassDays="180"/>
+		///				</ctcOdsApiSettings>
+		///				
+		///			</configuration>
+		///		</code>
+		/// </remarks>
+		/// <seealso cref="YearQuarterNode">&gt;yearQuarter&lt;</seealso>
+		[XmlAttribute("postLastClassDays")]
+        public int PostLastClassDays { get; set; }
+    }
 
 	/// <summary>
 	/// Encapsulates a collection of one or more <see cref="ClassRule"/>s
