@@ -224,35 +224,64 @@ namespace Ctc.Ods.Config
 		[XmlAttribute("registrationLeadDays")]
 		public int RegistrationLeadDays{get; set;}
 
+        /// <summary>
+        /// The type of caching to use for <see cref="YearQuarter"/> data.
+        /// </summary>
+        /// <remarks>
+        ///		<para>
+        ///		Data from both the <i>YearQuarter</i> and <i>WebRegistrationSetting</i> table will be cached
+        ///		using this cache type. Valid values: <i>absolute</i> or <i>sliding</i>.
+        ///		</para>
+        ///		<note type="important">This caching <i>only</i> applies to queries for data from these tables.
+        ///		It is not cached when this data is joined with other data.
+        ///		</note>
+        ///		<para>The following configuration example will absolute cache YRQ information for one (1) hour:</para>
+        ///		<code lang="xml">
+        ///			<configuration>
+        ///			
+        ///				<configSections>
+        ///					<section name="ctcOdsApiSettings" type="Ctc.Ods.Config.SettingsConfigHandler, CtcOdsApi" />
+        ///				</configSections>
+        ///				
+        ///				<ctcOdsApiSettings>
+        ///					<yearQuarter cacheType="absolute" cache="60" />
+        ///				</ctcOdsApiSettings>
+        ///				
+        ///			</configuration>
+        ///		</code>
+        /// </remarks>
+        /// <seealso cref="YearQuarterNode">&gt;yearQuarter&lt;</seealso>
+        [XmlAttribute("cacheType")]
+        public string CacheType { get; set; }
 
-		/// <summary>
-		/// How long to cache <see cref="YearQuarter"/> data, in minutes
-		/// </summary>
-		/// <remarks>
-		///		<para>
-		///		Data from both the <i>YearQuarter</i> and <i>WebRegistrationSetting</i> table will be cached
-		///		for this many minutes.
-		///		</para>
-		///		<note type="important">This caching only applies to queries for <i>only</i> data from these tables.
-		///		It is not cached when this data is joined with other data.
-		///		</note>
-		///		<para>The following configuration example will cache YRQ information for one (1) hour:</para>
-		///		<code lang="xml">
-		///			<configuration>
-		///			
-		///				<configSections>
-		///					<section name="ctcOdsApiSettings" type="Ctc.Ods.Config.SettingsConfigHandler, CtcOdsApi" />
-		///				</configSections>
-		///				
-		///				<ctcOdsApiSettings>
-		///					<yearQuarter cache="60"/>
-		///				</ctcOdsApiSettings>
-		///				
-		///			</configuration>
-		///		</code>
-		/// </remarks>
-		/// <seealso cref="YearQuarterNode">&gt;yearQuarter&lt;</seealso>
-		[XmlAttribute("cache")]
+        /// <summary>
+        /// How long to cache <see cref="YearQuarter"/> data, in minutes
+        /// </summary>
+        /// <remarks>
+        ///		<para>
+        ///		Data from both the <i>YearQuarter</i> and <i>WebRegistrationSetting</i> table will be cached
+        ///		for this many minutes.
+        ///		</para>
+        ///		<note type="important">This caching only applies to queries for <i>only</i> data from these tables.
+        ///		It is not cached when this data is joined with other data.
+        ///		</note>
+        ///		<para>The following configuration example will cache YRQ information for one (1) hour:</para>
+        ///		<code lang="xml">
+        ///			<configuration>
+        ///			
+        ///				<configSections>
+        ///					<section name="ctcOdsApiSettings" type="Ctc.Ods.Config.SettingsConfigHandler, CtcOdsApi" />
+        ///				</configSections>
+        ///				
+        ///				<ctcOdsApiSettings>
+        ///					<yearQuarter cache="60"/>
+        ///				</ctcOdsApiSettings>
+        ///				
+        ///			</configuration>
+        ///		</code>
+        /// </remarks>
+        /// <seealso cref="YearQuarterNode">&gt;yearQuarter&lt;</seealso>
+        [XmlAttribute("cache")]
 		public uint Cache{get;set;}
 
         ///<summary>

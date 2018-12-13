@@ -47,6 +47,9 @@ namespace Ctc.Ods.Data
         private string _commonCourseChar;
         private ApplicationContext _appContext;
 
+        private const string CacheType_Absolute = "absolute";
+        private const string CacheType_Sliding = "sliding";
+
         #region Properties
         /// <summary>
         /// Gets a reference to the <see cref="DbContext"/> used by this object
@@ -125,10 +128,31 @@ namespace Ctc.Ods.Data
                 {
                     _log.Trace("Retrieving current YearQuarter from DB or HttpRuntime.Cache");
                     DateTime curDate = _appContext.CurrentDate ?? DateTime.Now;
-                    YearQuarterEntity yrq = _DbContext.YearQuarters.FromCache(DateTime.UtcNow.Add(TimeSpan.FromMinutes(Settings.YearQuarter.Cache)))
-                                                    .Where(quarter => quarter.LastClassDay >= curDate.Date && quarter.YearQuarterID != Settings.YearQuarter.Max)
-                                                    .OrderBy(quarter => quarter.YearQuarterID)
-                                                    .Take(1).Single();
+                    
+                    //abstracted query out to 
+                    IQueryable<YearQuarterEntity> quarters = from y in _DbContext.YearQuarters
+                                                             where (y.LastClassDay >= curDate.Date)
+                                                                  && (y.YearQuarterID != Settings.YearQuarter.Max)
+                                                             orderby y.YearQuarterID
+                                                             select y;
+
+
+                    //get quarter using appropriate method for cache type
+                    YearQuarterEntity yrq;
+                    if (Settings.YearQuarter.CacheType == CacheType_Sliding)
+                    {
+                        var cacheWindowSliding = TimeSpan.FromMinutes(Settings.YearQuarter.Cache);
+                        yrq = quarters.FromCache(cacheWindowSliding).Take(1).Single();
+                    } else
+                    {
+                        var cacheWindow = DateTime.UtcNow.Add(TimeSpan.FromMinutes(Settings.YearQuarter.Cache));
+                        yrq = quarters.FromCache(cacheWindow).Take(1).Single();
+                    }
+                    /*yrq = _DbContext.YearQuarters.FromCache( cacheWindowSliding )
+                                                        .Where(quarter => quarter.LastClassDay >= curDate.Date && quarter.YearQuarterID != Settings.YearQuarter.Max)
+                                                        .OrderBy(quarter => quarter.YearQuarterID)
+                                                        .Take(1).Single();
+                     */
                     _currentYearQuarter = YearQuarter.FromString(yrq.YearQuarterID);
                 }
                 else
@@ -182,7 +206,19 @@ namespace Ctc.Ods.Data
                                                      select y;
 
             _log.Trace("Retrieving registration YearQuarters from DB or HttpRuntime.Cache");
-            return quarters.FromCache(DateTime.UtcNow.Add(TimeSpan.FromMinutes(Settings.YearQuarter.Cache)))
+            var cacheWindow = DateTime.UtcNow.Add(TimeSpan.FromMinutes(Settings.YearQuarter.Cache));
+            if ( Settings.YearQuarter.CacheType == CacheType_Sliding )
+            {
+                var cacheWindowSliding = TimeSpan.FromMinutes(Settings.YearQuarter.Cache);
+                return quarters.FromCache(cacheWindowSliding)
+                                              .Take(count)
+                                              .Select(q => new YearQuarter
+                                              {
+                                                  ID = q.YearQuarterID
+                                              }).ToList();
+            }
+
+            return quarters.FromCache(cacheWindow)
                                               .Take(count)
                                               .Select(q => new YearQuarter
                                               {
@@ -214,12 +250,24 @@ namespace Ctc.Ods.Data
                                                      select y;
 
             _log.Trace("Retrieving future YearQuarters from DB or HttpRuntime.Cache");
-            return quarters.FromCache(DateTime.UtcNow.Add(TimeSpan.FromMinutes(Settings.YearQuarter.Cache)))
-                                              .Take(count)
-                                              .Select(q => new YearQuarter
-                                              {
-                                                  ID = q.YearQuarterID
-                                              }).ToList();
+            var cacheWindow = DateTime.UtcNow.Add(TimeSpan.FromMinutes(Settings.YearQuarter.Cache));
+            if ( Settings.YearQuarter.CacheType == CacheType_Sliding )
+            {
+                var cacheWindowSliding = TimeSpan.FromMinutes(Settings.YearQuarter.Cache);
+                return quarters.FromCache(cacheWindowSliding)
+                                  .Take(count)
+                                  .Select(q => new YearQuarter
+                                  {
+                                      ID = q.YearQuarterID
+                                  }).ToList();
+            }
+
+            return quarters.FromCache(cacheWindow)
+                                .Take(count)
+                                .Select(q => new YearQuarter
+                                {
+                                    ID = q.YearQuarterID
+                                }).ToList();
         }
 
         #endregion
