@@ -38,7 +38,7 @@ namespace Ctc.Ods.Data
     /// </summary>
     public class OdsRepository : IDisposable
     {
-        private ILog _log = LogManager.GetCurrentClassLogger();
+        private ILog _log = LogManager.GetLogger<OdsRepository>();
 
         OdsContext _context;
         private YearQuarter _currentYearQuarter;
