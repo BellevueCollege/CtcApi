@@ -22,9 +22,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("CTC ODS API")]
 [assembly: AssemblyDescription("Common API for obtaining rich, multi-layer business objects from the ODS. For more info, visit https://tfs.wacollabcoop.org/sites/SharedProjects/ODSAPI/")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Washington State Board Community and Technical Colleges - Information Technology (SBCTC-IT)")]
+[assembly: AssemblyCompany("Bellevue College")]
 [assembly: AssemblyProduct("CTCODSAPI")]
-[assembly: AssemblyCopyright("Copyright © 2011 Bellevue College and Peninsula College")]
+[assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -46,5 +46,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.9.15.0")]
-[assembly: AssemblyFileVersion("0.9.15.0")]
+[assembly: AssemblyVersion("0.9.16.1")]
+[assembly: AssemblyFileVersion("0.9.16.1")]
