@@ -43,7 +43,6 @@ namespace Ctc.Ods.Data
         OdsContext _context;
         private YearQuarter _currentYearQuarter;
         private ApiSettings _settings;
-        private HttpContextBase _httpContext;
         private string _commonCourseChar;
         private ApplicationContext _appContext;
 
@@ -501,7 +500,7 @@ namespace Ctc.Ods.Data
         /// <param name="courseId">Only retrieve <see cref="Course"/>s for the specified <see cref="ICourseID"/></param>
         /// <param name="subjects">Only retrieve <see cref="Course"/>s with the specified subject prefix(es).</param>
         /// <remarks>
-        ///		If any <see cref="GetCourses()"/> method was called without specifying any <see cref="ISectionFacet"/>s, this method
+        ///		If any GetCourses method was called without specifying any <see cref="ISectionFacet"/>s, this method
         ///		will retrieve all current and future <see cref="Course"/>s after applying the remaining filter requests (e.g.
         ///		<paramref name="courseId"/>, <paramref name="subjects"/>, etc.)
         /// </remarks>
@@ -1012,7 +1011,7 @@ namespace Ctc.Ods.Data
             {
                 if (_context != null)
                 {
-                    if (_httpContext != null)
+                    if (_appContext != null)
                     {
                         // The calling app is most likely caching a _context object, so don't dispose it
                         // (even if we're wrong, nulling the variable should trigger garbage collection)
