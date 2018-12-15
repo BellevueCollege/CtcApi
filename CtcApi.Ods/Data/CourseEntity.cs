@@ -75,7 +75,7 @@ namespace Ctc.Ods.Data
 		/// The <see cref="YearQuarter"/> that this <see cref="Course"/> is/was first offered
 		/// </summary>
 		/// <remarks>
-		/// If not specified in the ODS, YearQuarterBegin defaults <see cref="ApiSettings.YearQuarter.Min"/> so that
+		/// If not specified in the ODS, YearQuarterBegin defaults <see cref="YearQuarterNode.Min"/> so that
 		/// it will be sure to come before any valid YRQ value during comparisons, etc.
 		/// </remarks>
 		public string YearQuarterBegin

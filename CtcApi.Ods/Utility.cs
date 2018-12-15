@@ -275,10 +275,10 @@ namespace Ctc.Ods
 		}
 
 		/// <summary>
-		/// Removes the <see cref="ApiSettings.RegexPatterns.CommonCourseChar"/> from the end of a string.
+		/// Removes the <see cref="RegexSettings.CommonCourseChar"/> from the end of a string.
 		/// </summary>
 		/// <param name="courseSubject"></param>
-		/// <returns>A new string with the trailing <see cref="ApiSettings.RegexPatterns.CommonCourseChar"/> removed.</returns>
+		/// <returns>A new string with the trailing <see cref="RegexSettings.CommonCourseChar"/> removed.</returns>
 		static public string TrimCommonCourseChar(string courseSubject)
 		{
 			string commonCourseChar = GetApiSettings().RegexPatterns.CommonCourseChar;

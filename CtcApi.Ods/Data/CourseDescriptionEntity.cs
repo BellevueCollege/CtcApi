@@ -96,7 +96,7 @@ namespace Ctc.Ods.Data
 		/// YearQuarter this description takes/took effect
 		/// </summary>
 		/// <remarks>
-		/// NOTE: if this value is null or an empty string it is replaced with <see cref="ApiSettings.YearQuarter.Min"/>
+		/// NOTE: if this value is null or an empty string it is replaced with <see cref="YearQuarterNode.Min"/>
 		/// </remarks>
 		[Column("EffectiveYearQuarterBegin")]
 		public string YearQuarterBegin

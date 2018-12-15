@@ -32,7 +32,7 @@ namespace Ctc.Ods.Data
 		/// The five-character abbreviation which identifies a course of study (e.g. ENGL)
 		/// </summary>
 		/// <remarks>
-		/// PrefixID values that end in <see cref="ApiSettings.RegexPatterns.CommonCourseChar"/>
+		/// PrefixID values that end in <see cref="RegexSettings.CommonCourseChar"/>
 		/// only exist in the database to provide a relational lookup for <see cref="Course"/>s to
 		/// which the Common Course designation applies. Since the API handles these relationships
 		/// for us, and leaving this designator active creates duplicate subjects, it is filtered
