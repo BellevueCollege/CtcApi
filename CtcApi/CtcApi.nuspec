@@ -19,7 +19,7 @@ If not, see <http://www.gnu.org/licenses/>.
 <package >
 	<metadata>
 		<id>CtcApi</id>
-		<version>0.9.16.0</version>
+		<version>$version$</version>
 		<title>CTC API (core)</title>
 		<authors>Bellevue College</authors>
 		<owners>$author$</owners>
