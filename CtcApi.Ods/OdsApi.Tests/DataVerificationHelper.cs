@@ -75,7 +75,7 @@ namespace Ctc.Ods.Tests
 			_conn.ConnectionString = ConfigurationManager.ConnectionStrings["OdsContext"].ConnectionString;
 
 			DateTime today = appContext.CurrentDate ?? DateTime.Now;
-			CurrentYrq = GetYearQuarterID(string.Format("LastClassDay >= cast('{0}' as datetime)", today));
+			CurrentYrq = GetYearQuarterID(string.Format("LastClassDay >= cast('{0}' as datetime)", today.Date));
 
 			_yrqFilter = String.Format(" and YearQuarterID in (SELECT TOP (4) y.[YearQuarterID] FROM [vw_YearQuarter] AS y LEFT OUTER JOIN [vw_WebRegistrationSetting] AS r ON y.[YearQuarterID] = r.[YearQuarterID] WHERE (((r.[FirstRegistrationDate] IS NOT NULL AND r.[FirstRegistrationDate] <= cast('{0}' as smalldatetime)) OR y.[FirstClassDay] <= cast('{1}' as smalldatetime)) AND y.[YearQuarterID] <> 'Z999') ORDER BY y.[YearQuarterID] DESC) ",
 			                           today.AddDays(14).ToShortDateString(), today.ToShortDateString());

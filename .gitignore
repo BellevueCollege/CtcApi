@@ -23,6 +23,7 @@ x64/
 build/
 [Bb]in/
 [Oo]bj/
+*.nupkg
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
@@ -102,9 +103,9 @@ publish/
 *.Publish.xml
 *.pubxml
 
-# NuGet Packages Directory
-## TODO: If you have NuGet Package Restore enabled, uncomment the next line
-#packages/
+# NuGet Packages Directory - Package Restore will d/l packages
+packages/*
+*/packages/
 
 # Windows Azure Build Output
 csx

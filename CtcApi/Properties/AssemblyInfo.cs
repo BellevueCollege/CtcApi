@@ -20,11 +20,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("CtcApi")]
-[assembly: AssemblyDescription("Common API for use by Washington State community and technical colleges. For more info, visit http://codemastershawn.com/kb/index.php/CTC_API")]
+[assembly: AssemblyDescription("Library of common methods, classes, etc for reuse in .NET projects.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Washington State Board Community and Technical Colleges - Information Technology (SBCTC-IT)")]
+[assembly: AssemblyCompany("Bellevue College")]
 [assembly: AssemblyProduct("CtcApi")]
-[assembly: AssemblyCopyright("Copyright © 2012")]
+[assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -46,5 +46,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.9.15.0")]
-[assembly: AssemblyFileVersion("0.9.15.0")]
+[assembly: AssemblyVersion("1.0.0")]
+[assembly: AssemblyFileVersion("1.0.0")]

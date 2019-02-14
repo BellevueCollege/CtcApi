@@ -78,7 +78,7 @@ namespace CtcApi.Web.Security
 		{
 			get
 			{
-				_log = _log ?? LogManager.GetCurrentClassLogger();
+				_log = _log ?? LogManager.GetLogger<ActiveDirectoryRoleProvider>();
 				return _log;
 			}
 		}
@@ -116,7 +116,6 @@ namespace CtcApi.Web.Security
 
 			// Initialize the abstract base class.
 			base.Initialize( name, config );
-
 			_domain = ReadConfig( config, "domain" );
 			_isAdditiveGroupMode = ( ReadConfig( config, "groupMode" ) == "Additive" );
 			_activeDirectoryConnectionString = ReadConfig( config, "connectionString" );
@@ -194,12 +193,12 @@ namespace CtcApi.Web.Security
 			if ( principal == null )
 				return;
 					
-			Debug.Print(principal.Name);
+			//Debug.Print(principal.Name);
 
 			List<string> res = null;
 			try
 			{
-				res = principal.GetGroups().Select(grp => grp.Name).ToList();
+				res = principal.GetGroups(context).Select(grp => grp.Name).ToList();
 			}
 			// Gracefully handle known issue when attempting to retrieve group membership from another domain.
 			// NOTE: This code will result in the remainder of this branch being abandoned, which may cause false negatives
@@ -243,17 +242,19 @@ namespace CtcApi.Web.Security
 					)
 				return ( (List<string>) ( HttpContext.Current.Session[ sessionKey ] ) ).ToArray();
 
-			using ( PrincipalContext context = new PrincipalContext( ContextType.Domain, _domain, null, ContextOptions.Negotiate ) )
+            using ( PrincipalContext context = new PrincipalContext( ContextType.Domain, _domain, null, ContextOptions.Negotiate | ContextOptions.Signing | ContextOptions.Sealing ) )
 			{
 				try
 				{
-					// add the users groups to the result
-					UserPrincipal identity = UserPrincipal.FindByIdentity( context, IdentityType.SamAccountName, username );
+                    //Debug.Print("context info (server): " + context.ConnectedServer);
+
+                    // add the users groups to the result
+                    UserPrincipal identity = UserPrincipal.FindByIdentity( context, IdentityType.SamAccountName, username );
 
 					if (identity != null)
 					{
 						var groupList = identity
-								.GetGroups()
+								.GetGroups(context)
 								.Select( group => group.Name )
 								.ToList();
 
@@ -428,6 +429,7 @@ namespace CtcApi.Web.Security
 			                             			Filter = filter,
 			                             			PageSize = 500
 			                             	};
+
 			searcher.PropertiesToLoad.Clear();
 			searcher.PropertiesToLoad.Add( field );
 

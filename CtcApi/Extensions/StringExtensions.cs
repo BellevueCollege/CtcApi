@@ -34,7 +34,7 @@ namespace CtcApi.Extensions
 	public static class StringExtensions
 	{
 
-		private static ILog _log = LogManager.GetCurrentClassLogger();
+        private static ILog _log = LogManager.GetLogger(typeof(StringExtensions));
 		private static readonly char _pathSeparator = '\\';
 		private static readonly char _urlSeparator = '/';
 

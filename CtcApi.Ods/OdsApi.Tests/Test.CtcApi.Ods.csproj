@@ -10,7 +10,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Ctc.Ods.Tests</RootNamespace>
-    <AssemblyName>Ctc.Ads.Tests</AssemblyName>
+    <AssemblyName>Ctc.Ods.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -61,7 +61,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.4.1.10715.0\lib\EntityFramework.dll</HintPath>
+      <HintPath>..\..\packages\EntityFramework.4.1.10715.0\lib\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -116,6 +116,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="AppSettings.config" />
+    <None Include="ConnectionStrings.config" />
+    <None Include="EXAMPLE-AppSettings.config" />
+    <None Include="EXAMPLE-ConnectionStrings.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -158,15 +162,12 @@
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
-  -->
   <Target Name="AfterBuild">
-    <!-- copy the workstation-specific connection strings to the same folder as the executable -->
-    <Exec Command="if exist ConnectionStrings.config xcopy /y ConnectionStrings.config $(OutputPath)" />
-    <Exec Command="if exist AppSettings.config xcopy /y AppSettings.config $(OutputPath)" />
   </Target>
+  -->
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>if exist $(ProjectDir)ConnectionStrings.config xcopy /y $(ProjectDir)ConnectionStrings.config $(OutDir)
+if exist $(ProjectDir)AppSettings.config xcopy /y $(ProjectDir)AppSettings.config $(OutDir)</PostBuildEvent>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>

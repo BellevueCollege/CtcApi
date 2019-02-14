@@ -38,7 +38,7 @@ namespace Ctc.Ods.Data
 		/// <summary>
 		/// The status of the waitlist record
 		/// </summary>
-		/// <seealso cref="ApiSettings.Waitlist.Status"/>
+		/// <seealso cref="WaitlistNode.Status"/>
 		public string Status{get;set;}
 	}
 }

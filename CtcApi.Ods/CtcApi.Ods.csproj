@@ -65,11 +65,16 @@
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Common.Logging">
-      <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
+    <Reference Include="Common.Logging, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.3.3.1\lib\net40\Common.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.Core.3.3.1\lib\net40\Common.Logging.Core.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework">
-      <HintPath>packages\EntityFramework.4.1.10715.0\lib\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.4.1.10715.0\lib\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -199,10 +204,6 @@
 	<Target Name="AfterBuild">
 	</Target>
 	-->
-  <Target Name="AfterBuild">
-    <!-- copy the workstation-specific connection strings to the same folder as the executable -->
-    <Exec Command="if exist ConnectionStrings.config xcopy /y ConnectionStrings.config $(OutputPath)" />
-  </Target>
   <!-- NuGet packaging code obtained from http://blog.richardadleta.com/2011/06/automating-nuget-packing-and-publishing.html -->
   <Target Name="Package">
     <!-- Ensure the Package directory exists for this project -->
@@ -216,4 +217,8 @@
       <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_ConfigurationName="Release" BuildVersion_BuildAction="ReBuild" />
     </VisualStudio>
   </ProjectExtensions>
+  <PropertyGroup>
+    <PostBuildEvent>if exist $(ProjectDir)ConnectionStrings.config xcopy /y $(ProjectDir)ConnectionStrings.config $(OutDir)
+if exist $(ProjectDir)AppSettings.config xcopy /y $(ProjectDir)AppSettings.config $(OutDir)</PostBuildEvent>
+  </PropertyGroup>
 </Project>
