@@ -9,14 +9,17 @@ For more details about the projects themselves, see [Structure and examples](htt
 ### Current NuGet package versions (as published on BC NuGet server)
 
  - CtcApi 
- 	- 0.9.16 - for Commons Logging v3.3.1
- 	- 0.9.15.1 - for Commons Logging v2.1.2 (see branch legacy-commonslogging2.1.2)
+ 	- 0.9.16.2/1.0.0
  - CtcApi.Ods
-	 - 0.9.15.1 (there was an error with 0.9.15 so this is merely a rebuilt package)  
+	 - 0.9.16.2/1.0.0  
+
+> Note: In an attempt to end the versioning madness (and to get closer to SemVer specs), the version has arbitrarily been moved forward to 1.0.0. As such, the 0.9.16.2 and 1.0.0 versions are the same.
 
 ### To create NuGet packages
 
-Each project (CtcApi and CtcApi.Ods) has its own .nuspec file for use in building NuGet packages which are then deployed to the Bellevue College NuGet server. To build NuGet packages, you will need a local copy of the NuGet CLI. [See the NuGet CLI reference](https://docs.microsoft.com/en-us/nuget/tools/nuget-exe-cli-reference) for download instructions. Put the `nuget.exe` file in an easy to use location like `C:\Nuget`. You can then build each project into a NuGet package (.nupkg) using the Package Manager Console in Visual Studio.
+Nuget packages for CtcApi and CtcApi.Ods are now created using build processes in Azure DevOps.  In the CtcApi project, queue a new build of CtcApi-CI and CtcOdsApi-CI. When queueing the build, add a variable `version.current` and then specify the build version. This will be used by Azure DevOps as the package version, i.e. `1.0.0`. This should match the assembly version. Once the builds successfully queue and run, you can check the Artifacts list to verify the new Nuget package is there.
+
+If you want to locally build a Nuget package of CtcApi or CtcApi.Ods for your own purposes, you can do so using the Nuget CLI. [See the NuGet CLI reference](https://docs.microsoft.com/en-us/nuget/tools/nuget-exe-cli-reference) for download instructions. Put the `nuget.exe` file in an easy to use location like `C:\Nuget`. You can then build each project into a NuGet package (.nupkg) using the Package Manager Console in Visual Studio.
 
 Example:
 
