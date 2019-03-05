@@ -27,7 +27,7 @@ using CtcApi;
 namespace Ctc.Ods.Tests
 {
 
-	class DataVerificationHelper : IDisposable
+	class DataVerificationHelper //: IDisposable
 	{
 		// constants
 		/// <summary>
@@ -39,6 +39,7 @@ namespace Ctc.Ods.Tests
 
 		private DbProviderFactory _provider;
 		private DbConnection _conn;
+        private string _connString;
 		private int _allSectionsCount = -1;
 
 		public string CurrentYrq{get; private set;}
@@ -71,42 +72,44 @@ namespace Ctc.Ods.Tests
 		public DataVerificationHelper(ApplicationContext appContext)
 		{
 			_provider = DbProviderFactories.GetFactory("System.Data.SqlClient");
-			_conn = _provider.CreateConnection();
-			_conn.ConnectionString = ConfigurationManager.ConnectionStrings["OdsContext"].ConnectionString;
+			//_conn = _provider.CreateConnection();
+			//_conn.ConnectionString = ConfigurationManager.ConnectionStrings["OdsContext"].ConnectionString;
+            _connString = ConfigurationManager.ConnectionStrings["OdsContext"].ConnectionString;
 
-			DateTime today = appContext.CurrentDate ?? DateTime.Now;
+            DateTime today = appContext.CurrentDate ?? DateTime.Now;
 			CurrentYrq = GetYearQuarterID(string.Format("LastClassDay >= cast('{0}' as datetime)", today.Date));
 
 			_yrqFilter = String.Format(" and YearQuarterID in (SELECT TOP (4) y.[YearQuarterID] FROM [vw_YearQuarter] AS y LEFT OUTER JOIN [vw_WebRegistrationSetting] AS r ON y.[YearQuarterID] = r.[YearQuarterID] WHERE (((r.[FirstRegistrationDate] IS NOT NULL AND r.[FirstRegistrationDate] <= cast('{0}' as smalldatetime)) OR y.[FirstClassDay] <= cast('{1}' as smalldatetime)) AND y.[YearQuarterID] <> 'Z999') ORDER BY y.[YearQuarterID] DESC) ",
 			                           today.AddDays(14).ToShortDateString(), today.ToShortDateString());
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="whereClause"></param>
-		/// <returns></returns>
-		public string GetYearQuarterID(string whereClause)
-		{
-			string sql = string.Format("select top 1 YearQuarterID from vw_YearQuarter where YearQuarterID <> 'Z999' and {0} order by YearQuarterID", whereClause);
-			try
-			{
-				if (_conn.State != ConnectionState.Open) {
-					_conn.Open();
-				}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="whereClause"></param>
+        /// <returns></returns>
+        public string GetYearQuarterID(string whereClause)
+        {
+            string sql = string.Format("select top 1 YearQuarterID from vw_YearQuarter where YearQuarterID <> 'Z999' and {0} order by YearQuarterID", whereClause);
+            using (SqlConnection conn = new SqlConnection(_connString))
+            {
+                using (DbCommand cmd = conn.CreateCommand())
+                {
+                    try
+                    {
+                        conn.Open();
+                        cmd.Connection = conn;
+                        cmd.CommandText = sql;
 
-				using (DbCommand cmd = _conn.CreateCommand())
-				{
-					cmd.CommandText = sql;
-
-					return cmd.ExecuteScalar().ToString();
-				}
-			}
-			catch (SqlException ex)
-			{
-				throw new DataException(String.Format("An error occurred while attempting execute the following SQL: \"{0}\"", sql), ex);
-			}
-		}
+                        return cmd.ExecuteScalar().ToString();
+                    }
+                    catch (SqlException ex)
+                    {
+                        throw new DataException(String.Format("An error occurred while attempting execute the following SQL: \"{0}\"", sql), ex);
+                    }
+                }
+            }
+        }
 
 		/// <summary>
 		/// 
@@ -116,24 +119,24 @@ namespace Ctc.Ods.Tests
 		public string GetRandomClassID(string whereClause)
 		{
 			string sql = string.Format("select top 1 ClassID from vw_Class where {0} and YearQuarterID >= '{1}' order by newid()", whereClause, CurrentYrq);
-			try
-			{
-				if (_conn.State != ConnectionState.Open) {
-					_conn.Open();
-				}
+            using (SqlConnection conn = new SqlConnection(_connString))
+            {
+                using (DbCommand cmd = conn.CreateCommand())
+                {
+                    try
+                    {
+                        conn.Open();
+                        cmd.Connection = conn;
+                        cmd.CommandText = sql;
 
-				using (DbCommand cmd = _conn.CreateCommand())
-				{
-					cmd.CommandText = sql;
-
-					// NOTE: A NullReferenceException here most likely means an empty recordset was returned.
-					return cmd.ExecuteScalar().ToString();
-				}
-			}
-			catch (SqlException ex)
-			{
-				throw new DataException(String.Format("An error occurred while attempting execute the following SQL: \"{0}\"", sql), ex);
-			}
+                        return cmd.ExecuteScalar().ToString();
+                    }
+                    catch (SqlException ex)
+                    {
+                        throw new DataException(String.Format("An error occurred while attempting execute the following SQL: \"{0}\"", sql), ex);
+                    }
+                }
+            }
 		}
 
 		/// <summary>
@@ -146,24 +149,27 @@ namespace Ctc.Ods.Tests
 			string yrqFilter = string.Format(" and isnull(EffectiveYearQuarterEnd, 'Z999') >= '{0}' ", CurrentYrq);
 			string sql = string.Format("select count(c.CourseID) FROM (select DISTINCT replace(CourseID,'&', ' ') AS CourseID, EffectiveYearQuarterBegin, EffectiveYearQuarterEnd from vw_Course WHERE {0} {1}) c", whereClause, yrqFilter);
 
-			try
-			{
-				if (_conn.State != ConnectionState.Open) {
-					_conn.Open();
-				}
+            using (SqlConnection conn = new SqlConnection(_connString))
+            {
+                using (DbCommand cmd = conn.CreateCommand())
+                {
+                    try
+                    {
+                        conn.Open();
+                        cmd.Connection = conn;
+                        cmd.CommandText = sql;
 
-				using (DbCommand cmd = _conn.CreateCommand())
-				{
-					cmd.CommandText = sql;
+                        Debug.Print("==> EXECUTING SQL QUERY: {0}", sql);
+                        return int.Parse(cmd.ExecuteScalar().ToString());
 
-					Debug.Print("==> EXECUTING SQL QUERY: {0}", sql);
-					return int.Parse(cmd.ExecuteScalar().ToString());
-				}
-			}
-			catch (SqlException ex)
-			{
-				throw new DataException(String.Format("An error occurred while attempting execute the following SQL: \"{0}\"", sql), ex);
-			}
+                        //return cmd.ExecuteScalar().ToString();
+                    }
+                    catch (SqlException ex)
+                    {
+                        throw new DataException(String.Format("An error occurred while attempting execute the following SQL: \"{0}\"", sql), ex);
+                    }
+                }
+            }
 		}
 
 		/// <summary>
@@ -176,23 +182,25 @@ namespace Ctc.Ods.Tests
 			string courseYrqFilter = string.Format(" isnull(EffectiveYearQuarterEnd, 'Z999') >= '{0}' ", CurrentYrq);
 			string sql = string.Format("select count(distinct replace(CourseID,'&', ' ')) from vw_Class where {0} and CourseID in (select CourseID from vw_Course where {3}) {1} {2}",
 																whereClause, _sectionFilter, _yrqFilter, courseYrqFilter);
-			try
-			{
-				if (_conn.State != ConnectionState.Open) {
-					_conn.Open();
-				}
 
-				using (DbCommand cmd = _conn.CreateCommand())
-				{
-					cmd.CommandText = sql;
+            using (SqlConnection conn = new SqlConnection(_connString))
+            {
+                using (DbCommand cmd = conn.CreateCommand())
+                {
+                    try
+                    {
+                        conn.Open();
+                        cmd.Connection = conn;
+                        cmd.CommandText = sql;
 
-					return int.Parse(cmd.ExecuteScalar().ToString());
-				}
-			}
-			catch (SqlException ex)
-			{
-				throw new DataException(String.Format("An error occurred while attempting execute the following SQL: \"{0}\"", sql), ex);
-			}
+                        return int.Parse(cmd.ExecuteScalar().ToString());
+                    }
+                    catch (SqlException ex)
+                    {
+                        throw new DataException(String.Format("An error occurred while attempting execute the following SQL: \"{0}\"", sql), ex);
+                    }
+                }
+            }
 		}
 
 		/// <summary>
@@ -202,33 +210,34 @@ namespace Ctc.Ods.Tests
 		/// <returns></returns>
 		public int GetSectionCount(string whereClause)
 		{
-      string sql = String.Format("SELECT count(DISTINCT ClassID) FROM vw_Class where {0} {1}", whereClause, _sectionFilter);
+            string sql = String.Format("SELECT count(DISTINCT ClassID) FROM vw_Class where {0} {1}", whereClause, _sectionFilter);
 
-      // Only include the default YRQ filter if the caller hasn't explicitly defined a direct YRQ where clause
-      Regex explicitWhere = new Regex(@"(^|\s+)YearQuarterID\s+(in\s+\(|[=><])\s*('|select)", RegexOptions.IgnoreCase);
-      if (!explicitWhere.IsMatch(sql))
-		  {
-		    sql = string.Format("{0} {1}", sql, _yrqFilter);
-		  }
-			Debug.Print("Executing >> {0}", sql);
+            // Only include the default YRQ filter if the caller hasn't explicitly defined a direct YRQ where clause
+            Regex explicitWhere = new Regex(@"(^|\s+)YearQuarterID\s+(in\s+\(|[=><])\s*('|select)", RegexOptions.IgnoreCase);
+            if (!explicitWhere.IsMatch(sql))
+            {
+                sql = string.Format("{0} {1}", sql, _yrqFilter);
+            }
+            Debug.Print("Executing >> {0}", sql);
 
-			try
-			{
-				if (_conn.State != ConnectionState.Open) {
-					_conn.Open();
-				}
+            using (SqlConnection conn = new SqlConnection(_connString))
+            {
+                using (DbCommand cmd = conn.CreateCommand())
+                {
+                    try
+                    {
+                        conn.Open();
+                        cmd.Connection = conn;
+                        cmd.CommandText = sql;
 
-				using (DbCommand cmd = _conn.CreateCommand())
-				{
-					cmd.CommandText = sql;
-
-					return int.Parse(cmd.ExecuteScalar().ToString());
-				}
-			}
-			catch (SqlException ex)
-			{
-				throw new DataException(String.Format("An error occurred while attempting execute the following SQL: \"{0}\"", sql), ex);
-			}
+                        return int.Parse(cmd.ExecuteScalar().ToString());
+                    }
+                    catch (SqlException ex)
+                    {
+                        throw new DataException(String.Format("An error occurred while attempting execute the following SQL: \"{0}\"", sql), ex);
+                    }
+                }
+            }
 		}
 
 		/// <summary>
@@ -245,13 +254,27 @@ namespace Ctc.Ods.Tests
 			return int.Parse(ExecuteScalar(sql));
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="whereClause"></param>
-		/// <param name="applySectionFilter"></param>
-		/// <returns></returns>
-		public string GetRandomCourseSubject(string whereClause, bool applySectionFilter = false)
+        /// <summary>
+        /// Retrieves a course prefix _not_ used by the classes specified by the where clause
+        /// </summary>
+        /// <param name="whereClause"></param>
+        /// <param name="applySectionFilter"></param>
+        /// <returns></returns>
+        public string GetExcludedCourseSubject(string whereClause, bool applySectionFilter = false)
+        {
+            string sql = String.Format("SELECT TOP 1 REPLACE(p.[CoursePrefixID], '&', '') FROM vw_CoursePrefix AS p where RTRIM(p.[CoursePrefixID]) not in (select RTRIM(LEFT(CourseID, 5)) from vw_Class where {0} {1})",
+                                                                    whereClause, applySectionFilter ? _sectionFilter : string.Empty);
+
+            return ExecuteScalar(String.Concat(sql, " ORDER BY NEWID()"));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="whereClause"></param>
+        /// <param name="applySectionFilter"></param>
+        /// <returns></returns>
+        public string GetRandomCourseSubject(string whereClause, bool applySectionFilter = false)
 		{
 			string sql = String.Format("SELECT TOP 1 REPLACE(p.[CoursePrefixID], '&', '') FROM vw_CoursePrefix AS p where p.[CoursePrefixID] in (select LEFT(CourseID, 5) from vw_Class where {0} {1})",
 																	whereClause, applySectionFilter ? _sectionFilter : string.Empty);
@@ -294,32 +317,33 @@ namespace Ctc.Ods.Tests
 			IList<ISectionID> ids = new List<ISectionID>(count);
 
 			string sql = string.Format("select top {0} ClassID from vw_Class where CourseTitle like '%{1}%' {2} {3}", count, queryString, _yrqFilter, _sectionFilter);
-			try
-			{
-				if (_conn.State != ConnectionState.Open) {
-					_conn.Open();
-				}
+            using (SqlConnection conn = new SqlConnection(_connString))
+            {
+                using (DbCommand cmd = conn.CreateCommand())
+                {
+                    try
+                    {
+                        conn.Open();
+                        cmd.Connection = conn;
+                        cmd.CommandText = sql;
 
-				using (DbCommand cmd = _conn.CreateCommand())
-				{
-					cmd.CommandText = sql;
+                        cmd.ExecuteScalar().ToString();
+                        using (DbDataReader rs = cmd.ExecuteReader())
+                        {
+                            while (rs.Read())
+                            {
+                                ids.Add(SectionID.FromString(rs["ClassID"].ToString().Trim()));
+                            }
+                        }
 
-					cmd.ExecuteScalar().ToString();
-					using (DbDataReader rs = cmd.ExecuteReader())
-					{
-						while (rs.Read())
-						{
-							ids.Add(SectionID.FromString(rs["ClassID"].ToString().Trim()));
-						}
-					}
-
-					return ids;
-				}
-			}
-			catch (SqlException ex)
-			{
-				throw new DataException(String.Format("An error occurred while attempting execute the following SQL: \"{0}\"", sql), ex);
-			}
+                        return ids;
+                    }
+                    catch (SqlException ex)
+                    {
+                        throw new DataException(String.Format("An error occurred while attempting execute the following SQL: \"{0}\"", sql), ex);
+                    }
+                }
+            }
 		}
 
 		/// <summary>
@@ -333,32 +357,34 @@ namespace Ctc.Ods.Tests
 			IList<ICourseID> ids = new List<ICourseID>(count);
 
 			string sql = string.Format("select top {0} CourseID from (select distinct CourseID from vw_Class where CourseTitle like '%{1}%' {4} {2} {3}) a", count, queryString, _yrqFilter, _sectionFilter, whereClause ?? string.Empty);
-			try
-			{
-				if (_conn.State != ConnectionState.Open) {
-					_conn.Open();
-				}
 
-				using (DbCommand cmd = _conn.CreateCommand())
-				{
-					cmd.CommandText = sql;
+            using (SqlConnection conn = new SqlConnection(_connString))
+            {
+                using (DbCommand cmd = conn.CreateCommand())
+                {
+                    try
+                    {
+                        conn.Open();
+                        cmd.Connection = conn;
+                        cmd.CommandText = sql;
 
-					cmd.ExecuteScalar().ToString();
-					using (DbDataReader rs = cmd.ExecuteReader())
-					{
-						while (rs.Read())
-						{
-							ids.Add(CourseID.FromString(rs["CourseID"].ToString().Trim()));
-						}
-					}
+                        cmd.ExecuteScalar().ToString();
+                        using (DbDataReader rs = cmd.ExecuteReader())
+                        {
+                            while (rs.Read())
+                            {
+                                ids.Add(CourseID.FromString(rs["CourseID"].ToString().Trim()));
+                            }
+                        }
 
-					return ids;
-				}
-			}
-			catch (SqlException ex)
-			{
-				throw new DataException(String.Format("An error occurred while attempting execute the following SQL: \"{0}\"", sql), ex);
-			}
+                        return ids;
+                    }
+                    catch (SqlException ex)
+                    {
+                        throw new DataException(String.Format("An error occurred while attempting execute the following SQL: \"{0}\"", sql), ex);
+                    }
+                }
+            }
 		}
 
 		/// <summary>
@@ -369,44 +395,48 @@ namespace Ctc.Ods.Tests
 		public DbDataReader ExecuteReader(string sql)
 		{
 			string fullSql = string.Format("{0} {1} {2}", sql, _sectionFilter, _yrqFilter);
-			try
-			{
-				if (_conn.State != ConnectionState.Open) {
-					_conn.Open();
-				}
 
-				using (DbCommand cmd = _conn.CreateCommand())
-				{
-					cmd.CommandText = fullSql;
-					return cmd.ExecuteReader();
-				}
-			}
-			catch (SqlException ex)
-			{
-				throw new DataException(String.Format("An error occurred while attempting execute the following SQL: \"{0}\"", sql), ex);
-			}
+            using (SqlConnection conn = new SqlConnection(_connString))
+            {
+                using (DbCommand cmd = conn.CreateCommand())
+                {
+                    try
+                    {
+                        conn.Open();
+                        cmd.Connection = conn;
+                        cmd.CommandText = fullSql;
+
+                        return cmd.ExecuteReader();
+                    }
+                    catch (SqlException ex)
+                    {
+                        throw new DataException(String.Format("An error occurred while attempting execute the following SQL: \"{0}\"", sql), ex);
+                    }
+                }
+            }
 		}
 
 		#region Helper methods
 		private string ExecuteScalar(string sql)
 		{
-			try
-			{
-				if (_conn.State != ConnectionState.Open) {
-					_conn.Open();
-				}
+            using (SqlConnection conn = new SqlConnection(_connString))
+            {
+                using (DbCommand cmd = conn.CreateCommand())
+                {
+                    try
+                    {
+                        conn.Open();
+                        cmd.Connection = conn;
+                        cmd.CommandText = sql;
 
-				using (DbCommand cmd = _conn.CreateCommand())
-				{
-					cmd.CommandText = sql;
-
-					return cmd.ExecuteScalar().ToString();
-				}
-			}
-			catch (SqlException ex)
-			{
-				throw new DataException(String.Format("An error occurred while attempting execute the following SQL: \"{0}\"", sql), ex);
-			}
+                        return cmd.ExecuteScalar().ToString();
+                    }
+                    catch (SqlException ex)
+                    {
+                        throw new DataException(String.Format("An error occurred while attempting execute the following SQL: \"{0}\"", sql), ex);
+                    }
+                }
+            }
 		}
 
 		#endregion
@@ -415,7 +445,12 @@ namespace Ctc.Ods.Tests
 		/// <summary>
 		/// 
 		/// </summary>
-		public void Dispose()
+        /** Dispose appears to have only been used for closing the connection, but this ended up causing weird 
+         * Data Provider errors and research tells me Dispose should not be used for connections as natural garbage 
+         * collection would handle this. Moved to "using" syntax for connections so should be cleaned up without 
+         * leaks after each connection.
+         **/
+		/*public void Dispose()
 		{
 			GC.SuppressFinalize(this);
 			Dispose(true);
@@ -434,7 +469,7 @@ namespace Ctc.Ods.Tests
 					_conn.Close();
 				}
 			}
-		}
+		}*/
 
 		#endregion
 	}

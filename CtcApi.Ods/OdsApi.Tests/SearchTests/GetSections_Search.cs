@@ -36,10 +36,10 @@ namespace Ctc.Ods.Tests.SearchTests
 			_dataVerifier = new DataVerificationHelper();
 		}
 
-		~GetSections_Search()
+		/*~GetSections_Search()
 		{
 			_dataVerifier.Dispose();
-		}
+		}*/
 
 		private TestContext testContextInstance;
 

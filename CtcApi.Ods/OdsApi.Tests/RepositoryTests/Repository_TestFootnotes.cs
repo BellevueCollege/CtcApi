@@ -37,10 +37,10 @@ namespace Ctc.Ods.Tests
 			_dataVerifier = new DataVerificationHelper();
 		}
 
-		~FootnoteTest()
+		/*~FootnoteTest()
 		{
 			_dataVerifier.Dispose();
-		}
+		}*/
 
 		private TestContext testContextInstance;
 

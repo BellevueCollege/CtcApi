@@ -36,10 +36,10 @@ namespace Ctc.Ods.Tests.ClassDataFilterTests
 			_dataVerifier = new DataVerificationHelper();
 		}
 
-        ~GetSections_FilterYearQuarter()
+        /*~GetSections_FilterYearQuarter()
 		{
 			_dataVerifier.Dispose();
-		}
+		}*/
 
 		private TestContext testContextInstance;
 
@@ -97,9 +97,9 @@ namespace Ctc.Ods.Tests.ClassDataFilterTests
         public void GetSections_ThreeQuarters_Success()
         {
 					IList<YearQuarter> yearQuartersToFilter = new List<YearQuarter>();
-					yearQuartersToFilter.Add(YearQuarter.FromString("B014"));
-					yearQuartersToFilter.Add(YearQuarter.FromString("B121"));
-					yearQuartersToFilter.Add(YearQuarter.FromString("B122"));
+					yearQuartersToFilter.Add(YearQuarter.FromString("B891"));
+					yearQuartersToFilter.Add(YearQuarter.FromString("B892"));
+					yearQuartersToFilter.Add(YearQuarter.FromString("B893"));
 
           int returnedCount = TestHelper.GetSectionCountWithFilter(new YearQuarterFacet(yearQuartersToFilter), false);
         	int actualCount = _dataVerifier.GetSectionCount(string.Format("YearQuarterID in ('{0}', '{1}', '{2}')",

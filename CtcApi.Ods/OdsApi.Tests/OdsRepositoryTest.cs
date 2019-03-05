@@ -39,10 +39,10 @@ namespace Ctc.Ods.Tests
 			_dataVerifier = new DataVerificationHelper();
 		}
 
-		~OdsRepositoryTest()
+		/*~OdsRepositoryTest()
 		{
 			_dataVerifier.Dispose();
-		}
+		}*/
 
 		private TestContext testContextInstance;
 
@@ -371,7 +371,7 @@ namespace Ctc.Ods.Tests
 			using (OdsRepository repository = new OdsRepository())
 			{
 				IList<ISectionFacet> facets = TestHelper.GetFacets(new ModalityFacet(ModalityFacet.Options.Online));
-
+              
 				IList<Course> courses = repository.GetCourses(facets);
 				Debug.Print("==> Online course count before DISTINCT: {0}", courses.Count);
 

@@ -33,10 +33,10 @@ namespace Ctc.Ods.Tests
 			_dataVerifier = new DataVerificationHelper();
 		}
 
-		~ApiSettingsTests()
+		/*~ApiSettingsTests()
 		{
 			_dataVerifier.Dispose();
-		}
+		}*/
 
 		private TestContext testContextInstance;
 

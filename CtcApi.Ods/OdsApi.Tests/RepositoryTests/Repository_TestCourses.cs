@@ -37,10 +37,10 @@ namespace Ctc.Ods.Tests.RepositoryTests
 			_dataVerifier = new DataVerificationHelper();
 		}
 
-		~Repository_TestCourses()
+		/*~Repository_TestCourses()
 		{
 			_dataVerifier.Dispose();
-		}
+		}*/
 
 		private TestContext testContextInstance;
 

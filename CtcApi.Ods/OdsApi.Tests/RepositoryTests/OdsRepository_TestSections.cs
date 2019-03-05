@@ -39,10 +39,10 @@ namespace Ctc.Ods.Tests
 			_dataVerifier = new DataVerificationHelper();
 		}
 
-		~OdsRepository_TestSections()
+		/*~OdsRepository_TestSections()
 		{
 			_dataVerifier.Dispose();
-		}
+		}*/
 
 		private TestContext testContextInstance;
 
@@ -441,7 +441,7 @@ namespace Ctc.Ods.Tests
 		{
 			using (OdsRepository repository = new OdsRepository())
 			{
-				YearQuarter yrq = YearQuarter.FromString("B012");
+				YearQuarter yrq = YearQuarter.FromString("B893");
 				IList<Section> sections = repository.GetSections(CourseID.FromString("ART 101"), yrq);
 
 				Assert.IsTrue(sections.Count > 0);
@@ -457,7 +457,7 @@ namespace Ctc.Ods.Tests
 		{
 			using (OdsRepository repository = new OdsRepository())
 			{
-				YearQuarter yrq = YearQuarter.FromString("B233");
+				YearQuarter yrq = YearQuarter.FromString("B893");
 				string courseId = "ART 101";
 
 				IList<Section> sections = repository.GetSections(CourseID.FromString(courseId), yrq, TestHelper.GetFacets());

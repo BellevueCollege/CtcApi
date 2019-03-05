@@ -35,10 +35,10 @@ namespace Ctc.Ods.Tests.ClassDataFilterTests
 			_dataVerifier = new DataVerificationHelper();
 		}
 
-		~GetSections_FilterModality()
+		/*~GetSections_FilterModality()
 		{
 			_dataVerifier.Dispose();
-		}
+		}*/
 
 		private TestContext testContextInstance;
 

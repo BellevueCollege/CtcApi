@@ -36,10 +36,10 @@ namespace Ctc.Ods.Tests.RepositoryTests
 			_dataVerifier = new DataVerificationHelper();
 		}
 
-		~Repository_TestSubjects()
+		/*~Repository_TestSubjects()
 		{
 			_dataVerifier.Dispose();
-		}
+		}*/
 
 		private TestContext testContextInstance;
 
@@ -127,7 +127,7 @@ namespace Ctc.Ods.Tests.RepositoryTests
 		}
 
 		/// <summary>
-		/// 
+		/// Test that subject not used by the given yrq is not available in results returned from repository
 		/// </summary>
 		[TestMethod]
 		public void GetSubjects_VerifyCourseSubjectIsCorrectlyExcluded()
@@ -139,7 +139,7 @@ namespace Ctc.Ods.Tests.RepositoryTests
 				IList<CoursePrefix> actual = repo.GetCourseSubjects(yrq);
 				Assert.IsTrue(actual.Count > 0, "No subjects were returned for {0} ({1})", yrq.FriendlyName, yrq);
 
-				string subject = _dataVerifier.GetRandomCourseSubject(string.Format("YearQuarterID <> '{0}'", yrq.ID), true);
+				string subject = _dataVerifier.GetExcludedCourseSubject(string.Format("YearQuarterID <> '{0}'", yrq.ID), true);
 
 				IEnumerable<CoursePrefix> shouldBeEmpty = actual.Where(s => s.Subject.ToUpper() == subject.ToUpper());
 				int emptyCount = shouldBeEmpty.Count();

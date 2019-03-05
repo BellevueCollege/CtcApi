@@ -23,10 +23,10 @@ namespace Ctc.Ods.Tests.RepositoryTests
 			_dataVerifier = new DataVerificationHelper();
 		}
 
-		~OdsRepository_TestSectionCounts()
+		/*~OdsRepository_TestSectionCounts()
 		{
 			_dataVerifier.Dispose();
-		}
+		}*/
 
 		private TestContext testContextInstance;
 
