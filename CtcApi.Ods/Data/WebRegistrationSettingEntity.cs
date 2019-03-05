@@ -15,6 +15,7 @@
 //If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ctc.Ods.Data
 {

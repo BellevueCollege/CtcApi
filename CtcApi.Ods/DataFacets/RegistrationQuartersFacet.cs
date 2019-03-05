@@ -82,10 +82,9 @@ namespace Ctc.Ods
 			// LINQ for EF only supports primitive variables
 			_today = appContext.CurrentDate ?? DateTime.Now;
 			_yrqMax = Settings.YearQuarter.Max;
-			// Registration information should be available *before* registration begins
-			// NOTE: we jump ahead n days to simulate date lookup n days prior to the registration date
-			_registrationDate = _today.Add(new TimeSpan(14, 0, 0, 0));
-			// TODO: make the number of days in advance of registration opening configurable
+            // Registration information should be available *before* registration begins
+            // NOTE: we jump ahead n days to simulate date lookup n days prior to the registration date
+            _registrationDate = _today.Add(new TimeSpan(_settings.YearQuarter.RegistrationLeadDays, 0, 0, 0));
 		}
 
 		/// <summary>

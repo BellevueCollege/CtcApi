@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data.Entity;
-using System.Data.Objects.SqlClient;
+using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Linq.Expressions;
 using Ctc.Ods.Data;

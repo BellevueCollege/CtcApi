@@ -14,6 +14,7 @@
 //License and GNU General Public License along with this program.
 //If not, see <http://www.gnu.org/licenses/>.
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Ctc.Ods.Config;
 
 namespace Ctc.Ods.Data
