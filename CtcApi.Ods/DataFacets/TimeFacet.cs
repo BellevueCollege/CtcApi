@@ -51,8 +51,13 @@ namespace Ctc.Ods
 			DateTime startTime = Utility.GetHpTime(_startTimeRange);
 			DateTime endTime = Utility.GetHpTime(_endTimeRange);
 
-			return
-					s => (( ! s.StartTime.HasValue) || (s.StartTime.Value.CompareTo(startTime) >= 0 && s.StartTime.Value.CompareTo(endTime) <= 0));
-		}
+            // This commented out code is a proposed fix for this facet to properly filter records to be 
+            // between the specified start and end times. It currently does not technically filter correctly 
+            // but leaving it for now as no one has complained.
+            //return
+            //		s => (( (!s.StartTime.HasValue) || s.StartTime.Value.CompareTo(startTime) >= 0) && ( (! s.EndTime.HasValue) || s.EndTime.Value.CompareTo(endTime) <= 0));
+            return
+                    s => ((!s.StartTime.HasValue) || (s.StartTime.Value.CompareTo(startTime) >= 0 && s.StartTime.Value.CompareTo(endTime) <= 0));
+        }
 	}
 }
